@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Incluir el header -->
+<th:block th:replace="~{fragments/header :: head}"></th:block>
+<script th:src="@{/js/clients/edit.js}"></script>
+<body>
+<th:block th:replace="~{fragments/header :: header}"></th:block>
+<div>
+    <th:block th:replace="~{fragments/breadcrumbs :: listbreacrumbs}"></th:block>
+    <div class="page-header" id="banner">
+        <div class="row">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6 mt-3">
+                            <button type="button" class="btn btn-primary btn-sm"
+                                    data-toggle="modal" data-url="/company/create" data-target="#modalCreate" id="createCompanyBtn">
+                                NUEVO <i class="bi bi-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <table class="display table-stripped" style="width:100%" id="tblClients">
+                        <thead>
+                        <tr>
+                            <th scope="col">Nombre</th>
+                            <th>Email</th>
+                            <th>Teléfono</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="client, iter : ${clients}">
+                            <td th:text="${client.firstname + ' ' + client.lastname}"></td>
+                            <td th:text="${client.email}"></td>
+                            <td th:text="${client.telephone}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:insert="~{modal :: simpleModal('Alta de Cliente')}"></th:block>

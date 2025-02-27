@@ -1,0 +1,10 @@
+package com.ar.nxg.nxgappts.repositories;
+
+import com.ar.nxg.nxgappts.domain.Appointment;
+import com.ar.nxg.nxgappts.domain.CategoryService;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+
+@RepositoryRestResource(path = "categoryService", collectionResourceRel = "categoryService")
+public interface CategoryServiceRepository extends JpaRepository<CategoryService, Long> {}
+

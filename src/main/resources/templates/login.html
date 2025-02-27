@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- saved from url=(0027)https://bootswatch.com/lux/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>NXG Turnos - Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!-- Google Fonts -->
+    <link th:href="@{https://fonts.gstatic.com}" rel="preconnect">
+    <link th:href="@{https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i}" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet">
+    <link th:href="@{/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet">
+    <link th:href="@{/vendor/quill/quill.snow.css}" rel="stylesheet">
+    <link th:href="@{/vendor/quill/quill.bubble.css}" rel="stylesheet">
+    <link th:href="@{/vendor/remixicon/remixicon.css}" rel="stylesheet">
+    <link th:href="@{/vendor/simple-datatables/style.css}" rel="stylesheet">
+    <!-- Template Main CSS File -->
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body>
+    <main>
+        <div class="container">
+            <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-center">
+                                        <img th:src="@{/image/logo.png}" class="img-fluid" alt="Logo" style="max-width: 40%; max-height: 40%; border-radius: 30%;">
+                                    </div>
+                                    <div class="pb-2">
+                                        <h5 class="card-title text-center pb-0 fs-4 p-0">NXG Turnos</h5>
+                                        <p class="text-center small">Ingrese su usuario y clave</p>
+                                    </div>
+
+                                    <form class="row g-3 needs-validation" th:action="@{/login}" method="post">
+                                        <div th:if="${param.error}" class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show text-center p-2 mb-0 mt-0" style="padding: 10px;padding-bottom: 0px;">
+                                            <label class="message" style="font-size: 15px" th:text="${param.error}">Usuario o clave incorrecto.</label>
+                                        </div>
+                                        <div th:if="${param.logout}" class="alert alert-info bg-info text-light border-0 alert-dismissible fade show text-center p-2 mb-0 mt-0" style="padding: 10px;padding-bottom: 0px;">
+                                            <label class="message" style="font-size: 15px">Has cerrado sesión correctamente.</label>
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="username" class="form-label">Usuario</label>
+                                            <div class="input-group has-validation">
+                                                <input type="text" id="username" name="username" class="form-control form-control-user" placeholder="" required />
+                                                <div class="invalid-feedback">Por favor, ingrese un nombre de usuario.</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label for="password" class="form-label">Contraseña</label>
+                                            <input type="password" id="password" name="password" class="form-control form-control-user" autocomplete="off" placeholder="" required />
+                                            <div class="invalid-feedback">Por favor, ingrese una contraseña.</div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
+                                                <label class="form-check-label" for="rememberMe">Recordarme</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <button type="submit" class="btn btn-primary w-100">INICIAR SESIÓN</button>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <div class="small mb-0"> No tienes cuenta? <a href="/register" class="text-primary">Registrarse</a></div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="credits">
+                                <small class="text-muted">@project.artifactId@ - v<span th:text="${gitVersion}"></span></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    <!-- Template Main JS File -->
+    <script th:src="@{https://code.jquery.com/jquery-3.7.1.slim.min.js}"></script>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/vendor/tinymce/tinymce.min.js}"></script>
+    <script th:src="@{/js/main.js}"></script>
+</body>
+</html>
