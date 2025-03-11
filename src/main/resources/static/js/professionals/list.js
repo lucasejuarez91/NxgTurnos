@@ -26,7 +26,7 @@ $(document).ready(function(){
             await manageEntity("professionals", id, {status: false})
     });
 
-    loadHtmlOnModal(document.getElementById('createProfessionalBtn'));
+    loadHtmlOnModal(document.getElementById('createBtn'));
     //loader(false);
 });
 

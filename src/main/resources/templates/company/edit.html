@@ -11,6 +11,37 @@
         <div class="row">
             <div class="card">
                 <div class="card-body">
+                    <h5 class="card-title">Edición Compañia</h5>
+                    <div class="row">
+                        <div class="col-6">
+                            <strong class="card-subtitle">Logo</strong>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <img th:src="@{/images/{filename}(filename=${company.logo != null ? company.logo.getName() : ''})}"
+                                     class="rounded"
+                                     alt="User Avatar"
+                                     style="vertical-align: middle; width: 160px; height: auto;">
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <input type="file" id="fileInput" accept="image/*" required hidden>
+                                    <button class="btn btn-md btn-info mt-3" type="button" id="btnUploadAvatar">ACTUALIZAR LOGO</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <strong class="card-subtitle">Banner</strong>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <img th:src="@{/images/{filename}(filename=${company.banner != null ? company.banner.getName() : ''})}"
+                                     class="rounded"
+                                     alt="User Avatar"
+                                     style="vertical-align: middle; width: 160px; height: auto;">
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <input type="file" class="form-control" id="signature" hidden>
+                                    <input type="file" id="fileInputSignature" accept="image/*" required hidden>
+                                    <button class="btn btn-md btn-success mt-3" type="button" id="btnUploadSignature">ACTUALIZAR FIRMA</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr width="50%" class="offset-3 text-center">
                     <div class="row">
                         <div class="col-12 col-lg-6">
                             <label for="name" class="form-label mt-4">Nombre</label>
@@ -46,6 +77,61 @@
                         <div class="col-lg-12 col-12 ms-auto d-flex justify-content-end">
                             <button class="btn btn-success btnUpdate" type="button" th:data-id="${company.id}">Actualizar</button>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <h5 class="card-title">Profesionales asociados</h5>
+                        <table class="display table-stripped" style="width:100%" id="tblProfessionals">
+                            <thead>
+                            <tr>
+                                <th scope="col">Nombre</th>
+                                <th>Especialidad</th>
+                                <th>Teléfono</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col"></th>
+                                <th scope="col"></th>
+                                <th scope="col"></th>
+                                <th scope="col"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="professional, iter : ${professionals}" th:class="${!professional.status ? 'text-muted' : ''}">
+                                <td th:text="${professional.firstname + ' ' + professional.lastname}"></td>
+                                <td>
+                                    <span th:each="p: ${professional.services}">
+                                        <a class="badge rounded-pill text-bg-secondary" th:text="${p.name}">
+                                    </a>
+                                </td>
+                                <td th:text="${professional.telephone}"></td>
+                                <td th:text="${professional.status ? 'ACTIVO' : 'INACTIVO'}"></td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary btnEdit" th:data-url="'./edit/' + ${professional.id}" th:disabled="${!professional.status}" data-toggle="tooltip" data-placement="top" title="Editar">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-info btnAvailability" th:data-url="'./availability/' + ${professional.id}" th:disabled="${!professional.status}" data-toggle="tooltip" data-placement="top" title="Disponibilidad">
+                                        <i class="bi bi-calendar"></i>
+                                    </button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning btnChangeStatus" th:data-id="${professional.id}" th:disabled="${professional.status}" data-toggle="tooltip" data-placement="top" title="Recuperar">
+                                        <i class="bi bi-arrow-counterclockwise"></i>
+                                    </button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-danger btnDelete" th:data-id="${professional.id}" th:disabled="${!professional.status}" data-toggle="tooltip" data-placement="top" title="Eliminar">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                                </span>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

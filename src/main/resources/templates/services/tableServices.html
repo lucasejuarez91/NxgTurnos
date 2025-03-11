@@ -1,0 +1,53 @@
+<table class="display table-stripped" style="width:100%" id="tblServices" th:fragment="tblServices">
+    <thead>
+    <tr>
+        <th scope="col">Nombre</th>
+        <th>Descripción</th>
+        <th>Precio</th>
+        <th scope="col">Duración(min)</th>
+        <th scope="col">Categoría</th>
+        <th scope="col">Estado</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="service : ${services}" th:class="${!service.status ? 'text-muted' : ''}">
+        <td>
+            <span class="badge bg-secondary">
+                <a th:href="${ service.status ? '/services/edit/'+ service.id : '#'}" th:text="${service.name}" class="text-white"></a>
+            </span>
+        </td>
+        <td th:text="${service.description}"></td>
+        <td th:text="${'$ ' + service.price}"></td>
+        <td th:text="${service.duration}"></td>
+        <td>
+            <span class="badge bg-secondary">
+                <a th:href="${ service.categoryService.status && service.status ? '/categoryService/edit/'+ service.categoryService.id : '#'}" th:text="${service.categoryService.name}" class="text-white"></a>
+            </span>
+        </td>
+        <td th:if="${!service.status}">
+            <span class="badge bg-danger" th:text="${'INACTIVO'}"></span>
+        </td>
+        <td th:if="${service.status}">
+            <span class="badge bg-success" th:text="${'ACTIVO'}"></span>
+        </td>
+        <td>
+            <button class="btn btn-sm btn-primary btnEdit" th:data-url="'./edit/' + ${service.id}" th:disabled="${!service.status}" data-toggle="tooltip" data-placement="top" title="Editar">
+                <i class="bi bi-pencil-square"></i>
+            </button>
+        </td>
+        <td>
+            <button class="btn btn-sm btn-warning btnChangeStatus" th:data-id="${service.id}" th:disabled="${service.status}" data-toggle="tooltip" data-placement="top" title="Recuperar">
+                <i class="bi bi-arrow-counterclockwise"></i>
+            </button>
+        </td>
+        <td>
+            <button class="btn btn-sm btn-danger btnDelete" th:data-id="${service.id}" th:disabled="${!service.status}" data-toggle="tooltip" data-placement="top" title="Eliminar">
+                <i class="bi bi-trash"></i>
+            </button>
+        </td>
+    </tr>
+    </tbody>
+</table>

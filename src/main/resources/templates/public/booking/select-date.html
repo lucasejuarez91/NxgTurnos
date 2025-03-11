@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Incluir el header -->
+<th:block th:replace="~{fragments/header :: head}"></th:block>
+<body>
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<th:block th:replace="~{fragments/public/header :: header}"></th:block>
+<script th:src="@{/js/booking/availability.js}"></script>
+<div>
+    <div class="page-header" id="banner">
+        <div class="row">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-center fs-1">Listado de Fechas</h5>
+                    <div class="row">
+                        <div class="offset-1 col-2">
+                            <div class="card mb-3">
+                                <div class="row g-0">
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Resumen</h5>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <label class="text-muted">Salón</label>
+                                                    <br>
+                                                    <span th:text="${company.name}" id="companyLbl" th:data-maxEndTime="${endTime}" th:data-minStartTime="${startTime}"></span>
+                                                </div>
+                                            </div>
+                                            <div class="row" th:if="${service != null}">
+                                                <div class="col-12">
+                                                    <label class="text-muted">Servicios</label>
+                                                    <br>
+                                                    <span th:text="${service != null ? service.name : '' }"></span>
+                                                </div>
+                                            </div>
+                                            <div class="row" th:if="${professional != null}">
+                                                <div class="col-12">
+                                                    <label class="text-muted">Profesional</label>
+                                                    <br>
+                                                    <span th:text="${professional.fullname}" id="professionalLbl" th:data-professionalId="${professional.id}"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card mb-3">
+                                <div class="row g-0">
+                                    <div class="col-md-12">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="col-12 col-lg-12">
+                                                        <div id="calendar" class="mt-3"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

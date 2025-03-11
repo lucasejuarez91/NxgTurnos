@@ -1,10 +1,13 @@
 package com.ar.nxg.nxgappts.controller;
 
+import com.ar.nxg.nxgappts.domain.Company;
 import com.ar.nxg.nxgappts.domain.MenuItem;
 import com.ar.nxg.nxgappts.domain.User;
 import com.ar.nxg.nxgappts.dto.ResponseMessage;
+import com.ar.nxg.nxgappts.repositories.CompanyRepository;
 import com.ar.nxg.nxgappts.repositories.MenuItemRepository;
 import com.ar.nxg.nxgappts.repositories.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,33 +35,8 @@ public class GlobalControllerAdvice {
     @Autowired
     MenuItemRepository menuItemRepository;
 
-	/*@ModelAttribute
-	public void addUserToModel(Model model) {
-		// Obtener el usuario autenticado del contexto de seguridad
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-		if (authentication != null && authentication.isAuthenticated()) {
-			String username = authentication.getName();
-			User user = userRepository.findByUsername(username);
-			LoggedUserDTO loggedUser = null;
-			if (user != null) {
-				loggedUser = new LoggedUserDTO(user.getId(), user.getUsername(),
-						user.getAvatar() != null ? user.getAvatar().getName() : "", user.getEmail(),
-						user.getFullname());
-			}
-			// Agregar el objeto `principal` al modelo (puede ser un objeto `User` u otro,
-			// según tu implementación)
-			model.addAttribute("loggedUser", loggedUser);
-			boolean isAdmin = false;
-			if(user != null){
-				isAdmin = user.getRoles().stream()
-						.anyMatch(role -> role.getName().equals("ADMINISTRATOR"));
-			}
-			model.addAttribute("isAdmin", isAdmin);
-			model.addAttribute("greeting", getGreeting());
-			model.addAttribute("gitVersion", gitVersion);
-		}
-	}*/
+    @Autowired
+    CompanyRepository companyRepository;
 
     @ExceptionHandler(AccessException.class)
     public String handleAccessDeniedException(AccessException ex, Model model) {
@@ -89,6 +67,23 @@ public class GlobalControllerAdvice {
 	public String toggledSidebar() { // Reemplaza User con tu clase
 		return "";//""toggle-sidebar";
 	}
+
+    @ModelAttribute("isAdmin")
+    public void toggledSidebar(Model model) { // Reemplaza User con tu clase
+        model.addAttribute("isAdmin", true);
+    }
+
+
+    @ModelAttribute("actualCompany")
+    public Company actualCompany(HttpSession session) {
+        Company company = (Company) session.getAttribute("actualCompany");
+        return company != null ? company : (getUserIdLogged() != null ? !getUserIdLogged().getCompanies().isEmpty() ? getUserIdLogged().getCompanies().get(0) : null : null);
+    }
+
+    @ModelAttribute("myCompanies")
+    public List myCompanies() { // Reemplaza User con tu clase
+        return getUserIdLogged() != null ? getUserIdLogged().getCompanies() : new ArrayList();
+    }
 
     public void attributesByMenu(Model model, long menuItem){
         MenuItem menuItemEntity = menuItemRepository.findById(menuItem)
@@ -134,18 +129,16 @@ public class GlobalControllerAdvice {
         private String email;
         private String avatarUrl;
         private String fullname;
-        private String companyName;
-        private long companyId;
+        private List<Company> companies;
 
-        public LoggedUserDTO(Long id, String username, String avatarUrl, String email, String fullname, String companyName, long companyId) {
+        public LoggedUserDTO(Long id, String username, String avatarUrl, String email, String fullname, List<Company> companies) {
             super();
             this.id = id;
             this.username = username;
             this.email = email;
             this.avatarUrl = avatarUrl;
-            this.fullname = fullname;
-            this.companyName = companyName;
-            this.companyId = companyId;
+            this.fullname = fullname.toUpperCase();
+            this.companies = companies;
         }
 
         public LoggedUserDTO() {

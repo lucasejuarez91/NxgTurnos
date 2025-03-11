@@ -16,8 +16,8 @@ import java.util.List;
 @Table(name = "sec_company")
 public class Company extends BaseEntity {
 
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<User> users; // Usuarios asociados a esta compania
+    @ManyToMany(mappedBy = "companies", fetch = FetchType.LAZY)
+    private List<User> users;  // Usuarios asociados a esta empresa
 
     @Column(nullable = false)
     private String name;
@@ -41,5 +41,11 @@ public class Company extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "logo_file_id", referencedColumnName = "id", nullable = true)
     private Files logo; // Relación con el logo
+
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Professional> professionals = new ArrayList<>();
+
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Appointment> appointments = new ArrayList<>();
 
 }

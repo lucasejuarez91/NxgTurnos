@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Incluir el header -->
+<th:block th:replace="~{fragments/header :: head}"></th:block>
+<body>
+<th:block th:replace="~{fragments/public/header :: header}"></th:block>
+<div>
+    <div class="page-header" id="banner">
+        <div class="row">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-center fs-1">Listado de Salones</h5>
+                    <div class="row">
+                        <div class="offset-2 col-md-4">
+                            <div class="card mb-3">
+                                <div class="row g-0">
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Filtros</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card mb-3" th:each="comp : ${companies}">
+                                <div class="row g-0">
+                                    <div class="col-md-4">
+                                        <img th:src="@{/images/{filename}(filename=${comp.logo != null ? comp.logo.getName() : ''})}" class="img-fluid rounded-start" alt="...">
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <a class="card-title" th:text="${comp.name}" th:href="${'/booking/request/select-salon/' + comp.id}"></a>
+                                            <br>
+                                            <span>4,6</span>
+                                            <i class="bi bi-star me-1"></i>
+                                            <i class="bi bi-star me-1"></i>
+                                            <i class="bi bi-star me-1"></i>
+                                            <i class="bi bi-star me-1"></i>
+                                            <i class="bi bi-star me-1"></i>
+                                            <span>(6.345)</span>
+                                            <p class="card-text" th:text="${comp.description}"></p>
+                                            <span th:text="${comp.address}"></span>
+                                            <span th:text="${comp.minStartTime}"></span>
+                                            <span th:text="${comp.maxEndtime}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

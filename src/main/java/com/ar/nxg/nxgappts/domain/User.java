@@ -50,9 +50,13 @@ public class User extends BaseEntity implements UserDetails {
 
     private String resetPasswordToken;
 
-    @ManyToOne(fetch = FetchType.LAZY) // Muchas Users pueden pertenecer a una Company
-    @JoinColumn(name = "company_id") // Clave foránea en la tabla User
-    private Company company;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_company",  // Nombre de la tabla intermedia
+            joinColumns = @JoinColumn(name = "user_id"),  // Clave foránea hacia User
+            inverseJoinColumns = @JoinColumn(name = "company_id")  // Clave foránea hacia Company
+    )
+    private List<Company> companies;  // Empresas asociadas a este usuario
 
     @OneToOne
     @JoinColumn(name = "avatar_file_id", referencedColumnName = "id")

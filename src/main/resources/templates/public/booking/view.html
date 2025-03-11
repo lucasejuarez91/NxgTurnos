@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Incluir el header -->
+<th:block th:replace="~{fragments/header :: head}"></th:block>
+<body>
+<th:block th:replace="~{fragments/public/header :: header}"></th:block>
+<div>
+    <div class="page-header" id="banner">
+        <div class="row">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-center fs-1">Listado de Servicios</h5>
+                    <div class="row">
+                        <div class="offset-2 col-2">
+                            <div class="card mb-3">
+                                <div class="row g-0">
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Resumen</h5>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <label class="text-muted">Salón</label>
+                                                    <br>
+                                                    <span th:text="${company.name}"></span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <label class="text-muted">Servicios</label>
+                                                    <br>
+                                                    <span th:text="${company.name}"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="row g-0">
+                                    <div class="col-md-12">
+                                        <div class="container">
+                                            <div class="row" th:each="catServ : ${categoryServices}">
+                                                <div class="col-12">
+                                                    <div class="card-header" th:text="${catServ.name}"></div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="row align-items-center mb-2 mt-2" style="justify-content: space-between;" th:each="serv : ${catServ.services}">
+                                                        <div class="col-md-3 col-lg-6 col-xs-12">
+                                                            <span class="fw-bold" th:text="${serv.name}"></span>
+                                                            <br>
+                                                            <small class="text-muted" th:text="${serv.description}"></small>
+                                                        </div>
+                                                        <div class="col-md-3 col-6 fw-bold text-primary" th:text="${'$ ' + serv.price}"></div>
+                                                        <div class="col-md-3 col-6 text-end">
+                                                            <button class="btn btn-primary btn-sm" th:data-id="${serv.id}">RESERVAR</button>
+                                                        </div>
+                                                        <div class="card-header p-0"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

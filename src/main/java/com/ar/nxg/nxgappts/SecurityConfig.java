@@ -26,17 +26,23 @@ public class SecurityConfig {
                 //.csrf().csrfTokenRepository(csrfTokenRepository()) // Configurar el repositorio de tokens CSRF
                 .csrf().disable()
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/login/**", "/register/**", "/registerUser/**", "/confirm", "/confirmation",
-                                "/assets/**",  "/css/**", "/js/**", "/images/**", "/image/**", "/vendor/**", "/reset-password-request",
-                                "/reset-password").permitAll()
-                        .requestMatchers("/api/**").authenticated()
-                        .anyRequest().authenticated()
+                                .requestMatchers("/login/**", "/register/**", "/registerUser/**", "/confirm", "/confirmation",
+                                        "/assets/**",  "/css/**", "/js/**", "/images/**", "/image/**", "/vendor/**", "/reset-password-request",
+                                        "/reset-password","/booking/request/**").permitAll()
+                                //.requestMatchers( "/confirm","/confirmation").authenticated()
+                        .anyRequest().permitAll()
                 )
-                //.addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)  // Añadir el filtro de autenticación JWT
-                .formLogin(t -> t.loginPage("/login").permitAll().defaultSuccessUrl("/", true)
+                .formLogin(t -> t.loginPage("/login").permitAll().defaultSuccessUrl("/", false)
                         //.failureUrl("/login?error"))
                         .failureHandler(customAuthenticationFailureHandler())) // Configurar el handler de fallos
-                .logout();
+                //.addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)  // Añadir el filtro de autenticación JWT
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout")
+                        .invalidateHttpSession(true) // <-- Fuerza invalidación de sesión
+                        .deleteCookies("JSESSIONID") // <-- Borra cookies al hacer logout
+                        .permitAll()
+                );
         return http.build();
     }
 

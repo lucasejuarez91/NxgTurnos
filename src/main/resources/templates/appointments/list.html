@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Incluir el header -->
+<th:block th:replace="~{fragments/header :: head}"></th:block>
+<script th:src="@{/js/appointments/list.js}"></script>
+<style src="https://cdn.datatables.net/rowgroup/1.5.1/css/rowGroup.dataTables.css"></style>
+<body>
+<th:block th:replace="~{fragments/header :: header}"></th:block>
+<div>
+    <th:block th:replace="~{fragments/breadcrumbs :: listbreacrumbs}"></th:block>
+    <div class="page-header" id="banner">
+        <div class="row">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Listado de Turnos</h5>
+                    <div class="row">
+                        <div class="col-6 mt-3">
+                        </div>
+                    </div>
+                    <th:block th:insert="~{/appointments/tableAppts :: tblAppts}"></th:block>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:insert="~{modal :: simpleModal('Alta de Turno')}"></th:block>

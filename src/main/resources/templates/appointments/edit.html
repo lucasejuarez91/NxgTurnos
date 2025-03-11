@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Incluir el header -->
+<th:block th:replace="~{fragments/header :: head}"></th:block>
+<script th:src="@{/js/appointments/edit.js}"></script>
+<body>
+<th:block th:replace="~{fragments/header :: header}"></th:block>
+<div>
+    <th:block th:replace="~{fragments/breadcrumbs :: listbreacrumbs}"></th:block>
+    <div class="page-header" id="banner">
+        <div class="row">
+            <div class="card">
+                <div class="card-body">
+                    <a onclick="history.back()" class="btn btn-primary mb-4 mt-3"><i class="bi bi-arrow-left"></i></a>
+                    <h5 class="card-title">Edición de Turno #[[${appointment.id}]]</h5>
+                    <label class="badge bg-danger" th:if="${isAdmin}">Modo administrador</label>
+                    <div class="row">
+                        <div class="col-12 col-lg-6">
+                            <label for="client" class="form-label mt-4">Cliente</label>
+                            <select class="form-select" id="client" disabled>
+                                <option value="" disabled selected>Seleccione una opción...</option>
+                                <option th:each="client : ${clients}"
+                                        th:value="${'/clients/' + client.id}"
+                                        th:text="${client.getFullname() + ' - ' + client.getEmail()}"
+                                        th:selected="${#arrays.contains(appointment.client, client)}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <label for="service" class="form-label mt-4">Servicio</label>
+                            <select class="form-select" id="service" th:disabled="${!isAdmin}">
+                                <option value="" disabled selected>Seleccione una opción...</option>
+                                <option th:each="service : ${services}"
+                                        th:value="${'/service/' + service.id}"
+                                        th:text="${service.name + ' - $' + service.price}"
+                                        th:selected="${#arrays.contains(appointment.service, service)}">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-lg-6">
+                            <label for="professional" class="form-label mt-4">Profesional</label>
+                            <select class="form-select" id="professional">
+                                <option value="" disabled selected>Seleccione una opción...</option>
+                                <option th:each="professional : ${professionals}"
+                                        th:value="${'/professionals/' + professional.id}"
+                                        th:text="${professional.getFullname()}"
+                                        th:selected="${#arrays.contains(appointment.professional, professional)}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <label for="scheduledDate" class="form-label mt-4">Fecha y Hora</label>
+                            <input type="datetime-local" step="2" class="form-control" id="scheduledDateStart" th:value="${appointment.scheduledDateStart}">
+                            <input type="datetime-local" step="2" class="form-control" id="scheduledDateEnd" th:value="${appointment.scheduledDateEnd}">
+                        </div>
+                    </div>
+                    <br>
+                    <th:block th:insert="~{/components/buttons/update :: buttonUpdate(${appointment.id})}"></th:block>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

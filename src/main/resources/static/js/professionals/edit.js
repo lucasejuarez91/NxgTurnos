@@ -8,4 +8,6 @@ $(document).ready(async function(){
         let id = $(this).data('id');
         await manageEntity("professionals", id, await getChanges())
     });
+
+    $('#specialities').select2();
 })

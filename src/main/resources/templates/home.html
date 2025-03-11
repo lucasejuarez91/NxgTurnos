@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Incluir el header -->
+<th:block th:replace="~{fragments/header :: head}"></th:block>
+<body>
+<th:block th:replace="~{fragments/public/header :: header}"></th:block>
+<style>
+    #main {
+        padding: 0px !important;
+    }
+</style>
+<div>
+    <div class="page-header" id="banner">
+        <div>
+            <div class="d-flex justify-content-center align-items-center"
+                 style="background-image: url('https://thebarberylurgan.com/wp-content/uploads/2020/09/barber-background.jpg'); background-size: cover; height: 800px;">
+                <div class="card mb-5"> <!-- Se le da un ancho de 50% a la tarjeta interna -->
+                    <div class="card-body">
+                        <h2 class="card-title text-center fs-2">Reserva en los mejores salones de belleza</h2>
+                        <form th:action="@{/booking/request/list-company}">
+                            <div class="mb-3">
+                                <input type="text" class="form-control" id="searchInput" name="name" placeholder="Buscar por nombre, ciudad o servicio">
+                            </div>
+                            <div class="mb-3">
+                                <button type="submit" class="btn btn-primary w-100">Buscar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

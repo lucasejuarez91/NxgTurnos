@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Incluir el header -->
+<th:block th:replace="~{fragments/header :: head}"></th:block>
+<script th:src="@{/js/services/edit.js}"></script>
+<body>
+<th:block th:replace="~{fragments/header :: header}"></th:block>
+<div>
+    <th:block th:replace="~{fragments/breadcrumbs :: listbreacrumbs}"></th:block>
+    <div class="page-header" id="banner">
+        <div class="row">
+            <div class="card">
+                <div class="card-body">
+                    <a onclick="history.back()" class="btn btn-primary mb-4 mt-3"><i class="bi bi-arrow-left"></i></a>
+                    <h5 class="card-title">Edición de Servicio</h5>
+                    <div class="row">
+                        <div class="col-12 col-lg-6">
+                            <label for="name" class="form-label mt-4">Nombre</label>
+                            <input type="text" class="form-control" id="name" th:value="${service.name}">
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <label for="description" class="form-label mt-4">Descripción</label>
+                            <input type="text" class="form-control" id="description" th:value="${service.description}">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-lg-6">
+                            <label for="price" class="form-label mt-4">Nombre</label>
+                            <input type="number" class="form-control" id="price" th:value="${service.price}">
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <label for="duration" class="form-label mt-4">Duración <small class="text-muted">(en minutos)</small> </label>
+                            <input type="text" class="form-control" id="duration" th:value="${service.duration}">
+                        </div>
+                    </div>
+                    <br>
+                    <th:block th:insert="~{/components/buttons/update :: buttonUpdate(${service.id})}"></th:block>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

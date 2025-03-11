@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <!-- Incluir el header -->
 <th:block th:replace="~{fragments/header :: head}"></th:block>
-<script th:src="@{/js/services/edit.js}"></script>
+<script th:src="@{/js/services/list.js}"></script>
 <body>
 <th:block th:replace="~{fragments/header :: header}"></th:block>
 <div>
@@ -11,63 +11,13 @@
         <div class="row">
             <div class="card">
                 <div class="card-body">
+                    <h5 class="card-title">Listado de Servicios</h5>
                     <div class="row">
                         <div class="col-6 mt-3">
-                            <button type="button" class="btn btn-primary btn-sm"
-                                    data-toggle="modal" data-url="/services/create" data-target="#modalCreate" id="createServicesBtn">
-                                NUEVO <i class="bi bi-plus"></i>
-                            </button>
+                            <th:block th:insert="~{/components/buttons/new :: buttonNew('/services/create', null, false)}"></th:block>
                         </div>
                     </div>
-                    <table class="display table-stripped" style="width:100%" id="tblServices">
-                        <thead>
-                        <tr>
-                            <th scope="col">Nombre</th>
-                            <th>Descripción</th>
-                            <th>Precio</th>
-                            <th scope="col">Duración(min)</th>
-                            <th scope="col">Categoría</th>
-                            <th scope="col">Estado</th>
-                            <th scope="col"></th>
-                            <th scope="col"></th>
-                            <th scope="col"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="service : ${services}" th:class="${!service.status ? 'text-muted' : ''}">
-                            <td th:text="${service.name}"></td>
-                            <td th:text="${service.description}"></td>
-                            <td th:text="${'$ ' + service.price}"></td>
-                            <td th:text="${service.duration}"></td>
-                            <td>
-                                <span class="badge bg-info">
-                                    <a href="/categoryService/1" th:text="${service.categoryService.name}"></a>
-                                </span>
-                            </td>
-                            <td th:if="${!service.status}">
-                                <span class="badge bg-danger" th:text="${'INACTIVO'}"></span>
-                            </td>
-                            <td th:if="${service.status}">
-                                <span class="badge bg-success" th:text="${'ACTIVO'}"></span>
-                            </td>
-                            <td>
-                                <button class="btn btn-sm btn-primary btnEdit" th:data-url="'./edit/' + ${service.id}" th:disabled="${!service.status}" data-toggle="tooltip" data-placement="top" title="Editar">
-                                    <i class="bi bi-pencil-square"></i>
-                                </button>
-                            </td>
-                            <td>
-                                <button class="btn btn-sm btn-warning btnChangeStatus" th:data-id="${service.id}" th:disabled="${service.status}" data-toggle="tooltip" data-placement="top" title="Recuperar">
-                                    <i class="bi bi-arrow-counterclockwise"></i>
-                                </button>
-                            </td>
-                            <td>
-                                <button class="btn btn-sm btn-danger btnDelete" th:data-id="${service.id}" th:disabled="${!service.status}" data-toggle="tooltip" data-placement="top" title="Eliminar">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <th:block th:insert="~{/services/tableServices :: tblServices}"></th:block>
                 </div>
             </div>
         </div>

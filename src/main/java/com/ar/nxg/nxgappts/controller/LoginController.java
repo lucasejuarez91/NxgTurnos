@@ -55,7 +55,7 @@ public class LoginController extends GlobalControllerAdvice {
             if (user != null) {
                 loggedUser = new LoggedUserDTO(user.getId(), user.getUsername(),
                         user.getAvatar() != null ? user.getAvatar().getName() : "", user.getEmail(),
-                        user.getFullname(), user.getCompany().getName(), user.getCompany().getId());
+                        user.getFullname(), user.getCompanies());
                 // Agregar el objeto `principal` al modelo (puede ser un objeto `User` u otro,
                 // según tu implementación)
                 model.addAttribute("loggedUser", loggedUser);

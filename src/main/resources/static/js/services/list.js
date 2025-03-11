@@ -3,11 +3,7 @@ $(document).ready(function(){
     //loader();
     initDataTable('tblServices');
 
-    loadHtmlOnModal(document.getElementById('createServicesBtn'));
+    loadHtmlOnModal(document.getElementById('createBtn'));
     //loader(false);
-
-    $('#modalCreate').on('shown.bs.modal', function() {
-
-    });
 });
 

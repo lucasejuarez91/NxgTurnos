@@ -13,10 +13,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-6 mt-3">
-                            <button type="button" class="btn btn-primary btn-sm"
-                                    data-toggle="modal" data-url="/professionals/create" data-target="#modalCreate" id="createProfessionalBtn">
-                                NUEVO <i class="bi bi-plus"></i>
-                            </button>
+                            <th:block th:insert="~{/components/buttons/new :: buttonNew('/professionals/create', null, false)}"></th:block>
                         </div>
                     </div>
                     <table class="display table-stripped" style="width:100%" id="tblProfessionals">
@@ -36,7 +33,7 @@
                         <tr th:each="professional, iter : ${professionals}" th:class="${!professional.status ? 'text-muted' : ''}">
                             <td th:text="${professional.firstname + ' ' + professional.lastname}"></td>
                             <td>
-                                <span th:each="p: ${professional.specialities}">
+                                <span th:each="p: ${professional.services}">
                                     <a class="badge rounded-pill text-bg-secondary" th:text="${p.name}">
                                 </a>
                             </td>

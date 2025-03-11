@@ -1,0 +1,8 @@
+<button type="button" class="btn btn-primary btn-sm"
+        data-toggle="modal" th:data-url="${dataUrl}" th:data-target="${isHeaderButton ? '#headerModalCreate' : '#modalCreate'}"
+        th:id="${isHeaderButton ? 'headerButton' : 'createBtn'}" th:fragment="buttonNew(dataUrl, label, isHeaderButton)">
+    <span th:text="${label != null ? label : 'NUEVO'}">NUEVO</span>
+</button>
+<a th:class="${'btn btn-' + type + ' btn-sm me-3'}" th:href="${dataUrl}" th:fragment="buttonNewLink(dataUrl, label, type)">
+    <span th:text="${label != null ? label : 'NUEVO'}">NUEVO</span>
+</a>

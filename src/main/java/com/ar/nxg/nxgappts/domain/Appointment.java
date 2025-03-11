@@ -12,22 +12,27 @@ import java.util.List;
 @Setter
 public class Appointment extends BaseEntity {
 
-    private LocalDateTime datetime;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User client;
 
     @ManyToOne
-    @JoinColumn(name = "id_client")
-    private Client client;
+    @JoinColumn(name = "service_id")
+    private Service service;
 
     @ManyToOne
-    @JoinColumn(name = "id_professional")
-    private Professional profesional;
+    @JoinColumn(name = "professional_id")
+    private Professional professional;
 
-    @ManyToMany
-    @JoinTable(
-            name = "appointment_services",
-            joinColumns = @JoinColumn(name = "id_appointment"),
-            inverseJoinColumns = @JoinColumn(name = "id_service")
-    )
-    private List<Service> services;
+    @ManyToOne
+    @JoinColumn(name = "appointment_status_id")
+    private AppointmentStatus apptStatus;
+
+    private LocalDateTime scheduledDateStart; // Fecha y hora de la cita
+    private LocalDateTime scheduledDateEnd; // Fecha y hora de la cita
+
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
 
 }

@@ -1,0 +1,36 @@
+<table class="display table-stripped" style="width:100%" id="tblAppts" th:fragment="tblAppts">
+    <thead>
+    <tr>
+        <th scope="col">Cliente</th>
+        <th>Servicio</th>
+        <th>Profesional</th>
+        <th scope="col">Fecha/Hora</th>
+        <th scope="col">Estado</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="appt : ${appointments}" th:class="${!appt.status ? 'text-muted' : ''}">
+        <td th:text="${appt.client.getFullname()}"></td>
+        <td th:text="${appt.service.name}"></td>
+        <td th:text="${appt.professional.getFullname()}"></td>
+        <td th:text="${appt.scheduledDateStart + ' - ' + appt.scheduledDateEnd}"></td>
+        <td>
+            <span th:if="${appt.apptStatus.getId() == 1}" class="badge bg-info text-white" th:text="${appt.apptStatus.name}"></span>
+            <span th:if="${appt.apptStatus.getId() == 2}" class="badge bg-danger text-white" th:text="${appt.apptStatus.name}"></span>
+            <span th:if="${appt.apptStatus.getId() == 3}" class="badge bg-success text-white" th:text="${appt.apptStatus.name}"></span>
+        </td>
+        <td>
+            <button class="btn btn-sm btn-primary btnEdit" th:data-url="'./edit/' + ${appt.id}" th:if="${appt.status}" data-toggle="tooltip" data-placement="top" title="Editar">
+                <i class="bi bi-pencil-square"></i>
+            </button>
+        </td>
+        <td>
+            <button class="btn btn-sm btn-danger btnDelete" th:data-id="${appt.id}" th:if="${appt.status}" data-toggle="tooltip" data-placement="top" title="Cancelar turno">
+                <i class="bi bi-trash"></i>
+            </button>
+        </td>
+    </tr>
+    </tbody>
+</table>

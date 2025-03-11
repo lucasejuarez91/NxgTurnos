@@ -6,11 +6,10 @@ import com.ar.nxg.nxgappts.domain.Professional;
 import com.ar.nxg.nxgappts.repositories.AvailabilityRepository;
 import com.ar.nxg.nxgappts.repositories.CompanyRepository;
 import com.ar.nxg.nxgappts.repositories.ProfessionalRepository;
-import com.ar.nxg.nxgappts.repositories.SpecialityRepository;
+import com.ar.nxg.nxgappts.repositories.ServiceRepository;
 import com.ar.nxg.nxgappts.service.AvailabilityService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,12 +25,6 @@ import java.util.Map;
 @RequestMapping("/professionals")
 public class ProfessionalController extends GlobalControllerAdvice {
 
-    @Value("${calendar.startTime:07:00}")
-    private String calendarStartTime;
-
-    @Value("${calendar.endTime:21:00}")
-    private String calendarEndTime;
-
     @Autowired
     private ProfessionalRepository professionalRepository;
 
@@ -40,7 +32,7 @@ public class ProfessionalController extends GlobalControllerAdvice {
     private AvailabilityRepository availabilityRepository;
 
     @Autowired
-    private SpecialityRepository specialityRepository;
+    private ServiceRepository serviceRepository;
 
     @Autowired
     private AvailabilityService availabilityService;
@@ -49,22 +41,22 @@ public class ProfessionalController extends GlobalControllerAdvice {
     CompanyRepository companyRepository;
 
     @GetMapping(path = "/list")
-    public String listProfessionals(Model model) {
-        model.addAttribute("professionals", professionalRepository.findAll());
+    public String listProfessionals(Model model, HttpSession httpSession) {
+        model.addAttribute("professionals", professionalRepository.findAllByCompany((Company) model.getAttribute("actualCompany")));
         attributesByMenu(model, 4);
         return "professionals/list";
     }
 
     @GetMapping("/create")
-    public String modalCreate(Model model) {
-        model.addAttribute("specialities", specialityRepository.findAll());
+    public String modalCreate(Model model, HttpSession httpSession) {
+        model.addAttribute("specialities", serviceRepository.findByCompany((Company) model.getAttribute("actualCompany")));
         return "./professionals/modalCreate";
     }
 
     @GetMapping(path = "/edit/{professionalId}")
     public String editProfessionals(Model model, @PathVariable long professionalId) {
         model.addAttribute("professional", professionalRepository.findById(professionalId).orElseThrow());
-        model.addAttribute("specialities", specialityRepository.findAll());
+        model.addAttribute("specialities", serviceRepository.findAll());
         attributesByMenu(model, 4);
         return "professionals/edit";
     }

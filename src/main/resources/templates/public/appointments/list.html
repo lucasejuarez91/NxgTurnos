@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Incluir el header -->
+<th:block th:replace="~{fragments/header :: head}"></th:block>
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script th:src="@{/js/public/appointments/list.js}"></script>
+<body>
+<th:block th:replace="~{fragments/header :: header}"></th:block>
+<div>
+    <th:block th:replace="~{fragments/breadcrumbs :: listbreacrumbs}"></th:block>
+    <div class="page-header" id="banner">
+        <div class="row">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Mis turnos</h5>
+                    <div class="row">
+                        <div class="col-6 mt-3">
+                            <button type="button" class="btn btn-primary btn-sm"
+                                    data-toggle="modal" data-target="#modalCalendar" id="btnModalCalendar">
+                                VER CALENDARIO <i class="bi bi-calendar"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <table class="display table-stripped" style="width:100%" id="tblAppts" th:fragment="tblAppts">
+                        <thead>
+                        <tr>
+                            <th th:if="${isAdmin}" scope="col">Cliente</th>
+                            <th scope="col">Salón</th>
+                            <th>Servicio</th>
+                            <th>Profesional</th>
+                            <th scope="col">Fecha/Hora</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="appt : ${appointments}" th:class="${!appt.status ? 'text-muted' : ''}">
+                            <td th:if="${isAdmin}" th:text="${appt.client.fullname}"></td>
+                            <td th:text="${appt.company.name}"></td>
+                            <td th:text="${appt.service.name}"></td>
+                            <td th:text="${appt.professional.getFullname()}"></td>
+                            <td th:text="${appt.scheduledDateStart + ' - ' + appt.scheduledDateEnd}"></td>
+                            <td>
+                                <span th:if="${appt.apptStatus.getId() == 1}" class="badge bg-info text-white" th:text="${appt.apptStatus.name}"></span>
+                                <span th:if="${appt.apptStatus.getId() == 2}" class="badge bg-danger text-white" th:text="${appt.apptStatus.name}"></span>
+                                <span th:if="${appt.apptStatus.getId() == 3}" class="badge bg-success text-white" th:text="${appt.apptStatus.name}"></span>
+                            </td>
+                            <td>
+                                <button th:if="${appt.apptStatus.getId() == 1}" class="btn btn-sm btn-primary btnQR" th:data-url="'./qr/' + ${appt.id}" th:disabled="${!appt.status}" data-toggle="tooltip" data-placement="top" title="Ver QR">
+                                    <i class="bi bi-qr-code"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <button th:if="${appt.apptStatus.getId() == 1}" class="btn btn-sm btn-warning btnReSchedule" th:data-url="'./reschedule/' + ${appt.id}" th:disabled="${!appt.status}" data-toggle="tooltip" data-placement="top" title="Editar">
+                                    <i class="bi bi-calendar-date"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <button th:if="${appt.apptStatus.getId() == 1}" class="btn btn-sm btn-primary btnEdit" th:data-url="'./edit/' + ${appt.id}" th:disabled="${!appt.status}" data-toggle="tooltip" data-placement="top" title="Editar">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <button th:if="${appt.apptStatus.getId() == 1}" class="btn btn-sm btn-danger btnDelete" th:data-id="${appt.id}" th:disabled="${!appt.status}" data-toggle="tooltip" data-placement="top" title="Cancelar turno">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <th:block th:insert="~{/appointments/modalQR :: modalQR}"></th:block>
+                <th:block th:insert="~{/appointments/modalCalendar :: calendar}"></th:block>
+            </div>
+        </div>
+    </div>
+</div>

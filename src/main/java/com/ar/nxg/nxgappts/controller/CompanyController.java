@@ -1,14 +1,25 @@
 package com.ar.nxg.nxgappts.controller;
 
 import com.ar.nxg.nxgappts.domain.Company;
-import com.ar.nxg.nxgappts.repositories.ClientRepository;
-import com.ar.nxg.nxgappts.repositories.CompanyRepository;
+import com.ar.nxg.nxgappts.domain.Service;
+import com.ar.nxg.nxgappts.dto.BookingDTO;
+import com.ar.nxg.nxgappts.dto.ResponseMessage;
+import com.ar.nxg.nxgappts.repositories.*;
+import com.ar.nxg.nxgappts.service.AvailabilityService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/company")
@@ -17,16 +28,120 @@ public class CompanyController extends GlobalControllerAdvice {
     @Autowired
     private CompanyRepository companyRepository;
 
+    @Autowired
+    private CategoryServiceRepository categoryServiceRepository;
+
+    @Autowired
+    private ServiceRepository serviceRepository;
+
+    @Autowired
+    private FilesRepository filesRepository;
+
+    @Autowired
+    private AvailabilityService availabilityService;
+
     @GetMapping(path = "/edit/{companyId}")
+    @PreAuthorize("isAuthenticated()")
     public String listarClientes(Model model, @PathVariable(value = "companyId") long companyId) {
-        model.addAttribute("company", companyRepository.findById(companyId).orElseThrow());
+        Company company = companyRepository.findById(companyId).orElseThrow();
+        model.addAttribute("company", company);
+        model.addAttribute("professionals", company.getProfessionals());
         attributesByMenu(model, 2);
         return "company/edit";
     }
 
+    @PostMapping("/{companyId}/updateAvatar")
+    public ResponseEntity<ResponseMessage> updateAvatar(@RequestBody Long fileId, @PathVariable(name = "companyId") Long companyId) {
+        ResponseMessage resp = new ResponseMessage();
+
+        try {
+            Company existingCompany = companyRepository.findById(companyId)
+                    .orElseThrow(() -> new RuntimeException("Empresa no encontrado con ID: " + companyId));
+            existingCompany.setLogo(filesRepository.findById(fileId).orElseThrow());
+            companyRepository.save(existingCompany);
+            // Configurar la respuesta de éxito
+            resp.setError(false);
+            resp.setMessage("Actualizado correctamente");
+            return ResponseEntity.ok(resp);
+        } catch (Exception e) {
+            resp.setError(true);
+            resp.setMessage("No se pudo actualizar la entidad");
+            // logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resp);
+        }
+
+    }
+
     @GetMapping("/create")
-    public String modalCreate(Model model) {
+    @PreAuthorize("isAuthenticated()")
+    public String modalCreate() {
         return "./clients/modalCreate";
+    }
+
+    @GetMapping("/changeCompany/{companyId}")
+    @PreAuthorize("isAuthenticated()")
+    public String setActualCompany(@PathVariable long companyId, HttpSession session, HttpServletRequest httpServletRequest) {
+        // Buscar la empresa seleccionada
+        getUserIdLogged().getCompanies()
+                .stream()
+                .filter(company -> company.getId() == companyId)
+                .findFirst().ifPresent(selectedCompany -> session.setAttribute("actualCompany", selectedCompany));
+        String referer = httpServletRequest.getHeader("Referer");
+
+        // Si el referer está presente, redirigir a esa URL; si no, redirigir a la página principal
+        if (referer != null && !referer.isEmpty()) {
+            return "redirect:" + referer;
+        }
+
+        // En caso de no tener un referer, redirigir a la página principal (o la vista que desees)
+        return "redirect:/";
+    }
+
+    /* Public Site*/
+
+    @ModelAttribute("booking")
+    public BookingDTO booking() {
+        return new BookingDTO();
+    }
+    @GetMapping(path = "/public/list")
+    public String listCompanies(Model model) {
+        model.addAttribute("companies", companyRepository.findAll());
+        return "./public/companies/list";
+    }
+
+    @GetMapping("/select-company/{companyId}")
+    public String selectSalon(@PathVariable Long companyId, @ModelAttribute("booking") BookingDTO booking) {
+        booking.setSalonId(companyId);
+        return "redirect:/booking/view";
+    }
+
+    @GetMapping(path = "/public/view/{companyId}")
+    public String listCompanies(Model model, @PathVariable(value = "companyId") long companyId) {
+        Company company = companyRepository.findById(companyId).orElseThrow();
+        model.addAttribute("company", company);
+        model.addAttribute("categoryServices", categoryServiceRepository.findByCompany(company));
+        return "./public/companies/view";
+    }
+
+    @GetMapping(path = "/public/view/{companyId}/{serviceId}")
+    public String listCompanies(Model model, @PathVariable(value = "companyId") long companyId, @PathVariable(value = "serviceId") long serviceId) {
+        Company company = companyRepository.findById(companyId).orElseThrow();
+        model.addAttribute("company", company);
+        Service service = serviceRepository.findById(serviceId).orElseThrow();
+        model.addAttribute("company", company);
+        model.addAttribute("service", service);
+        model.addAttribute("categoryServices", categoryServiceRepository.findByCompany(company));
+        return "./public/companies/view/service/view";
+    }
+
+    @ResponseBody
+    @GetMapping("/availability/slots")
+    public List<Map<String, Object>> getSlots(@RequestParam("start") String startStr,
+                                              @RequestParam("end") String endStr, HttpSession httpSession) {
+        LocalDate startDate = LocalDate.parse(startStr.substring(0, 10));
+        LocalDate endDate = LocalDate.parse(endStr.substring(0, 10));
+
+        return availabilityService.getAllEvents(startDate, endDate, actualCompany(httpSession));
     }
 }
 
