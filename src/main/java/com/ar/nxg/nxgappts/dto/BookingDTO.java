@@ -10,5 +10,6 @@ public class BookingDTO implements Serializable {
     private Long salonId;
     private Long serviceId;
     private Long professionalId;
-    private LocalDateTime dateTime;
+    private LocalDateTime startDateTime;
+    private LocalDateTime endDateTime;
 }

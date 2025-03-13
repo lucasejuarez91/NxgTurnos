@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-    <title>NXG Turnos - Login</title>
+    <title>NXG Turnos - Registro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <!-- Google Fonts -->
     <link th:href="@{https://fonts.gstatic.com}" rel="preconnect">
@@ -38,7 +38,7 @@
                                         <p class="text-center small">Ingrese su usuario y clave</p>
                                     </div>
 
-                                    <form class="row g-3 needs-validation" th:action="@{/login}" method="post" th:fragment="loginForm" id="loginForm">
+                                    <form class="row g-3 needs-validation" th:action="@{/register}" method="post" th:fragment="registerForm" id="registerForm">
                                         <div id="loginError" class="alert alert-danger fade show text-center p-2 mb-0 mt-3 d-none">
                                             <label class="message" style="font-size: 15px"></label>
                                         </div>
@@ -49,6 +49,18 @@
                                                 <div class="invalid-feedback">Por favor, ingrese un nombre de usuario.</div>
                                             </div>
                                         </div>
+                                        <div class="col-6">
+                                            <label for="firstname" class="form-label">Nombre</label>
+                                            <div class="input-group has-validation">
+                                                <input type="text" id="firstname" name="firstname" class="form-control form-control-user" placeholder="" required />
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="lastname" class="form-label">Apellido</label>
+                                            <div class="input-group has-validation">
+                                                <input type="text" id="lastname" name="lastname" class="form-control form-control-user" placeholder="" required />
+                                            </div>
+                                        </div>
 
                                         <div class="col-12">
                                             <label for="password" class="form-label">Contraseña</label>
@@ -57,17 +69,22 @@
                                         </div>
 
                                         <div class="col-12">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
-                                                <label class="form-check-label" for="rememberMe">Recordarme</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <button type="submit" class="btn btn-primary w-100">INICIAR SESIÓN</button>
+                                            <label for="re-password" class="form-label">Confirmar contraseña</label>
+                                            <input type="password" id="re-password" name="re-password" class="form-control form-control-user" autocomplete="off" placeholder="" required />
+                                            <div class="invalid-feedback">Por favor, ingrese una contraseña.</div>
                                         </div>
 
                                         <div class="col-12">
-                                            <div class="small mb-0"> No tienes cuenta? <a href="/register" class="text-primary" id="linkToRegister">Registrarse</a></div>
+                                            <label for="email" class="form-label">Correo electrónico</label>
+                                            <input type="email" id="email" name="email" class="form-control form-control-user" autocomplete="off" placeholder="" required />
+                                        </div>
+
+                                        <div class="col-12">
+                                            <button type="submit" class="btn btn-primary w-100">REGISTRARSE</button>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <div class="small mb-0"> Ya tienes cuenta? <a href="/login" class="text-primary" id="linkToLogin">Iniciar sesión</a></div>
                                         </div>
                                     </form>
                                 </div>

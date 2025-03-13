@@ -38,7 +38,7 @@ public class SecurityConfig {
                 //.addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)  // Añadir el filtro de autenticación JWT
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
+                        .logoutSuccessUrl("/")
                         .invalidateHttpSession(true) // <-- Fuerza invalidación de sesión
                         .deleteCookies("JSESSIONID") // <-- Borra cookies al hacer logout
                         .permitAll()

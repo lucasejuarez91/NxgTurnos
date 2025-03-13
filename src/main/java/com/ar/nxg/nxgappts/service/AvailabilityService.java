@@ -33,21 +33,30 @@ public class AvailabilityService {
 
         List<Map<String, Object>> events = new ArrayList<>();
         LocalDate today = LocalDate.now();
-        // Iterar sobre cada disponibilidad
-        for (Availability availability : availabilities) {
-            LocalDate eventDate = today.with(TemporalAdjusters.nextOrSame(availability.getDayOfWeek()));
-            LocalDateTime startDateTime = LocalDateTime.of(eventDate, availability.getStartTime());
-            LocalDateTime endDateTime = LocalDateTime.of(eventDate, availability.getEndTime());
+        LocalDate limitDate = today.plusDays(30); // Generar hasta 30 días adelante
 
-            Map<String, Object> event = new HashMap<>();
-            event.put("start", startDateTime.toString());  // "2025-03-02T09:00:00"
-            event.put("end", endDateTime.toString());      // "2025-03-02T10:00:00"
-            event.put("title", "Disponible");
+        // Iterar sobre los próximos 30 días
+        for (LocalDate date = today; !date.isAfter(limitDate); date = date.plusDays(1)) {
+            DayOfWeek currentDayOfWeek = date.getDayOfWeek();
 
-            events.add(event);
+            // Revisar si el día actual coincide con algún día de disponibilidad del profesional
+            for (Availability availability : availabilities) {
+                if (availability.getDayOfWeek() == currentDayOfWeek) {
+                    LocalDateTime startDateTime = LocalDateTime.of(date, availability.getStartTime());
+                    LocalDateTime endDateTime = LocalDateTime.of(date, availability.getEndTime());
+
+                    Map<String, Object> event = new HashMap<>();
+                    event.put("start", startDateTime.toString());  // "2025-03-02T09:00:00"
+                    event.put("end", endDateTime.toString());      // "2025-03-02T10:00:00"
+                    event.put("title", "Disponible");
+
+                    events.add(event);
+                }
+            }
         }
         return events;
     }
+
 
     public List<Map<String, Object>> getAllEvents(LocalDate startDate, LocalDate endDate, Company company) {
         List<Professional> professionals = professionalRepository.findAllByCompany(company);

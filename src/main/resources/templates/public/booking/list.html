@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <!-- Incluir el header -->
 <th:block th:replace="~{fragments/header :: head}"></th:block>
 <body>
@@ -11,10 +11,10 @@
                 <div class="card-body">
                     <h5 class="card-title text-center fs-1">Listado de Salones</h5>
                     <div class="row">
-                        <div class="offset-2 col-md-4">
-                            <div class="card mb-3">
+                        <div class="offset-lg-2 col-md-3">
+                            <div class="card mb-3" style="border: 1px solid lightgray;">
                                 <div class="row g-0">
-                                    <div class="col-md-8">
+                                    <div class="col-lg-6 col-sm-12">
                                         <div class="card-body">
                                             <h5 class="card-title">Filtros</h5>
                                         </div>
@@ -22,27 +22,40 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="card mb-3" th:each="comp : ${companies}">
+                        <div class="col-md-5">
+                            <div class="card mb-3" th:each="comp : ${companies}" style="border: 1px solid lightgray;">
                                 <div class="row g-0">
                                     <div class="col-md-4">
-                                        <img th:src="@{/images/{filename}(filename=${comp.logo != null ? comp.logo.getName() : ''})}" class="img-fluid rounded-start" alt="...">
+                                        <img th:src="@{/images/{filename}(filename=${comp.logo != null ? comp.logo.getName() : ''})}" class="rounded mx-auto d-block" style="width: 150px" th:alt="${comp.description}">
                                     </div>
                                     <div class="col-md-8">
-                                        <div class="card-body">
-                                            <a class="card-title" th:text="${comp.name}" th:href="${'/booking/request/select-salon/' + comp.id}"></a>
+                                        <div class="card-body mt-3">
+                                            <a class="card-title" th:text="${comp.name}" th:href="@{'/booking/request/select-salon/' + ${comp.id} }"></a>
                                             <br>
-                                            <span>4,6</span>
-                                            <i class="bi bi-star me-1"></i>
-                                            <i class="bi bi-star me-1"></i>
-                                            <i class="bi bi-star me-1"></i>
-                                            <i class="bi bi-star me-1"></i>
-                                            <i class="bi bi-star me-1"></i>
-                                            <span>(6.345)</span>
-                                            <p class="card-text" th:text="${comp.description}"></p>
-                                            <span th:text="${comp.address}"></span>
-                                            <span th:text="${comp.minStartTime}"></span>
-                                            <span th:text="${comp.maxEndtime}"></span>
+                                            <div class="rating text-muted">
+                                                <span class="score" th:text="${calificacion}">4.6</span>
+                                                <div class="stars">
+                                                    <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                                                        <span th:class="${i <= calificacionInt} ? 'star filled' : (${i == calificacionInt + 1 && calificacion % 1 >= 0.5} ? 'star half-filled' : 'star')">★</span>
+                                                    </th:block>
+                                                </div>
+                                                <span class="total-ratings" th:text="'(' + ${totalRatings} + ')'">(6,345)</span>
+                                            </div>
+                                            <p>
+                                                <figcaption th:if="${comp.description}" class="blockquote-footer" th:text="${comp.description}"></figcaption>
+                                            </p>
+                                            <p>
+                                                <i class="bi bi-pin-map"></i>
+                                                <a th:text="${comp.address}" target="_blank" th:href="${'https://www.google.com/maps/place/' + #strings.listJoin(comp.address.split(' '), '+')}"></a>
+                                            </p>
+                                            <p>
+                                                <i class="bi bi-calendar-week"></i>
+                                                <small>Horarios de Atención: </small>
+                                                <small th:text="${comp.minStartTime}"></small>
+                                                <small> - </small>
+                                                <small th:text="${comp.maxEndtime}"></small>
+                                            </p>
+
                                         </div>
                                     </div>
                                 </div>

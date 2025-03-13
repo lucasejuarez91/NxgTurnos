@@ -14,7 +14,7 @@
                 <div class="card-body">
                     <h5 class="card-title text-center fs-1">Listado de Fechas</h5>
                     <div class="row">
-                        <div class="offset-1 col-2">
+                        <div class="offset-lg-2 col-md-3">
                             <div class="card mb-3">
                                 <div class="row g-0">
                                     <div class="col-md-8">
@@ -46,7 +46,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-6">
                             <div class="card mb-3">
                                 <div class="row g-0">
                                     <div class="col-md-12">
@@ -59,6 +59,38 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="openLoginModal" tabindex="-1" style="display: none;" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Iniciar sesión para reservar</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <th:block th:insert="~{/login :: loginForm}"></th:block>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="openRegisterModal" tabindex="-1" style="display: none;" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Registrarse para reservar</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <th:block th:insert="~{/register :: registerForm}"></th:block>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
                                     </div>
                                 </div>
                             </div>

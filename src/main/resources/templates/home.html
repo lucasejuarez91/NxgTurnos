@@ -19,7 +19,7 @@
                         <h2 class="card-title text-center fs-2">Reserva en los mejores salones de belleza</h2>
                         <form th:action="@{/booking/request/list-company}">
                             <div class="mb-3">
-                                <input type="text" class="form-control" id="searchInput" name="name" placeholder="Buscar por nombre, ciudad o servicio">
+                                <input type="text" class="form-control" id="searchInput" name="name" placeholder="Buscar por nombre, ciudad o servicio" autocomplete="off">
                             </div>
                             <div class="mb-3">
                                 <button type="submit" class="btn btn-primary w-100">Buscar</button>
