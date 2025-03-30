@@ -1,6 +1,7 @@
-var cal;
+var cal;//2
 document.addEventListener("DOMContentLoaded", function() {
-    var dateLimit = new Date();
+    initCalendar(professionalLbl.dataset.professionalid)
+    /*var dateLimit = new Date();
     dateLimit.setDate(dateLimit.getDate() + 30);
     var calendarEl = document.getElementById('calendar');
     cal = new FullCalendar.Calendar(calendarEl, {
@@ -62,7 +63,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ start: fechaInicio, end: fechaFin })
+                body: JSON.stringify({ start: fechaInicio, end: fechaFin})
             })
                 .then(response => response.json())  // Convertir la respuesta a JSON
                 .then(async data => {
@@ -83,45 +84,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
         }
     });
-    cal.render();
+    cal.render();*/
 
-    document.getElementById("loginForm").addEventListener("submit", function (event) {
-        event.preventDefault(); // Evita que el formulario se envíe normalmente
-
-        let formData = new FormData(this);
-
-        fetch(this.action, {
-            method: "POST",
-            body: formData
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Usuario o clave incorrectos");
-                }
-                return response.text();
-            })
-            .then(data => {
-                // Si el login es exitoso, cerrar el modal y recargar eventos
-                $('#openLoginModal').modal('hide');
-                location.reload(); // Recargar la página para reflejar el estado de autenticación
-            })
-            .catch(error => {
-                // Mostrar mensaje de error sin recargar la página
-                let errorBox = document.getElementById("loginError");
-                errorBox.classList.remove("d-none");
-                errorBox.querySelector(".message").innerText = error.message;
-            });
-    });
-    $('#openLoginModal #linkToRegister').on('click', function(event){
-        event.preventDefault();
-        $('#openLoginModal').modal('hide');
-        $('#openRegisterModal').modal('show');
-    });
-    $('#openRegisterModal #linkToLogin').on('click', function(event){
-        event.preventDefault();
-        $('#openRegisterModal').modal('hide');
-        $('#openLoginModal').modal('show');
-    });
+    initLoginModal();
 
 });
 

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Incluir el header -->
+<th:block th:replace="~{fragments/header :: head}"></th:block>
+<body>
+<th:block th:replace="~{fragments/header :: header}"></th:block>
+<script th:src="@{/js/booking/confirmation.js}"></script>
+<div>
+    <div class="page-header" id="banner">
+        <div class="row">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title text-center fs-1" th:text="#{title.init.booking}"></h4>
+                    <div class="row">
+
+                    </div>
+                    <div class="row">
+                        <span th:if="${appt != null && initializated == true}">Turno iniciado</span>
+                    </div>
+                    <form class="row" method="POST" th:action="@{'/booking/initBooking?appointmentCode='+${appt.getCode()}+'&confirm=true'}" th:if="${appt != null}">
+                        <div class="offset-md-5 col-12 col-md-2">
+                            <button type="submit" class="btn btn-primary w-100" th:text="#{button.init.booking}">INICIAR TURNO</button>
+                        </div>
+                    </form>
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

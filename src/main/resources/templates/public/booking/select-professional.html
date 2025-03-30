@@ -3,39 +3,15 @@
 <!-- Incluir el header -->
 <th:block th:replace="~{fragments/header :: head}"></th:block>
 <body>
-<th:block th:replace="~{fragments/public/header :: header}"></th:block>
+<th:block th:replace="~{fragments/header :: header}"></th:block>
 <div>
     <div class="page-header" id="banner">
         <div class="row">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title text-center fs-1">Listado de Profesionales</h5>
+                    <h5 class="card-title text-center fs-1" th:text="#{title.professionals.list}">Listado de Profesionales</h5>
                     <div class="row">
-                        <div class="offset-lg-2 col-md-3">
-                            <div class="card mb-3">
-                                <div class="row g-0">
-                                    <div class="col-md-8">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Resumen</h5>
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <label class="text-muted">Salón</label>
-                                                    <br>
-                                                    <span th:text="${company.name}"></span>
-                                                </div>
-                                            </div>
-                                            <div class="row" th:if="${service != null}">
-                                                <div class="col-12">
-                                                    <label class="text-muted">Servicios</label>
-                                                    <br>
-                                                    <span th:text="${service != null ? service.name : '' }"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <th:block th:insert="~{/public/booking/summary :: summaryDiv}"></th:block>
                         <div class="col-md-6">
                             <div class="card mb-3">
                                 <div class="row g-0">
@@ -43,7 +19,7 @@
                                         <div class="container">
                                             <div class="row">
                                                 <div class="col-12">
-                                                    <h5 class="card-title">Profesionales disponibles</h5>
+                                                    <h5 class="card-title" th:text="#{title.available.professionals}">Profesionales disponibles</h5>
                                                     <div class="row align-items-center m-2" style="justify-content: space-between;" th:each="prof : ${professionals}">
                                                         <div class="alert alert-light alert-dismissible fade show" role="alert">
                                                             <a class="fw-bold" th:text="${prof.fullname}" th:href="@{'/booking/request/select-date/' + ${prof.id} }"></a>

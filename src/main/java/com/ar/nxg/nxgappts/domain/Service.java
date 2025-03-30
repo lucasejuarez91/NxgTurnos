@@ -7,6 +7,7 @@ import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,9 +16,10 @@ import java.util.List;
 @Setter
 public class Service extends BaseEntity {
 
+    private String code;
     private String name;
     private String description;
-    private Double price;
+    private BigDecimal price;
     private Integer duration; // En minutos
     @ManyToOne
     @JoinColumn(name = "category_service_id")

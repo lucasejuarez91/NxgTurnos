@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Incluir el header -->
+<th:block th:replace="~{fragments/header :: head}"></th:block>
+<script th:src="@{/js/user/profile.js}"></script>
+<body>
+<th:block th:replace="~{fragments/header :: header}"></th:block>
+<div>
+    <th:block th:replace="~{fragments/breadcrumbs :: listbreacrumbs}"></th:block>
+    <div class="page-header" id="banner">
+        <section class="section profile">
+            <div class="row">
+                <div class="col-xl-4">
+
+                    <div class="card">
+                        <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+
+                            <img th:src="@{/images/{filename}(filename=${user.avatar != null ? user.avatar.getName() : ''})}" alt="Profile" class="rounded-circle">
+                            <h2 th:text="${user.fullname}"></h2>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-xl-8">
+
+                    <div class="card">
+                        <div class="card-body pt-3">
+                            <!-- Bordered Tabs -->
+                            <ul class="nav nav-tabs nav-tabs-bordered">
+
+                                <li class="nav-item">
+                                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview" th:text="#{titile.overview}">Overview</button>
+                                </li>
+
+                                <li class="nav-item">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit" th:text="#{title.edit.profile}">Edit Profile</button>
+                                </li>
+
+                                <li class="nav-item">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-settings" th:text="#{title.settings}">Settings</button>
+                                </li>
+
+                                <li class="nav-item">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password" th:text="#{title.change.password}">Change Password</button>
+                                </li>
+
+                            </ul>
+                            <div class="tab-content pt-2">
+
+                                <th:block th:replace="~{user/profile/overview :: overwiew}"></th:block>
+                                <th:block th:replace="~{user/profile/edit :: edit}"></th:block>
+                                <th:block th:replace="~{user/profile/settings :: settings}"></th:block>
+                                <th:block th:replace="~{user/profile/changePassword :: change_password}"></th:block>
+
+                            </div><!-- End Bordered Tabs -->
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

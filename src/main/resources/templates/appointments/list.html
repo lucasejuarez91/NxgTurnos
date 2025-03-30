@@ -3,7 +3,7 @@
 <!-- Incluir el header -->
 <th:block th:replace="~{fragments/header :: head}"></th:block>
 <script th:src="@{/js/appointments/list.js}"></script>
-<style src="https://cdn.datatables.net/rowgroup/1.5.1/css/rowGroup.dataTables.css"></style>
+<link rel="stylesheet" href="https://cdn.datatables.net/rowgroup/1.5.1/css/rowGroup.dataTables.css"></link>
 <body>
 <th:block th:replace="~{fragments/header :: header}"></th:block>
 <div>
@@ -12,9 +12,13 @@
         <div class="row">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Listado de Turnos</h5>
-                    <div class="row">
+                    <div class="row justify-content-between" th:if="${loggedUser != null && actualCompany != null}">
                         <div class="col-6 mt-3">
+                            <button type="button" class="btn btn-primary btn-sm"
+                                    data-bs-toggle="modal" data-bs-target="#modalCalendar" id="btnModalCalendar">
+                                [[${#messages.msg('button.show.calendar')}]] <i class="bi bi-calendar"></i>
+                            </button>
+                            <span type="hidden" id="companyLbl" th:data-maxEndTime="${endTime}" th:data-minStartTime="${startTime}"></span>
                         </div>
                     </div>
                     <th:block th:insert="~{/appointments/tableAppts :: tblAppts}"></th:block>
@@ -23,4 +27,5 @@
         </div>
     </div>
 </div>
-<th:block th:insert="~{modal :: simpleModal('Alta de Turno')}"></th:block>
+<th:block th:insert="~{appointments/modalCalendar :: calendar}"></th:block>
+<script th:src="@{/js/appointments/calendarOnModal.js}"></script>

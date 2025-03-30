@@ -19,10 +19,10 @@
                     <table class="display table-stripped" style="width:100%" id="tblProfessionals">
                         <thead>
                         <tr>
-                            <th scope="col">Nombre</th>
-                            <th>Especialidad</th>
-                            <th>Teléfono</th>
-                            <th scope="col">Estado</th>
+                            <th scope="col" th:text="${#messages.msg('table.name')}"></th>
+                            <th th:text="${#messages.msg('table.speciality')}">Especialidad</th>
+                            <th th:text="${#messages.msg('table.phone')}">Teléfono</th>
+                            <th scope="col" th:text="${#messages.msg('table.status')}">Estado</th>
                             <th scope="col"></th>
                             <th scope="col"></th>
                             <th scope="col"></th>
@@ -38,26 +38,18 @@
                                 </a>
                             </td>
                             <td th:text="${professional.telephone}"></td>
-                            <td th:text="${professional.status ? 'ACTIVO' : 'INACTIVO'}"></td>
+                            <td th:text="${professional.status ? #messages.msg('entity.status.active') : #messages.msg('entity.status.inactive')}"></td>
                             <td>
-                                <button class="btn btn-sm btn-primary btnEdit" th:data-url="'./edit/' + ${professional.id}" th:disabled="${!professional.status}" data-toggle="tooltip" data-placement="top" title="Editar">
-                                    <i class="bi bi-pencil-square"></i>
-                                </button>
+                                <th:block th:insert="~{/components/buttons/table :: buttonManagerByUrl('title.edit', 'btn-primary btnEdit', 'bi-pencil-square', './edit/' + ${professional.id}, ${!professional.status})}"></th:block>
                             </td>
                             <td>
-                                <button class="btn btn-sm btn-info btnAvailability" th:data-url="'./availability/' + ${professional.id}" th:disabled="${!professional.status}" data-toggle="tooltip" data-placement="top" title="Disponibilidad">
-                                    <i class="bi bi-calendar"></i>
-                                </button>
+                                <th:block th:insert="~{/components/buttons/table :: buttonManagerByUrl('title.availability', 'btn-info btnAvailability', 'bi bi-calendar', './availability/' + ${professional.id}, ${!professional.status})}"></th:block>
                             </td>
                             <td>
-                                <button class="btn btn-sm btn-warning btnChangeStatus" th:data-id="${professional.id}" th:disabled="${professional.status}" data-toggle="tooltip" data-placement="top" title="Recuperar">
-                                    <i class="bi bi-arrow-counterclockwise"></i>
-                                </button>
+                                <th:block th:insert="~{/components/buttons/table :: buttonManagerById('title.recover', 'btn-warning btnChangeStatus', 'bi bi-arrow-counterclockwise', ${professional.id}, ${professional.status})}"></th:block>
                             </td>
                             <td>
-                                <button class="btn btn-sm btn-danger btnDelete" th:data-id="${professional.id}" th:disabled="${!professional.status}" data-toggle="tooltip" data-placement="top" title="Eliminar">
-                                    <i class="bi bi-trash"></i>
-                                </button>
+                                <th:block th:insert="~{/components/buttons/table :: buttonManagerById('title.delete', 'btn-danger btnDelete', 'bi bi-trash', ${professional.id}, ${!professional.status})}"></th:block>
                             </td>
                         </span>
                         </tbody>
@@ -67,4 +59,4 @@
         </div>
     </div>
 </div>
-<th:block th:insert="~{modal :: simpleModal('Alta de Profesional')}"></th:block>
+<th:block th:insert="~{modal :: simpleModal(${#messages.msg('title.new.professional')})}"></th:block>

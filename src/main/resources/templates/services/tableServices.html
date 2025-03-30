@@ -16,7 +16,7 @@
     <tr th:each="service : ${services}" th:class="${!service.status ? 'text-muted' : ''}">
         <td>
             <span class="badge bg-secondary">
-                <a th:href="${ service.status ? '/services/edit/'+ service.id : '#'}" th:text="${service.name}" class="text-white"></a>
+                <a th:href="@{ ${service.status} ? '/services/edit/'+ ${service.id} : '#'}" th:text="${service.name}" class="text-white"></a>
             </span>
         </td>
         <td th:text="${service.description}"></td>
@@ -24,7 +24,7 @@
         <td th:text="${service.duration}"></td>
         <td>
             <span class="badge bg-secondary">
-                <a th:href="${ service.categoryService.status && service.status ? '/categoryService/edit/'+ service.categoryService.id : '#'}" th:text="${service.categoryService.name}" class="text-white"></a>
+                <a th:href="@{ ${service.categoryService.status && service.status} ? '/categoryService/edit/'+ ${service.categoryService.id} : '#'}" th:text="${service.categoryService.name}" class="text-white"></a>
             </span>
         </td>
         <td th:if="${!service.status}">
@@ -34,19 +34,13 @@
             <span class="badge bg-success" th:text="${'ACTIVO'}"></span>
         </td>
         <td>
-            <button class="btn btn-sm btn-primary btnEdit" th:data-url="'./edit/' + ${service.id}" th:disabled="${!service.status}" data-toggle="tooltip" data-placement="top" title="Editar">
-                <i class="bi bi-pencil-square"></i>
-            </button>
+            <th:block th:insert="~{/components/buttons/table :: buttonManagerByUrl('title.edit', 'btn-primary btnEdit', 'bi-pencil-square', './edit/' + ${service.id}, ${!service.status})}"></th:block>
         </td>
         <td>
-            <button class="btn btn-sm btn-warning btnChangeStatus" th:data-id="${service.id}" th:disabled="${service.status}" data-toggle="tooltip" data-placement="top" title="Recuperar">
-                <i class="bi bi-arrow-counterclockwise"></i>
-            </button>
+            <th:block th:insert="~{/components/buttons/table :: buttonManagerById('title.recover', 'btn-warning btnChangeStatus', 'bi bi-arrow-counterclockwise', ${service.id}, ${service.status})}"></th:block>
         </td>
         <td>
-            <button class="btn btn-sm btn-danger btnDelete" th:data-id="${service.id}" th:disabled="${!service.status}" data-toggle="tooltip" data-placement="top" title="Eliminar">
-                <i class="bi bi-trash"></i>
-            </button>
+            <th:block th:insert="~{/components/buttons/table :: buttonManagerById('title.delete', 'btn-danger btnDelete', 'bi bi-trash', ${service.id}, ${!service.status})}"></th:block>
         </td>
     </tr>
     </tbody>

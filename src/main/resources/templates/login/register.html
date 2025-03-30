@@ -1,0 +1,16 @@
+<div class="modal fade" id="openRegisterModal" tabindex="-1" style="display: none;" aria-hidden="true" th:fragment="registerModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" th:text="#{title.need.register}">Registrarse para reservar</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <th:block th:insert="~{/register :: registerForm}"></th:block>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" th:text="#{title.close}">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>

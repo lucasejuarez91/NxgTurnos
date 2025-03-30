@@ -1,0 +1,8 @@
+{
+  "modal.confirmation.title": "Confirmación",
+  "modal.confirmation.text": "¿Está seguro de solicitar turno para el <strong>{{date}}</strong> en <strong>{{company}}</strong> con <strong>{{professional}}</strong>?",
+  "modal.confirmation.yes": "Sí, estoy seguro",
+  "modal.confirmation.cancel": "Cancelar",
+  "title.modal.request.book": "¿Está seguro de solicitar turno para el <strong>{{fechaInicioLbl}}</strong> en <strong>{{loungeName}}</strong> con <strong>{{professionalName}}</strong>?",
+  "nothing.to.do": "Nada para actualizar"
+}

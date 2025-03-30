@@ -3,6 +3,7 @@
 <!-- Incluir el header -->
 <th:block th:replace="~{fragments/header :: head}"></th:block>
 <script th:src="@{/js/categoryServices/edit.js}"></script>
+<script th:src="@{/js/services/list.js}"></script>
 <body>
 <th:block th:replace="~{fragments/header :: header}"></th:block>
 <div>
@@ -11,20 +12,24 @@
         <div class="row">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Editar Categoría de Servicios</h5>
+                    <th:block th:insert="~{/components/buttons/others :: buttonBack}"></th:block>
                     <div class="row">
                         <div class="col-12 col-lg-6">
                             <label for="name" class="form-label mt-4">Nombre</label>
                             <input type="text" class="form-control" id="name" th:value="${categoryService.name}">
                         </div>
                     </div>
-                    <th:block th:insert="~{/components/buttons/update :: buttonUpdate(${categoryService.id})}"></th:block>
+                    <div class="row">
+                        <div class="col-lg-12 col-12 ms-auto d-flex justify-content-end">
+                            <th:block th:insert="~{/components/buttons/update :: buttonUpdate('button.update',${categoryService.id})}"></th:block>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <h5 class="card-title">Servicios asociados</h5>
+                        <h5 class="card-title" th:text="#{title.services.assigned}">Servicios asociados</h5>
                         <th:block th:insert="~{services/tableServices :: tblServices}"></th:block>
                     </div>
                 </div>

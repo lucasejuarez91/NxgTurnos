@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 @Controller
@@ -43,8 +44,9 @@ public class ProfessionalController extends GlobalControllerAdvice {
     @GetMapping(path = "/list")
     public String listProfessionals(Model model, HttpSession httpSession) {
         model.addAttribute("professionals", professionalRepository.findAllByCompany((Company) model.getAttribute("actualCompany")));
-        attributesByMenu(model, 4);
-        return "professionals/list";
+        String view = "professionals/list";
+        attributesByMenu(model, view);
+        return view;
     }
 
     @GetMapping("/create")
@@ -55,10 +57,12 @@ public class ProfessionalController extends GlobalControllerAdvice {
 
     @GetMapping(path = "/edit/{professionalId}")
     public String editProfessionals(Model model, @PathVariable long professionalId) {
-        model.addAttribute("professional", professionalRepository.findById(professionalId).orElseThrow());
+        Professional prof = professionalRepository.findById(professionalId).orElseThrow();
+        model.addAttribute("professional", prof);
         model.addAttribute("specialities", serviceRepository.findAll());
-        attributesByMenu(model, 4);
-        return "professionals/edit";
+        String view = "professionals/edit";
+        attributesByMenu(model, view, joinManualBreadCrumbs(new String[]{"@"+prof.getFullname()}));
+        return view;
     }
 
     @GetMapping(path = "/availability/{professionalId}")
@@ -66,8 +70,9 @@ public class ProfessionalController extends GlobalControllerAdvice {
         Professional prof = professionalRepository.findById(professionalId).orElseThrow();
         model.addAttribute("professional", prof);
         model.addAttribute("availabilities", availabilityRepository.findByProfessional(prof));
-        attributesByMenu(model, 4);
-        return "professionals/availability";
+        String view = "professionals/availability";
+        attributesByMenu(model, view, joinManualBreadCrumbs(new String[]{"@"+prof.getFullname()}));
+        return view;
     }
 
     @PostMapping("/availability/save")
@@ -93,17 +98,17 @@ public class ProfessionalController extends GlobalControllerAdvice {
     @GetMapping("/availability/appts")
     public List<Map<String, Object>> getAppts(@RequestParam("start") String startStr,
                                               @RequestParam("end") String endStr,
-                                              @RequestParam("professionalId") Long professionalId) {
+                                              @RequestParam("professionalId") Long professionalId, Locale locale) {
         LocalDate startDate = LocalDate.parse(startStr.substring(0, 10));
         LocalDate endDate = LocalDate.parse(endStr.substring(0, 10));
 
-        return availabilityService.getAvailabilityEvents(professionalId, startDate, endDate);
+        return availabilityService.getAvailabilityEvents(professionalId, startDate, endDate, locale);
     }
 
     @ResponseBody
     @GetMapping("/configCalendar")
-    public Map<String, String> getConfig(@RequestParam Long companyId) {
-        Company company = companyRepository.findById(companyId).orElseThrow();
+    public Map<String, String> getConfig(HttpSession httpSession) {
+        Company company = actualCompany(httpSession);
         Map<String, String> config = new HashMap<>();
         config.put("startTime", String.valueOf(company.getMinStartTime().plusHours(-1)));
         config.put("endTime", String.valueOf(company.getMaxEndtime().plusHours(1)));

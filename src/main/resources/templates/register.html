@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-    <title>NXG Turnos - Registro</title>
+    <title>NXGBooking - Registro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <!-- Google Fonts -->
     <link th:href="@{https://fonts.gstatic.com}" rel="preconnect">
@@ -34,8 +34,8 @@
                                         <img th:src="@{/image/logo.png}" class="img-fluid" alt="Logo" style="max-width: 40%; max-height: 40%; border-radius: 30%;">
                                     </div>
                                     <div class="pb-2">
-                                        <h5 class="card-title text-center pb-0 fs-4 p-0">NXG Turnos</h5>
-                                        <p class="text-center small">Ingrese su usuario y clave</p>
+                                        <h5 class="card-title text-center pb-0 fs-4 p-0">NXGBooking</h5>
+                                        <p class="text-center small" th:text="#{title.insert.account}">Ingrese su usuario y clave</p>
                                     </div>
 
                                     <form class="row g-3 needs-validation" th:action="@{/register}" method="post" th:fragment="registerForm" id="registerForm">
@@ -43,48 +43,48 @@
                                             <label class="message" style="font-size: 15px"></label>
                                         </div>
                                         <div class="col-12">
-                                            <label for="username" class="form-label">Usuario</label>
+                                            <label for="username" class="form-label" th:text="#{title.username}">Usuario</label>
                                             <div class="input-group has-validation">
                                                 <input type="text" id="username" name="username" class="form-control form-control-user" placeholder="" required />
-                                                <div class="invalid-feedback">Por favor, ingrese un nombre de usuario.</div>
+                                                <div class="invalid-feedback" th:text="#{title.error.insert.username}">Por favor, ingrese un nombre de usuario.</div>
                                             </div>
                                         </div>
                                         <div class="col-6">
-                                            <label for="firstname" class="form-label">Nombre</label>
+                                            <label for="firstname" class="form-label" th:text="#{title.firstname}">Nombre</label>
                                             <div class="input-group has-validation">
                                                 <input type="text" id="firstname" name="firstname" class="form-control form-control-user" placeholder="" required />
                                             </div>
                                         </div>
                                         <div class="col-6">
-                                            <label for="lastname" class="form-label">Apellido</label>
+                                            <label for="lastname" class="form-label" th:text="#{title.lastname}">Apellido</label>
                                             <div class="input-group has-validation">
                                                 <input type="text" id="lastname" name="lastname" class="form-control form-control-user" placeholder="" required />
                                             </div>
                                         </div>
 
                                         <div class="col-12">
-                                            <label for="password" class="form-label">Contraseña</label>
+                                            <label for="password" class="form-label" th:text="#{title.password}">Contraseña</label>
                                             <input type="password" id="password" name="password" class="form-control form-control-user" autocomplete="off" placeholder="" required />
                                             <div class="invalid-feedback">Por favor, ingrese una contraseña.</div>
                                         </div>
 
                                         <div class="col-12">
-                                            <label for="re-password" class="form-label">Confirmar contraseña</label>
+                                            <label for="re-password" class="form-label" th:text="#{title.renew.password}">Confirmar contraseña</label>
                                             <input type="password" id="re-password" name="re-password" class="form-control form-control-user" autocomplete="off" placeholder="" required />
                                             <div class="invalid-feedback">Por favor, ingrese una contraseña.</div>
                                         </div>
 
                                         <div class="col-12">
-                                            <label for="email" class="form-label">Correo electrónico</label>
+                                            <label for="email" class="form-label" th:text="#{title.email}">Correo electrónico</label>
                                             <input type="email" id="email" name="email" class="form-control form-control-user" autocomplete="off" placeholder="" required />
                                         </div>
 
                                         <div class="col-12">
-                                            <button type="submit" class="btn btn-primary w-100">REGISTRARSE</button>
+                                            <button type="submit" class="btn btn-primary w-100" th:text="#{button.register}">REGISTRARSE</button>
                                         </div>
 
                                         <div class="col-12">
-                                            <div class="small mb-0"> Ya tienes cuenta? <a href="/login" class="text-primary" id="linkToLogin">Iniciar sesión</a></div>
+                                            <div class="small mb-0"> [[#{title.have.account}]] <a th:href="@{/login}" class="text-primary" id="linkToLogin" th:text="#{button.log.in}">Iniciar sesión</a></div>
                                         </div>
                                     </form>
                                 </div>

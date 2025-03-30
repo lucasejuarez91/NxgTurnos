@@ -1,0 +1,41 @@
+<div class="tab-pane fade pt-3" id="profile-settings" th:fragment="settings">
+
+    <!-- Settings Form -->
+    <form>
+
+        <div class="row mb-3">
+            <label for="fullName" class="col-md-4 col-lg-3 col-form-label" th:text="#{title.email.notifications}">Email Notifications</label>
+            <div class="col-md-8 col-lg-9">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="changesMade" checked>
+                    <label class="form-check-label" for="changesMade" th:text="#{title.email.allow.changes.account}">
+                        Changes made to your account
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="newProducts" checked>
+                    <label class="form-check-label" for="newProducts" th:text="#{title.email.allow.new.products}">
+                        Information on new products and services
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="proOffers">
+                    <label class="form-check-label" for="proOffers" th:text="#{title.email.allow.promos}">
+                        Marketing and promo offers
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="securityNotify" checked disabled>
+                    <label class="form-check-label" for="securityNotify" th:text="#{title.email.security.alerts}">
+                        Security alerts
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary" th:text="#{title.save}">Save Changes</button>
+        </div>
+    </form><!-- End settings Form -->
+
+</div>

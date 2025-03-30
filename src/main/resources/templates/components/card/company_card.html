@@ -1,0 +1,36 @@
+<div class="row g-0" th:fragment="companyCard">
+    <div class="col-md-3">
+        <img th:src="@{/images/{filename}(filename=${comp.logo != null ? comp.logo.getName() : ''})}" class="rounded mx-auto d-block" style="width: 150px" th:alt="${comp.description}">
+    </div>
+    <div class="col-md-9">
+        <div class="card-body mt-1 p-1" >
+            <a class="card-title" th:text="${comp.name}" th:href="@{'/booking/request/select-salon/' + ${comp.id} }"></a>
+            <br>
+            <div class="rating text-muted">
+                <span class="score" th:text="${calificacion}">4.6</span>
+                <div class="stars">
+                    <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                        <span th:class="${i <= calificacionInt} ? 'star filled' : (${i == calificacionInt + 1 && calificacion % 1 >= 0.5} ? 'star half-filled' : 'star')">★</span>
+                    </th:block>
+                </div>
+                <span class="total-ratings" th:text="'(' + ${totalRatings} + ')'">(6,345)</span>
+            </div>
+            <p>
+            <figcaption th:if="${comp.description}" class="blockquote-footer" th:text="${comp.description}"></figcaption>
+            <p class="m-0">
+                <i class="bi bi-pin-map"></i>
+                <a th:text="${comp.address}" target="_blank" th:href="${'https://www.google.com/maps/place/' + #strings.listJoin(comp.address.split(' '), '+')}"></a>
+            </p>
+            <span>
+        <i class="bi bi-calendar-week"></i>
+        <small th:text="#{attention.datetime}">Horarios de Atención: </small>
+        <small th:text="${#messages.msg(comp.minDay)}"></small>
+        <small> a </small>
+        <small th:text="${#messages.msg(comp.maxDay)}"></small>
+        <small> - </small>
+        <small th:text="${comp.minStartTime}"></small>
+        <small th:text="${comp.maxEndtime}"></small>
+    </span>
+        </div>
+    </div>
+</div>

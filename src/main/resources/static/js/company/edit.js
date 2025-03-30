@@ -50,7 +50,7 @@ $(document).ready(function(){
             let resp = await uploadImage(file);
             if(!resp.error){
 
-                const response = await fetch(`/company/${companyId}/updateAvatar`, {
+                const response = await fetch(e.currentTarget.dataset.url, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

@@ -68,6 +68,27 @@
           </a>
         </li><!-- End Search Icon-->
 
+        <li>
+          <a class="nav-link nav-icon" href="#" th:if="${loggedUser != null && actualCompany == null}">
+            <th:block th:insert="~{/components/buttons/new :: buttonNewLink('/appointments/my-appointments', 'MIS TURNOS', true)}"></th:block>
+          </a>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link nav-icon" href="#" th:if="${loggedUser != null && actualCompany != null}">
+            <th:block th:insert="~{/components/buttons/new :: buttonNew('/appointments/create', 'RESERVAR TURNO PUBLIC', true)}"></th:block>
+          </a>
+          <!-- End Notification Icon -->
+        </li>
+        <li class="nav-item dropdown">
+
+          <a class="nav-link nav-icon" href="#" th:if="${loggedUser != null && actualCompany != null}">
+            <th:block th:insert="~{/components/buttons/new :: buttonNewLink('/appointments/list', 'TURNOS', true)}"></th:block>
+          </a>
+          <!-- End Notification Icon -->
+        </li>
+        <th:block th:insert="~{headerModal :: simpleModal('Alta de Turno')}"></th:block>
+
         <li class="nav-item dropdown">
 
           <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown" th:if="${loggedUser != null}">

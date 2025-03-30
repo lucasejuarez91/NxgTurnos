@@ -5,6 +5,7 @@ import com.ar.nxg.nxgappts.domain.User;
 import com.ar.nxg.nxgappts.repositories.UserRepository;
 import com.ar.nxg.nxgappts.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,9 +13,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Locale;
 
 @Controller
 public class LoginController extends GlobalControllerAdvice {
@@ -64,23 +67,5 @@ public class LoginController extends GlobalControllerAdvice {
             }
             model.addAttribute("isAdmin", isAdmin);
         }
-    }
-
-    @ModelAttribute
-    public void addMenus(Model model) {
-        // Obtener el usuario autenticado del contexto de seguridad
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String menuItems = "";
-        if (authentication != null && authentication.isAuthenticated()) {
-            String username = authentication.getName();
-            User user = userRepository.findByUsername(username);
-            if (user != null) {
-                // Obtener los roles del usuario (esto depende de tu implementación de autenticación)
-                List<Role> roles = user.getRoles();
-                // Obtener el menú basado en los roles del usuario
-                menuItems = menuService.getMenuForUser(roles);
-            }
-        }
-        model.addAttribute("menuItems", menuItems);
     }
 }

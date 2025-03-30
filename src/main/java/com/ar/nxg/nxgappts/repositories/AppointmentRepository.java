@@ -10,10 +10,12 @@ import java.util.List;
 @RepositoryRestResource(path = "appointments", collectionResourceRel = "appointments")
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
 
-    List<Appointment> findByCompany(Company company);
+    List<Appointment> findByCompanyOrderByApptStatusDesc(Company company);
 
     List<Appointment> findByClient(User userIdLogged);
 
     List<Appointment> findByProfessional(Professional professional);
+
+    Appointment getAppointmentByCode(String code);
 }
 

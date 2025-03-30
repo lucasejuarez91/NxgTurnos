@@ -4,10 +4,12 @@ import com.ar.nxg.nxgappts.domain.Appointment;
 import com.ar.nxg.nxgappts.domain.Availability;
 import com.ar.nxg.nxgappts.domain.Company;
 import com.ar.nxg.nxgappts.domain.Professional;
+import com.ar.nxg.nxgappts.enums.AppointmentStatusEnum;
 import com.ar.nxg.nxgappts.repositories.AppointmentRepository;
 import com.ar.nxg.nxgappts.repositories.AvailabilityRepository;
 import com.ar.nxg.nxgappts.repositories.ProfessionalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -28,7 +30,10 @@ public class AvailabilityService {
     @Autowired
     private AppointmentRepository appointmentRepository;
 
-    public List<Map<String, Object>> getAvailabilityEvents(Long professionalId, LocalDate start, LocalDate end) {
+    @Autowired
+    private MessageSource messageSource;
+
+    public List<Map<String, Object>> getAvailabilityEvents(Long professionalId, LocalDate start, LocalDate end, Locale locale) {
         List<Availability> availabilities = availabilityRepository.findByProfessionalId(professionalId);
 
         List<Map<String, Object>> events = new ArrayList<>();
@@ -46,9 +51,19 @@ public class AvailabilityService {
                     LocalDateTime endDateTime = LocalDateTime.of(date, availability.getEndTime());
 
                     Map<String, Object> event = new HashMap<>();
+                    List<Appointment> appointments = appointmentRepository.findByProfessional(availabilities.get(0).getProfessional());
+                    // Buscar si hay un turno en este horario
+                    Optional<Appointment> optionalAppt = appointments.stream()
+                            .filter(appt -> appt.getScheduledDateStart().equals(startDateTime) &&
+                                    appt.getScheduledDateEnd().equals(endDateTime) && !(appt.getApptStatus() == AppointmentStatusEnum.CANCELLED))
+                            .findFirst();
+                    if(optionalAppt.isPresent()){
+                        continue;
+                    }
                     event.put("start", startDateTime.toString());  // "2025-03-02T09:00:00"
                     event.put("end", endDateTime.toString());      // "2025-03-02T10:00:00"
-                    event.put("title", "Disponible");
+                    String localizedTitle = messageSource.getMessage("available", null, locale);
+                    event.put("title", localizedTitle);
 
                     events.add(event);
                 }
@@ -57,8 +72,7 @@ public class AvailabilityService {
         return events;
     }
 
-
-    public List<Map<String, Object>> getAllEvents(LocalDate startDate, LocalDate endDate, Company company) {
+    public List<Map<String, Object>> getAllEvents(LocalDate startDate, LocalDate endDate, Company company, Locale locale) {
         List<Professional> professionals = professionalRepository.findAllByCompany(company);
         List<Map<String, Object>> events = new ArrayList<>();
 
@@ -79,21 +93,30 @@ public class AvailabilityService {
                         // Buscar si hay un turno en este horario
                         Optional<Appointment> optionalAppt = appointments.stream()
                                 .filter(appt -> appt.getScheduledDateStart().equals(startDateTime) &&
-                                        appt.getScheduledDateEnd().equals(endDateTime))
+                                        appt.getScheduledDateEnd().equals(endDateTime) && !(appt.getApptStatus() == AppointmentStatusEnum.CANCELLED))
                                 .findFirst();
 
                         Map<String, Object> event = new HashMap<>();
                         event.put("start", startDateTime.toString());
                         event.put("end", endDateTime.toString());
-
+                        event.put("prof", availability.getProfessional().getFullname());
+                        event.put("swalTemplate","#viewEvent");
+                        boolean available = true;
                         if (optionalAppt.isPresent()) {
-                            event.put("title", "Turno [" + optionalAppt.get().getClient().getFullname() + "]");
+                            event.put("title", optionalAppt.get().getClient().getFullname());
+                            event.put("service", optionalAppt.get().getService().getName());
                             event.put("isBusy", true);
+                            available = false;
+                            event.put("color", "red");
                         } else {
-                            event.put("title", "Disponible");
+                            //event.put("title", String.format("[%s - %s] Disponible", availability.getStartTime(),availability.getEndTime()));
                             event.put("isBusy", false);
+                            event.put("color", "green");
                         }
-
+                        String localizedTitle = messageSource.getMessage(available ? "available" : "not.available", null, locale);
+                        if(optionalAppt.isEmpty()){
+                            event.put("title", String.format("[%s - %s] %s", availability.getStartTime(),availability.getEndTime(), localizedTitle));
+                        }
                         events.add(event);
                     }
                 }

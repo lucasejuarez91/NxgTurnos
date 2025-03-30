@@ -2,8 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <!-- Incluir el header -->
 <th:block th:replace="~{fragments/header :: head}"></th:block>
-<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 <script th:src="@{/js/professionals/availability.js}"></script>
 <body>
 <th:block th:replace="~{fragments/header :: header}"></th:block>
@@ -14,21 +12,22 @@
         <div class="row">
             <div class="card">
                 <div class="card-body">
+                    <th:block th:replace="~{components/buttons/others :: buttonBack}"></th:block>
                     <form th:action="@{./save}" method="post">
-                        <h5 class="card-title">Asignar disponibilidad</h5>
+                        <h5 class="card-title" th:text="${#messages.msg('title.assign.availability')}">Asignar disponibilidad</h5>
                         <div class="row">
                             <div class="col-12 col-lg-4">
                                 <div class="col-12 col-lg-12">
                                     <!-- Selección de Profesional -->
                                     <div class="mb-3">
-                                        <label for="fullname" class="form-label">Profesional</label>
+                                        <label for="fullname" class="form-label" th:text="${#messages.msg('title.professional')}">Profesional</label>
                                         <input type="text" class="form-control" id="fullname" th:value="${professional.firstname + ' ' + professional.lastname}" disabled>
                                         <input type="hidden" class="form-control" name="profesionalId" id="profesionalId" th:value="${professional.id}">
                                     </div>
                                 </div>
                                 <div class="col-12 col-lg-8">
                                     <div class="mb-3">
-                                        <label for="dayOfWeek" class="form-label">Día de la Semana</label>
+                                        <label for="dayOfWeek" class="form-label" th:text="${#messages.msg('title.day.of.week')}">Día de la Semana</label>
                                         <select id="dayOfWeek" name="dayOfWeek" class="form-select" required>
                                             <option value="MONDAY">Lunes</option>
                                             <option value="TUESDAY">Martes</option>
@@ -44,14 +43,14 @@
                                     <div class="col-12 col-lg-6">
                                         <!-- Horario de Inicio -->
                                         <div class="mb-3">
-                                            <label for="startTime" class="form-label">Hora de Inicio</label>
+                                            <label for="startTime" class="form-label" th:text="${#messages.msg('title.start.hour')}">Hora de Inicio</label>
                                             <input type="time" id="startTime" name="startTime" class="form-control" required>
                                         </div>
                                     </div>
                                     <div class="col-12 col-lg-6">
                                         <!-- Horario de Fin -->
                                         <div class="mb-3">
-                                            <label for="endTime" class="form-label">Hora de Fin</label>
+                                            <label for="endTime" class="form-label" th:text="${#messages.msg('title.end.hour')}">Hora de Fin</label>
                                             <input type="time" id="endTime" name="endTime" class="form-control" required>
                                         </div>
                                     </div>
@@ -62,7 +61,7 @@
                             </div>
                         </div>
                         <!-- Botón para agregar disponibilidad -->
-                        <button type="submit" class="btn btn-primary">Asignar</button>
+                        <th:block th:insert="~{/components/buttons/update :: buttonUpdate('button.assign',${professional.id})}"></th:block>
                     </form>
                 </div>
             </div>
@@ -70,13 +69,14 @@
         <div class="row">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Disponibilidad</h5>
+                    <h5 class="card-title" th:text="${#messages.msg('title.availability')}">Disponibilidad</h5>
                     <table class="display table-stripped" style="width:100%" id="tblAvailability">
                         <thead>
                         <tr>
-                            <th scope="col">Día</th>
-                            <th>Hora Inicio</th>
-                            <th>Hora Fin</th>
+                            <th scope="col" th:text="${#messages.msg('title.day')}">Día</th>
+                            <th th:text="${#messages.msg('title.start.hour')}">Hora Inicio</th>
+                            <th th:text="${#messages.msg('title.end.hour')}">Hora Fin</th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -84,6 +84,9 @@
                             <td th:text="${availability.translate(availability.dayOfWeek)}"></td>
                             <td th:text="${availability.startTime}"></td>
                             <td th:text="${availability.endTime}"></td>
+                            <td>
+                                <th:block th:insert="~{/components/buttons/table :: buttonManagerById('title.delete', 'btn-danger btnDelete', 'bi bi-trash', ${availability.id}, ${!availability.status})}"></th:block>
+                            </td>
                         </tr>
                         </tbody>
                     </table>

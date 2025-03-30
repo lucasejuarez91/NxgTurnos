@@ -1,0 +1,35 @@
+<div class="offset-lg-2 col-md-3" th:fragment="summaryDiv">
+    <div class="card mb-3">
+        <div class="row g-0">
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="#{title.summary}">Resumen</h5>
+                    <div class="row">
+                        <div class="col-12">
+                            <label class="text-muted" th:text="#{title.lounge}">Salón</label>
+                            <br>
+                            <span th:text="${company.name}" id="companyLbl" th:data-maxEndTime="${endTime}" th:data-minStartTime="${startTime}"></span>
+                            <a th:href="@{'/booking/request/list-company'}"><small class="bi bi-arrow-left-right"></small></a>
+                        </div>
+                    </div>
+                    <div class="row" th:if="${service != null}">
+                        <div class="col-12">
+                            <label class="text-muted" th:text="#{title.services}">Servicios</label>
+                            <br>
+                            <span th:text="${service != null ? service.name : '' }"></span>
+                            <a th:href="@{'/booking/request/select-salon/' + ${company.id}}"><small class="bi bi-arrow-left-right"></small></a>
+                        </div>
+                    </div>
+                    <div class="row" th:if="${professional != null}">
+                        <div class="col-12">
+                            <label class="text-muted" th:text="#{title.professional}">Profesional</label>
+                            <br>
+                            <span th:text="${professional.fullname}" id="professionalLbl" th:data-professionalId="${professional.id}"></span>
+                            <a th:href="@{'/booking/request/select-professional/' + ${professional.id}}"><small class="bi bi-arrow-left-right"></small></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

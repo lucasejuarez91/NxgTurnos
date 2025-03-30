@@ -37,9 +37,14 @@ public class AppointmentController extends GlobalControllerAdvice {
     // Listar todas las citas
     @GetMapping(value = "/list")
     public String listAppointments(Model model, HttpSession httpSession) {
+        Company company = actualCompany(httpSession);
         List<Appointment> appointments = appointmentService.getAllAppointments((Company) httpSession.getAttribute("actualCompany"));
         model.addAttribute("appointments", appointments);
-        return "appointments/list";
+        model.addAttribute("startTime", String.valueOf(company.getMinStartTime().minusHours(1)));
+        model.addAttribute("endTime", String.valueOf(company.getMaxEndtime().plusHours(1)));
+        String view = "appointments/list";
+        attributesByMenu(model, view);
+        return view;
     }
 
     @GetMapping("/create")
@@ -51,20 +56,31 @@ public class AppointmentController extends GlobalControllerAdvice {
     }
 
     // Ver detalles de una cita
-    @GetMapping("/edit/{id}")
-    public String editAppointment(@PathVariable Long id, Model model, HttpSession httpSession) {
-        Appointment appointment = appointmentService.getAppointmentById(id);
-        model.addAttribute("clients", userRepository.findAll());
-        model.addAttribute("services", serviceRepository.findByCompany((Company) httpSession.getAttribute("actualCompany")));
-        model.addAttribute("professionals", professionalRepository.findByCompanyAndStatus((Company) httpSession.getAttribute("actualCompany"), true));
+    @GetMapping("/edit/{code}")
+    public String editAppointment(@PathVariable String code, Model model, HttpSession httpSession) {
+        Appointment appointment = appointmentRepository.getAppointmentByCode(code);
+        List services;
+        List professionals;
+        if(getUserIdLogged().getCompanies().isEmpty()){
+            services = serviceRepository.findByCompany(appointment.getCompany());
+            professionals = professionalRepository.findAllByCompany(appointment.getCompany());
+        } else {
+            services = serviceRepository.findByCompany((Company) httpSession.getAttribute("actualCompany"));
+            professionals = professionalRepository.findByCompanyAndStatus((Company) httpSession.getAttribute("actualCompany"), true);
+        }
+        model.addAttribute("clients", userRepository.findById(getUserIdLogged().getId()));
+        model.addAttribute("services", services);
+        model.addAttribute("professionals", professionals);
         model.addAttribute("appointment", appointment);
-        return "appointments/edit";
+        String view = "appointments/edit";
+        attributesByMenu(model, view);
+        return view;
     }
 
     // Cambiar estado de una cita
-    @PostMapping("/{id}/change-status")
-    public String changeAppointmentStatus(@PathVariable Long id, @RequestParam Long statusId) {
-        appointmentService.updateAppointmentStatus(id, statusId);
+    @PostMapping("/{code}/change-status")
+    public String changeAppointmentStatus(@PathVariable String code, @RequestParam String status) {
+        appointmentService.updateAppointmentStatus(code, status);
         return "redirect:/appointments";
     }
 
@@ -85,7 +101,7 @@ public class AppointmentController extends GlobalControllerAdvice {
 
     @GetMapping(value = "/allappointments")
     public String allAppointments(Model model, HttpSession httpSession) {
-        List<Appointment> appointments = appointmentRepository.findByCompany(actualCompany(httpSession));
+        List<Appointment> appointments = appointmentRepository.findByCompanyOrderByApptStatusDesc(actualCompany(httpSession));
         model.addAttribute("appointments", appointments);
 
         return "./public/appointments/list";

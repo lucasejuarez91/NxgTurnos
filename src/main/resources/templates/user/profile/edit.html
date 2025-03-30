@@ -1,0 +1,48 @@
+<div class="tab-pane fade profile-edit pt-3" id="profile-edit" th:fragment="edit">
+
+    <!-- Profile Edit Form -->
+    <form>
+        <div class="row mb-3">
+            <label for="profileImage" class="col-md-4 col-lg-3 col-form-label" th:text="#{title.profile.image}">Profile Image</label>
+            <div class="col-md-8 col-lg-9">
+                <img th:src="@{/images/{filename}(filename=${user.avatar != null ? user.avatar.getName() : ''})}" alt="Profile" id="profileImage">
+                <div class="pt-2">
+                    <input type="file" id="fileInput" accept="image/*" required hidden th:data-url="@{'/user/updateAvatar'}">
+                    <button id="btnUploadAvatar" class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="firstName" class="col-md-4 col-lg-3 col-form-label" th:text="#{title.firstname}">Nombre</label>
+            <div class="col-md-8 col-lg-9">
+                <input name="firstName" type="text" class="form-control" id="firstName" th:value="${user.firstName}">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="lastName" class="col-md-4 col-lg-3 col-form-label" th:text="#{title.lastname}">Apellido</label>
+            <div class="col-md-8 col-lg-9">
+                <input name="firstName" type="text" class="form-control" id="lastName" th:value="${user.lastName}">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="phone" class="col-md-4 col-lg-3 col-form-label" th:text="#{title.phone}">Phone</label>
+            <div class="col-md-8 col-lg-9">
+                <input name="phone" type="text" class="form-control" id="phone" th:value="${user.phone}">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="email" class="col-md-4 col-lg-3 col-form-label" th:text="#{title.email}">Email</label>
+            <div class="col-md-8 col-lg-9">
+                <input name="email" type="email" class="form-control" id="email" th:value="${user.email}">
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button class="btn btn-primary" id="btnSaveUserData" th:data-id="${user.id}" th:text="#{title.save}">Save Changes</button>
+        </div>
+    </form><!-- End Profile Edit Form -->
+
+</div>

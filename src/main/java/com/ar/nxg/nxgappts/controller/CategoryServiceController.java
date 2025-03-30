@@ -24,26 +24,28 @@ public class CategoryServiceController extends GlobalControllerAdvice {
     private CategoryServiceRepository categoryServiceRepository;
 
     @GetMapping(path = "/list")
-    public String listarServicios(Model model) {
-        model.addAttribute("services", serviceRepository.findAll());
-        attributesByMenu(model, 2);
-        return "categoryServices/list";
+    public String listarServicios(Model model, HttpSession httpSession) {
+        model.addAttribute("categoryServices", categoryServiceRepository.findByCompany(actualCompany(httpSession)));
+        String view = "categoryService/list";
+        attributesByMenu(model, view);
+        return view;
     }
 
     @GetMapping(path = "/edit/{categoryServiceId}")
     public String editService(Model model, @PathVariable(value = "categoryServiceId") long categoryServiceId, HttpSession httpSession) {
-        Company sessionCompany = (Company) httpSession.getAttribute("actualCompany");
-        CategoryService categoryService = categoryServiceRepository.findByIdAndCompany(categoryServiceId, sessionCompany);
+        //Company sessionCompany = (Company) httpSession.getAttribute("actualCompany");
+        CategoryService categoryService = categoryServiceRepository.findByIdAndCompany(categoryServiceId, actualCompany(httpSession));
         model.addAttribute("categoryService", categoryService);
-        model.addAttribute("services", categoryService.getServices().stream().filter(service -> service.getCompany() == sessionCompany));
-        attributesByMenu(model, 2);
-        return "./categoryServices/edit";
+        model.addAttribute("services", categoryService.getServices());//.stream().filter(service -> service.getCompany() == sessionCompany));
+        String view = "./categoryService/edit";
+        attributesByMenu(model, view, joinManualBreadCrumbs(new String[]{categoryService.getName()}));
+        return view;
     }
 
     @GetMapping("/create")
     public String modalCreate(Model model) {
         model.addAttribute("categories", categoryServiceRepository.findAll());
-        return "./services/modalCreate";
+        return "./categoryService/modalCreate";
     }
 }
 

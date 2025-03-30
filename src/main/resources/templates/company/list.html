@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Incluir el header -->
+<th:block th:replace="~{fragments/header :: head}"></th:block>
+<script th:src="@{/js/company/list.js}"></script>
+<body>
+<th:block th:replace="~{fragments/header :: header}"></th:block>
+<div>
+    <th:block th:replace="~{fragments/breadcrumbs :: listbreacrumbs}"></th:block>
+    <div class="page-header" id="banner">
+        <div class="row">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6 mt-3">
+                            <button type="button" class="btn btn-primary btn-sm"
+                                    data-toggle="modal" data-url="/company/create" data-target="#modalCreate" id="createCompanyBtn">
+                                NUEVO <i class="bi bi-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <table class="display table-stripped" style="width:100%" id="tblCompany">
+                        <thead>
+                        <tr>
+                            <th scope="col">Razon Social</th>
+                            <th>Dirección</th>
+                            <th>Teléfono</th>
+                            <th>Contacto</th>
+                            <th>Estado</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="comp : ${company}" th:class="${!comp.status ? 'text-muted' : ''}">
+                            <td th:text="${comp.name}"></td>
+                            <td th:text="${comp.address}"></td>
+                            <td th:text="${comp.telephone}"></td>
+                            <td th:text="${comp.contact}"></td>
+                            <td th:text="${comp.status ? 'ACTIVO' : 'INACTIVO'}"></td>
+                            <td>
+                                <button class="btn btn-sm btn-primary btnEdit" th:data-url="'./edit/' + ${comp.id}" th:disabled="${!comp.status}" data-toggle="tooltip" data-placement="top" title="Editar">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-warning btnChangeStatus" th:data-id="${comp.id}" th:disabled="${comp.status}" data-toggle="tooltip" data-placement="top" title="Recuperar">
+                                    <i class="bi bi-arrow-counterclockwise"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-danger btnDelete" th:data-id="${comp.id}" th:disabled="${!comp.status}" data-toggle="tooltip" data-placement="top" title="Eliminar">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:insert="~{modal :: simpleModal('Alta de Empresa')}"></th:block>

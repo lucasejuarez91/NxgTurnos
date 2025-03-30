@@ -25,6 +25,10 @@ public class SecurityConfig {
         http
                 //.csrf().csrfTokenRepository(csrfTokenRepository()) // Configurar el repositorio de tokens CSRF
                 .csrf().disable()
+                /*.sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer
+                        .invalidSessionUrl("/login?invalid") // Ruta a la que redirigir cuando la sesión sea inválida
+                        .maximumSessions(1) // Definir un máximo de sesiones por usuario
+                        .expiredUrl("/login?expired")) // Ruta a la que redirigir cuando la sesión expire*/
                 .authorizeHttpRequests((authorize) -> authorize
                                 .requestMatchers("/login/**", "/register/**", "/registerUser/**", "/confirm", "/confirmation",
                                         "/assets/**",  "/css/**", "/js/**", "/images/**", "/image/**", "/vendor/**", "/reset-password-request",
@@ -32,9 +36,9 @@ public class SecurityConfig {
                                 //.requestMatchers( "/confirm","/confirmation").authenticated()
                         .anyRequest().permitAll()
                 )
-                .formLogin(t -> t.loginPage("/login").permitAll().defaultSuccessUrl("/", false)
+                .formLogin(t -> t.loginPage("/login").permitAll().defaultSuccessUrl("/", false))
                         //.failureUrl("/login?error"))
-                        .failureHandler(customAuthenticationFailureHandler())) // Configurar el handler de fallos
+                        //.failureHandler(customAuthenticationFailureHandler())) // Configurar el handler de fallos
                 //.addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)  // Añadir el filtro de autenticación JWT
                 .logout(logout -> logout
                         .logoutUrl("/logout")

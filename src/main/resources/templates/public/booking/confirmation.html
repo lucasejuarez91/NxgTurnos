@@ -3,47 +3,63 @@
 <!-- Incluir el header -->
 <th:block th:replace="~{fragments/header :: head}"></th:block>
 <body>
-<th:block th:replace="~{fragments/public/header :: header}"></th:block>
+<th:block th:replace="~{fragments/header :: header}"></th:block>
 <script th:src="@{/js/booking/confirmation.js}"></script>
 <div>
     <div class="page-header" id="banner">
         <div class="row">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title text-center fs-1">¡[[${appt.client.firstName.toUpperCase()}]], gracias por reservar con NXG TURNOS!</h4>
-                    <h5 class="text-center fs-2 mb-5">Tu reserva en [[${appt.company.name}]] está confirmada.</h5>
+                    <h4 class="card-title text-center fs-1" th:text="#{title.thanks.for.book.with.us(${appt.client.firstName.toUpperCase()})}"></h4>
+                    <h5 class="text-center fs-2 mb-5" th:utext="#{title.book.confirmation(${appt.code},${appt.company.name}, ${appt.getApptStatus()})}"></h5>
                     <div class="row">
                         <div class="col-12 col-md-3">
-                            <span class="card-subtitle mb-2 text-muted">Servicio</span>
+                            <span class="card-subtitle mb-2 text-muted" th:text="#{title.service}">Servicio</span>
                             <p th:text="${appt.service.name}"></p>
                         </div>
                         <div class="col-12 col-md-3">
-                            <span class="card-subtitle mb-2 text-muted">Profesional</span>
+                            <span class="card-subtitle mb-2 text-muted" th:text="#{title.professional}">Profesional</span>
                             <p th:text="${appt.professional.fullname}"></p>
                         </div>
                         <div class="col-12 col-md-3">
-                            <span class="card-subtitle mb-2 text-muted">Horario</span>
+                            <span class="card-subtitle mb-2 text-muted" th:text="#{title.datetime}">Horario</span>
                             <p th:text="${#dates.format(scheduledDateStart, 'dd MMMM yyyy HH:mm')}"></p>
                         </div>
                         <div class="col-12 col-md-3">
-                            <span class="card-subtitle mb-2 text-muted">Pago</span>
+                            <span class="card-subtitle mb-2 text-muted" th:text="#{title.price}">Pago</span>
                             <p th:text="${'$ ' + #numbers.formatDecimal(appt.service.price, 0, 'COMMA', 2, 'POINT')}"></p>
+                        </div>
+                        <div th:if="${!appt.payments.isEmpty()}" class="row">
+                            <h5 th:text="#{title.prepay}">Reserva</h5>
+                            <div class="col-6 col-md-3">
+                                <span class="card-subtitle mb-2 text-muted" th:text="#{title.price}">Reserva</span>
+                                <p th:text="${'$ ' + #numbers.formatDecimal(appt.payments[0].amount, 0, 'COMMA', 2, 'POINT')}"></p>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <span class="card-subtitle mb-2 text-muted" th:text="#{title.payment.method}">Reserva</span>
+                                <p th:text="${appt.payments[0].getPaymentMethodEnum}"></p>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12 col-md-3">
-                            <span class="card-subtitle mb-2 text-muted">Ubicación</span>
+                            <span class="card-subtitle mb-2 text-muted" th:text="#{title.location}">Ubicación</span>
                             <p th:text="${appt.company.address}"></p>
                         </div>
                     </div>
+                    <form class="row" method="post" th:action="@{'/payment/payBooking?apptId='+${appt.getId}}" th:if="${appt.getApptStatus() == appt.getApptStatus().CREATED}">
+                        <div class="offset-md-5 col-12 col-md-2">
+                            <button type="submit" class="btn btn-primary w-100" th:text="#{button.prepay}">PAGAR RESERVA</button>
+                        </div>
+                    </form>
                     <hr>
                     <div class="row">
                         <div class="offset-md-5 col-12 col-md-2">
-                            <a class="btn btn-danger w-100" th:href="@{'/booking/cancel?apptId='+${appt.getId}}">CANCELAR TURNO</a>
+                            <a class="btn btn-danger w-100" th:href="@{'/booking/cancel?apptId='+${appt.getId}}" th:text="#{title.cancel.book}">CANCELAR TURNO</a>
                         </div>
                     </div>
                     <hr>
-                    <div class="row">
+                    <div class="row" th:if="${appt.getApptStatus().CONFIRM}">
                         <div class="col-12 col-md-2 mb-2 offset-md-4">
                             <button class="btn btn-light w-100"
                                     th:data-startdate="${appt.scheduledDateStart}"
@@ -53,7 +69,7 @@
                                     th:data-professional="${appt.professional.fullname}"
                                     th:data-location="${appt.company.address}"
                                     onclick="createGoogleCalendarEvent(this)">
-                                <i class="bi bi-google"></i> Agregar a Google Calendar
+                                <i class="bi bi-google"></i> [[#{button.add.google.calendar}]]
                             </button>
                         </div>
                         <div class="col-12 col-md-2 ml-2 mb-2 offset-md-0">
@@ -65,18 +81,18 @@
                                     th:data-professional="${appt.professional.fullname}"
                                     th:data-location="${appt.company.address}"
                                     onclick="createAppleCalendarEvent(this)">
-                                <i class="bi bi-apple"></i> Agregar a Apple Calendar
+                                <i class="bi bi-apple"></i> [[#{button.add.apple.calendar}]]
                             </button>
                         </div>
                     </div>
                     <hr>
                     <div class="row">
                         <div class="offset-md-5 col-12 col-md-2">
-                            <a class="btn btn-success w-100" th:href="@{/}">SOLICITAR OTRO TURNO</a>
+                            <a class="btn btn-success w-100" th:href="@{/}" th:text="#{title.request.new.book}">SOLICITAR OTRO TURNO</a>
                         </div>
                     </div>
                     <hr>
-                    <p class="text-muted">
+                    <p class="text-muted" th:utext="#{terms.and.conditions}">
                         Ut in ea error laudantium quas omnis officia. Sit sed praesentium voluptas. Corrupti inventore consequatur nisi necessitatibus modi consequuntur soluta id. Enim autem est esse natus assumenda. Non sunt dignissimos officiis expedita. Consequatur sint repellendus voluptas. Quidem sit est nulla ullam. Suscipit debitis ullam iusto dolorem animi dolorem numquam. Enim fuga ipsum dolor nulla quia ut. Rerum dolor voluptatem et deleniti libero totam numquam nobis distinctio. Sit sint aut. Consequatur rerum in.
                     </p>
                 </div>

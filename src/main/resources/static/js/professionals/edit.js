@@ -9,5 +9,5 @@ $(document).ready(async function(){
         await manageEntity("professionals", id, await getChanges())
     });
 
-    $('#specialities').select2();
+    $('#specialities').select2({theme: 'bootstrap-5'});
 })

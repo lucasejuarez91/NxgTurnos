@@ -17,9 +17,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/company")
@@ -42,15 +43,41 @@ public class CompanyController extends GlobalControllerAdvice {
 
     @GetMapping(path = "/edit/{companyId}")
     @PreAuthorize("isAuthenticated()")
-    public String listarClientes(Model model, @PathVariable(value = "companyId") long companyId) {
+    public String listarClientes(Model model, @PathVariable(value = "companyId") long companyId, Locale locale) {
         Company company = companyRepository.findById(companyId).orElseThrow();
         model.addAttribute("company", company);
         model.addAttribute("professionals", company.getProfessionals());
-        attributesByMenu(model, 2);
-        return "company/edit";
+        model.addAttribute("days", getDaysList(locale));
+        String view = "company/edit";
+        attributesByMenu(model, view);
+        return view;
     }
 
-    @PostMapping("/{companyId}/updateAvatar")
+    private List getDaysList(Locale locale){
+        List<String> days = new ArrayList<>();
+        Calendar cal = Calendar.getInstance();
+
+        // Usamos SimpleDateFormat para obtener el nombre del día
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE", locale); // "EEEE" para el nombre completo del día
+
+        // Iteramos a través de los días de la semana
+        for (int i = Calendar.SUNDAY; i <= Calendar.SATURDAY; i++) {
+            cal.set(Calendar.DAY_OF_WEEK, i); // Establecemos el día de la semana
+            days.add(sdf.format(cal.getTime())); // Obtenemos el nombre del día
+        }
+        return days;
+    }
+
+    @GetMapping(path = "/list")
+    @PreAuthorize("isAuthenticated()")
+    public String myCompanies(Model model) {
+        model.addAttribute("company", getUserIdLogged().getCompanies());
+        String view = "company/list";
+        attributesByMenu(model, view);
+        return view;
+    }
+
+    @PostMapping("/updateAvatar/{companyId}")
     public ResponseEntity<ResponseMessage> updateAvatar(@RequestBody Long fileId, @PathVariable(name = "companyId") Long companyId) {
         ResponseMessage resp = new ResponseMessage();
 
@@ -137,11 +164,11 @@ public class CompanyController extends GlobalControllerAdvice {
     @ResponseBody
     @GetMapping("/availability/slots")
     public List<Map<String, Object>> getSlots(@RequestParam("start") String startStr,
-                                              @RequestParam("end") String endStr, HttpSession httpSession) {
+                                              @RequestParam("end") String endStr, HttpSession httpSession, Locale locale) {
         LocalDate startDate = LocalDate.parse(startStr.substring(0, 10));
         LocalDate endDate = LocalDate.parse(endStr.substring(0, 10));
 
-        return availabilityService.getAllEvents(startDate, endDate, actualCompany(httpSession));
+        return availabilityService.getAllEvents(startDate, endDate, actualCompany(httpSession), locale);
     }
 }
 

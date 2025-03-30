@@ -1,11 +1,11 @@
 <div class="pagetitle" th:fragment="listbreacrumbs">
-    <h1 th:text="${actualView}">Listado</h1>
     <nav>
         <ol class="breadcrumb">
             <li th:each="crumb, stat : ${actualBreadcrumb}"
                 class="breadcrumb-item" th:classappend="${stat.last ? 'active' : ''}">
-                <a th:if="${!stat.last}" th:text="${crumb}"></a>
-                <span th:if="${stat.last}" th:text="${crumb}"></span>
+                <a th:if="${!stat.last}" th:text="${#messages.msg(crumb)}"></a>
+                <span th:if="${stat.last && crumb.contains('@')}" th:text="${crumb.replace('@','')}"></span>
+                <span th:if="${stat.last && !crumb.contains('@')}" th:text="${#messages.msg(crumb)}"></span>
             </li>
         </ol>
     </nav>

@@ -5,5 +5,6 @@ $(document).ready(function(){
 
     loadHtmlOnModal(document.getElementById('createBtn'));
     //loader(false);
+
 });
 

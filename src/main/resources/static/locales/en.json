@@ -1,0 +1,8 @@
+{
+  "modal.confirmation.title": "Confirmation",
+  "modal.confirmation.text": "Are you sure you want to book an appointment for <strong>{{date}}</strong> at <strong>{{company}}</strong> with <strong>{{professional}}</strong>?",
+  "modal.confirmation.yes": "Yes, I'm sure",
+  "modal.confirmation.cancel": "Cancel",
+  "title.modal.request.book": "Are you sure you want to book an appointment for <strong>{{fechaInicioLbl}}</strong> at <strong>{{loungeName}}</strong> with <strong>{{professionalName}}</strong>?",
+  "nothing.to.do": "Nothing to update"
+}

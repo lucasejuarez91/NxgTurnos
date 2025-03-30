@@ -20,7 +20,7 @@ public class MenuService {
     @Autowired
     private MenuRepository menuRepository;
 
-    public String getMenuForUser(List<Role> roles) {
+    public List<MenuDTO> getMenuForUser(List<Role> roles) {
         // Obtener todas las categorías de menú
         List<Menu> allMenuCategories = menuRepository.findAll();
         allMenuCategories.sort(Comparator.comparingInt(Menu::getOrdering));
@@ -46,7 +46,8 @@ public class MenuService {
                 menuCategories.add(categoryDTO);
             }
         }
-        return generateMenuHtml(menuCategories);
+        return menuCategories;
+        //return generateMenuHtml(menuCategories);
     }
 
     private String generateMenuHtml(List<MenuDTO> menuCategories) {
@@ -82,7 +83,8 @@ public class MenuService {
                         .append(String.format("<a class='nav-link collapsed' data-bs-target='#%s-nav' data-bs-toggle='collapse' href='#' ",menu.getName().toLowerCase()))
                         .append(String.format("<i class='%s'></i>", menu.getIcon()))
                         .append((String.format("<span>%s</span>",menu.getName())))
-                        .append("<i class='bi bi-chevron-down ms-auto'></i>");
+                        .append("<i class='bi bi-chevron-down ms-auto'></i>")
+                        .append("</a>");
 
                 for (MenuItemDTO item : menu.getItems()) {
                     /*
@@ -98,17 +100,17 @@ public class MenuService {
                       </li>
                      */
                     htmlBuilder.append(String.format("<ul id='%s-nav' class='nav-content collapse' data-bs-parent='#sidebar-nav'>",menu.getName().toLowerCase()))
-                            .append("<a class='nav-link collapsed' data-bs-target='#components-nav' data-bs-toggle='collapse' href='#'")
+                            //.append("<a class='nav-link collapsed' data-bs-target='#components-nav' data-bs-toggle='collapse' href='#'")
                             .append("<li>")
-                            .append(String.format("<a href='%s'>",item.getUrl()))
+                            .append(String.format("<a th:href=@{'%s'}>",item.getUrl()))
                             .append(String.format("<i class='%s'></i><span>%s</span>", item.getIcon(), item.getTitle()))
                             .append("</a>")
-                            .append("</li>")
-                            .append(item.getTitle())
-                            .append("</span>")
-                            .append("</a>")
                             .append("</li>");
-                    htmlBuilder.append("</ul></li>");
+                            //.append(item.getTitle())
+                            //.append("</span>")
+                            //.append("</a>")
+                            //.append("</li>");
+                    htmlBuilder.append("</ul>");
                 }
 
             }

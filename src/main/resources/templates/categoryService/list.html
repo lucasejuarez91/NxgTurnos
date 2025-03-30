@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Incluir el header -->
+<th:block th:replace="~{fragments/header :: head}"></th:block>
+<script th:src="@{/js/categoryServices/list.js}"></script>
+<body>
+<th:block th:replace="~{fragments/header :: header}"></th:block>
+<div>
+    <th:block th:replace="~{fragments/breadcrumbs :: listbreacrumbs}"></th:block>
+    <div class="page-header" id="banner">
+        <div class="row">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <h5 class="card-title" th:text="#{title.categoryservice.list}">Listado de Categorías de Servicios</h5>
+                        <div class="col-6 mt-3">
+                            <th:block th:insert="~{/components/buttons/new :: buttonNew('/categoryService/create', null, false)}"></th:block>
+                        </div>
+                    </div>
+                    <table class="display table-stripped" style="width:100%" id="tblCategoryServices">
+                        <thead>
+                        <tr>
+                            <th scope="col">Nombre</th>
+                            <th>Servicios Asociados</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="cat : ${categoryServices}" th:class="${!cat.status ? 'text-muted' : ''}">
+                            <td th:text="${cat.name}"></td>
+                            <td th:text="${cat.services.size()}"></td>
+                            <td th:if="${!cat.status}">
+                                <span class="badge bg-danger" th:text="${'INACTIVO'}"></span>
+                            </td>
+                            <td th:if="${cat.status}">
+                                <span class="badge bg-success" th:text="${'ACTIVO'}"></span>
+                            </td>
+                            <td>
+                                <th:block th:insert="~{/components/buttons/table :: buttonManagerByUrl('title.edit', 'btn-primary btnEdit', 'bi-pencil-square', './edit/' + ${cat.id}, ${!cat.status})}"></th:block>
+                            </td>
+                            <td>
+                                <th:block th:insert="~{/components/buttons/table :: buttonManagerById('title.recover', 'btn-warning btnChangeStatus', 'bi bi-arrow-counterclockwise', ${cat.id}, ${cat.status})}"></th:block>
+                            </td>
+                            <td>
+                                <th:block th:insert="~{/components/buttons/table :: buttonManagerById('title.delete', 'btn-danger btnDelete', 'bi bi-trash', ${cat.id}, ${!cat.status})}"></th:block>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:insert="~{modal :: simpleModal('Alta de Servicio')}"></th:block>

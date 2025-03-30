@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.cglib.core.Local;
 
+import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ public class Company extends BaseEntity {
 
     @Column(nullable = false)
     private String name;
+    @Column(length = 1000)
     private String description;
     private String address;
     @ManyToMany(fetch = FetchType.LAZY)
@@ -33,6 +36,12 @@ public class Company extends BaseEntity {
 
     private LocalTime minStartTime;
     private LocalTime maxEndtime;
+    private DayOfWeek minDay;
+    private DayOfWeek maxDay;
+    @Column(nullable = true)
+    private Double prepaymentPercentage;
+    @Column(nullable = true)
+    private BigDecimal prepaymentExplicitValue;
 
     @OneToOne
     @JoinColumn(name = "banner_file_id", referencedColumnName = "id", nullable = true)
@@ -48,4 +57,9 @@ public class Company extends BaseEntity {
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Appointment> appointments = new ArrayList<>();
 
+    //payment config
+    private String accessTokenMP;
+
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Item> items = new ArrayList<>();
 }

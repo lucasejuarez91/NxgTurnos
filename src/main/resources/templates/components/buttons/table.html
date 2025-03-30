@@ -1,0 +1,8 @@
+<button th:class="${'btn btn-sm ' + clazz}" th:data-id="${id}" th:disabled="${disabled}" data-toggle="tooltip"
+        data-placement="top" th:title="${#messages.msg(title)}" th:fragment="buttonManagerById(title, clazz, icon, id, disabled)">
+    <i th:class="${icon}"></i>
+</button>
+<button th:class="${'btn btn-sm ' + clazz}" th:data-url="${url}" th:disabled="${disabled}" data-toggle="tooltip"
+        data-placement="top" th:title="${#messages.msg(title)}" th:fragment="buttonManagerByUrl(title, clazz, icon, url, disabled)">
+    <i th:class="${icon}"></i>
+</button>

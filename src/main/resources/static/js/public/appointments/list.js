@@ -1,23 +1,23 @@
 var table;
-$(document).ready(function(){
+$(document).ready(function() {
     //loader();
-    initDataTable('tblAppts');
+    initDataTableGroup('tblAppts', 4, true, 5);
 
-    $('.btnEdit').on('click', function(){
-        window.location.href = $(this).data('url');
+    $('.btnView, .btnReSchedule').on('click', function () {
+        window.location.href = getContextPath() + $(this).data('url');
     });
 
-    $('.btnDelete').on('click', async function(){
+    $('.btnDelete').on('click', async function () {
         let id = $(this).data('id');
         const respuesta = await modalConfirmation(`¿Está seguro de cancelar este turno?`);
-        if(respuesta)
+        if (respuesta)
             await manageEntity("appointments", id, {status: false, apptStatus: '/appointmentStatus/2'})
     });
 
-    $('.btnQR').on('click', function(){
+    $('.btnQR').on('click', function () {
         document.getElementById("qrcode").innerHTML = '';
         $('#qrTurnoModal').modal('show');
-        let jsonData = { name: "Juan", age: 30, job: "Developer" };
+        let jsonData = {name: "Juan", age: 30, job: "Developer"};
         let jsonString = JSON.stringify(jsonData);
 
         new QRCode(document.getElementById("qrcode"), {
@@ -27,7 +27,7 @@ $(document).ready(function(){
         });
     });
 
-    $('#btnModalCalendar').on('click', function(){
+    $('#btnModalCalendar').on('click', function () {
         fetch(`/professionals/configCalendar?companyId=${loggedUserCompany.dataset.value}`)
             .then(response => response.json())
             .then(config => {
@@ -45,7 +45,7 @@ $(document).ready(function(){
                         center: "title",
                         right: "timeGridWeek"
                     },
-                    events: function(fetchInfo, successCallback, failureCallback) {
+                    events: function (fetchInfo, successCallback, failureCallback) {
                         // Convertir a formato YYYY-MM-DD sin zona horaria
                         let start = fetchInfo.start.toISOString().split("T")[0];
                         let end = fetchInfo.end.toISOString().split("T")[0];
@@ -63,7 +63,7 @@ $(document).ready(function(){
 
                 calendar.render();
             });
-       $('#modalCalendar').modal('show')
+        $('#modalCalendar').modal('show')
     });
 });
 

@@ -1,11 +1,15 @@
 <div class="modal fade" id="modalCalendar" tabindex="-1" style="display: none;" aria-hidden="true" th:fragment="calendar">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Calendario Turnos</h5>
+                <h5 class="modal-title">[[#{title.calendar}]] - <strong id="timestamp">
+                        [[${#calendars.format(#calendars.createNow(), 'dd MMM yyyy HH:mm:ss')}]]
+                    </strong>
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <small id="countdown" th:text="#{title.next.update}">Actualiza en 5 segundos...</small>
                 <div id="calendar" class="mt-3"></div>
             </div>
             <div class="modal-footer">
@@ -14,3 +18,10 @@
         </div>
     </div>
 </div>
+<template id="viewEvent">
+    <swal-title>Turno Programado</swal-title>
+    <swal-html>
+        <p>Cliente: <strong id="clientName"></strong></p>
+        <p>Profesional: <strong id="professionalName"></strong></p>
+    </swal-html>
+</template>

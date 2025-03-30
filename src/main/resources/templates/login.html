@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-    <title>NXG Turnos - Login</title>
+    <title>NXGBooking - Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <!-- Google Fonts -->
     <link th:href="@{https://fonts.gstatic.com}" rel="preconnect">
@@ -30,20 +30,38 @@
                         <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
                             <div class="card mb-3">
                                 <div class="card-body">
+                                    <div class="d-flex justify-content-end mt-3">
+                                        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                                            <span class="d-none d-md-block dropdown-toggle ps-2"><i class="bi bi-globe fs-5"></i></span>
+                                        </a>
+
+                                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                                            <li>
+                                                <a class="dropdown-item d-flex align-items-center" th:href="${'?lang=es'}">
+                                                    <span>Español</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item d-flex align-items-center" th:href="${'?lang=en'}">
+                                                    <span>English</span>
+                                                </a>
+                                            </li>
+                                        </ul><!-- End Profile Dropdown Items -->
+                                    </div>
                                     <div class="d-flex justify-content-center">
                                         <img th:src="@{/image/logo.png}" class="img-fluid" alt="Logo" style="max-width: 40%; max-height: 40%; border-radius: 30%;">
                                     </div>
                                     <div class="pb-2">
-                                        <h5 class="card-title text-center pb-0 fs-4 p-0">NXG Turnos</h5>
-                                        <p class="text-center small">Ingrese su usuario y clave</p>
+                                        <h5 class="card-title text-center pb-0 fs-4 p-0" th:text="#{login.title}"></h5>
+                                        <p class="text-center small" th:text="#{login.subtitle}"></p>
                                     </div>
 
                                     <form class="row g-3 needs-validation" th:action="@{/login}" method="post" th:fragment="loginForm" id="loginForm">
-                                        <div id="loginError" class="alert alert-danger fade show text-center p-2 mb-0 mt-3 d-none">
-                                            <label class="message" style="font-size: 15px"></label>
+                                        <div id="loginError" class="alert alert-danger fade show text-center p-2 mb-0 mt-3" th:if="${param.error}">
+                                            <label class="message" style="font-size: 15px" th:text="${#messages.msg('login.failed')}"></label>
                                         </div>
                                         <div class="col-12">
-                                            <label for="username" class="form-label">Usuario</label>
+                                            <label for="username" class="form-label" th:text="#{login.label.username}">Usuario</label>
                                             <div class="input-group has-validation">
                                                 <input type="text" id="username" name="username" class="form-control form-control-user" placeholder="" required />
                                                 <div class="invalid-feedback">Por favor, ingrese un nombre de usuario.</div>
@@ -51,7 +69,7 @@
                                         </div>
 
                                         <div class="col-12">
-                                            <label for="password" class="form-label">Contraseña</label>
+                                            <label for="password" class="form-label" th:text="#{login.label.password}">Contraseña</label>
                                             <input type="password" id="password" name="password" class="form-control form-control-user" autocomplete="off" placeholder="" required />
                                             <div class="invalid-feedback">Por favor, ingrese una contraseña.</div>
                                         </div>
@@ -59,15 +77,15 @@
                                         <div class="col-12">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
-                                                <label class="form-check-label" for="rememberMe">Recordarme</label>
+                                                <label class="form-check-label" for="rememberMe" th:text="#{login.label.rememberMe}">Recordarme</label>
                                             </div>
                                         </div>
                                         <div class="col-12">
-                                            <button type="submit" class="btn btn-primary w-100">INICIAR SESIÓN</button>
+                                            <button type="submit" class="btn btn-primary w-100" th:text="#{button.log.in}">INICIAR SESIÓN</button>
                                         </div>
 
                                         <div class="col-12">
-                                            <div class="small mb-0"> No tienes cuenta? <a href="/register" class="text-primary" id="linkToRegister">Registrarse</a></div>
+                                            <div class="small mb-0"> [[#{login.no.account}]] <a th:href="@{/register}" class="text-primary" id="linkToRegister" th:text="#{button.register}">Registrarse</a></div>
                                         </div>
                                     </form>
                                 </div>

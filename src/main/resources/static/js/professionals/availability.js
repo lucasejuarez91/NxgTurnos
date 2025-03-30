@@ -5,7 +5,7 @@ $(document).ready(function(){
 
 document.addEventListener("DOMContentLoaded", function() {
 
-    fetch(`/professionals/configCalendar?companyId=${loggedUserCompany.dataset.value}`)
+    fetch(`/turnos/professionals/configCalendar`)
         .then(response => response.json())
         .then(config => {
             var calendarEl = document.getElementById('calendar');
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     let start = fetchInfo.start.toISOString().split("T")[0];
                     let end = fetchInfo.end.toISOString().split("T")[0];
 
-                    let url = `/professionals/availability/appts?professionalId=${profesionalId.value}&start=${start}&end=${end}`;
+                    let url = `/turnos/professionals/availability/appts?professionalId=${profesionalId.value}&start=${start}&end=${end}`;
 
                     console.log("Llamando a la API:", url);
 

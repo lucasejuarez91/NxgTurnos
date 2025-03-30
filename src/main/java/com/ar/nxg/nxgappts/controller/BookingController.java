@@ -1,12 +1,17 @@
 package com.ar.nxg.nxgappts.controller;
 
 import com.ar.nxg.nxgappts.domain.*;
+import com.ar.nxg.nxgappts.dto.AppointmentDTO;
 import com.ar.nxg.nxgappts.dto.BookingDTO;
 import com.ar.nxg.nxgappts.dto.BookingRequestDTO;
 import com.ar.nxg.nxgappts.dto.ResponseMessage;
+import com.ar.nxg.nxgappts.enums.AppointmentStatusEnum;
 import com.ar.nxg.nxgappts.repositories.*;
-import com.ar.nxg.nxgappts.service.AvailabilityService;
+import com.ar.nxg.nxgappts.service.*;
 import jakarta.annotation.Nullable;
+import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.constraints.Null;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +22,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.LogManager;
@@ -48,7 +56,22 @@ public class BookingController extends GlobalControllerAdvice {
     private AppointmentRepository appointmentRepository;
 
     @Autowired
-    private AppointmentStatusRepository appointmentStatusRepository;
+    private MailService emailService;
+
+    @Autowired
+    private AppointmentService appointmentService;
+
+    @Autowired
+    private EmailQueueService emailQueueService;
+
+    @Autowired
+    private PaymentService paymentService;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @ModelAttribute("booking")
     public BookingDTO booking() {
@@ -108,7 +131,7 @@ public class BookingController extends GlobalControllerAdvice {
         model.addAttribute("service", service);
         Professional professional = professionalRepository.findById(booking.getProfessionalId()).orElseThrow();
         model.addAttribute("professional", professional);
-        model.addAttribute("startTime", String.valueOf(company.getMinStartTime().plusHours(1)));
+        model.addAttribute("startTime", String.valueOf(company.getMinStartTime().minusHours(1)));
         model.addAttribute("endTime", String.valueOf(company.getMaxEndtime().plusHours(1)));
         return "./public/booking/select-date";
     }
@@ -117,10 +140,23 @@ public class BookingController extends GlobalControllerAdvice {
     @GetMapping("/request/slots/appts")
     public Map<String, Object> getAppts(@RequestParam("start") String startStr,
                                               @RequestParam("end") String endStr,
-                                              @RequestParam("professionalId") Long professionalId) {
+                                              @RequestParam("professionalId") Long professionalId, Locale locale) {
         LocalDate startDate = LocalDate.parse(startStr.substring(0, 10));
         LocalDate endDate = LocalDate.parse(endStr.substring(0, 10));
-        List<Map<String, Object>> events = availabilityService.getAvailabilityEvents(professionalId, startDate, endDate);
+        List<Map<String, Object>> events = availabilityService.getAvailabilityEvents(professionalId, startDate, endDate, locale);
+        Map<String, Object> response = new HashMap<>();
+        response.put("isLoggedIn", getUserIdLogged() != null); // Booleano que indica si está logueado
+        response.put("events", events); // Lista de eventos generados
+        return response;
+    }
+
+    @ResponseBody
+    @GetMapping("/request/slots/allAppts")
+    public Map<String, Object> getAllAppts(HttpSession httpSession, Locale locale) {
+        Company company = companyRepository.findById(actualCompany(httpSession).getId()).orElseThrow();
+        LocalDate startDate = LocalDate.now();
+        LocalDate endDate = startDate.plusDays(30);
+        List<Map<String, Object>> events = availabilityService.getAllEvents(startDate, endDate, company, locale);
         Map<String, Object> response = new HashMap<>();
         response.put("isLoggedIn", getUserIdLogged() != null); // Booleano que indica si está logueado
         response.put("events", events); // Lista de eventos generados
@@ -129,7 +165,7 @@ public class BookingController extends GlobalControllerAdvice {
 
     @PostMapping("/preconfirm")
     public ResponseEntity<Map<String, String>> getPreConfirm(@RequestBody Map data,
-                                                   @ModelAttribute("booking") BookingDTO booking, Model model) {
+                                                   @ModelAttribute("booking") BookingDTO booking, Model model) throws MessagingException {
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME; // Usa el formato ISO 8601
 
         LocalDateTime startDate = LocalDateTime.parse((String) data.get("start"), formatter);
@@ -139,32 +175,74 @@ public class BookingController extends GlobalControllerAdvice {
         booking.setEndDateTime(endDate);
         ResponseMessage resp = new ResponseMessage();
         Appointment appt = new Appointment();
-        appt.setApptStatus(appointmentStatusRepository.findByName("CONFIRM"));
+        appt.setApptStatus(AppointmentStatusEnum.CREATED);
         appt.setClient(getUserIdLogged());
         appt.setProfessional(professionalRepository.findById(booking.getProfessionalId()).orElseThrow());
         appt.setService(serviceRepository.findById(booking.getServiceId()).orElseThrow());
         appt.setScheduledDateStart(startDate);
         appt.setScheduledDateEnd(endDate);
         appt.setCompany(companyRepository.findById(booking.getSalonId()).orElseThrow());
+        appt.setCode(appointmentService.generateBookingCode());
         appointmentRepository.save(appt);
         // Devolver la URL como JSON
         Map<String, String> response = new HashMap<>();
         String redirectUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/booking/confirmation")
-                .queryParam("bookingId", appt.getId())
+                .queryParam("bookingId", appt.getCode())
                 .toUriString();
         response.put("redirectUrl", redirectUrl);
+        //sendConfirmationMail(appt);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/confirmation")
-    public String showConfirmation(@RequestParam Long bookingId, Model model) {
-        Appointment appt = appointmentRepository.findById(bookingId).orElseThrow();
+    public String showConfirmation(@RequestParam String bookingId, Model model) throws MessagingException {
+        Appointment appt = appointmentRepository.getAppointmentByCode(bookingId);
+        if(getUserIdLogged() == null){
+            return "home";
+        }
+        if(!appt.getClient().getId().equals(getUserIdLogged().getId())){
+            return "./public/appointments/list";
+        }
         model.addAttribute("appt", appt);
         // Convertir LocalDateTime a Date antes de agregarlo al modelo
         model.addAttribute("scheduledDateStart",
                 Date.from(appt.getScheduledDateStart().atZone(ZoneId.systemDefault()).toInstant()));
         return "public/booking/confirmation";
+    }
+
+    @GetMapping("/previewBooking")
+    public String previewBooking(@RequestParam String appointmentCode, @RequestParam @Nullable Boolean confirm, Model model){
+        Appointment appt = appointmentRepository.getAppointmentByCode(appointmentCode);
+        model.addAttribute("initializated", false);
+        if(appt == null || getUserIdLogged() == null){
+            //model.addAttribute("initializated", false);
+            return "home";
+        }
+        model.addAttribute("appt", appt);
+        return "public/booking/initBooking";
+
+    }
+
+    @PostMapping("/initBooking")
+    public String initBooking(@RequestParam String appointmentCode, @RequestParam @Nullable Boolean confirm, Model model){
+        Appointment appt = appointmentRepository.getAppointmentByCode(appointmentCode);
+        model.addAttribute("initializated", false);
+        if(appt == null || getUserIdLogged() == null){
+            //model.addAttribute("initializated", false);
+            return "home";
+        }
+        model.addAttribute("appt", appt);
+        User userProfessional = userRepository.findById(getUserIdLogged().getId()).orElseThrow();
+        if(userProfessional.getRoles().contains(roleRepository.findByName("APPT_INITIATOR"))
+                && appt.getApptStatus() == AppointmentStatusEnum.CREATED
+                && Boolean.TRUE.equals(confirm)){
+            appt.setApptStatus(AppointmentStatusEnum.IN_PROGRESS);
+            appointmentRepository.save(appt);
+            model.addAttribute("initializated", true);
+        }
+        return "public/booking/initBooking";
+
     }
 
 }

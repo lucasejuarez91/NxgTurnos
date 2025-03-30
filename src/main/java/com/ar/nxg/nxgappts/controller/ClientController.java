@@ -17,8 +17,9 @@ public class ClientController extends GlobalControllerAdvice {
     @GetMapping(path = "/list")
     public String listarClientes(Model model) {
         model.addAttribute("clients", clientRepository.findAllBy());
-        attributesByMenu(model, 2);
-        return "clients/list";
+        String view = "clients/list";
+        attributesByMenu(model, view);
+        return view;
     }
 
     @GetMapping("/create")
