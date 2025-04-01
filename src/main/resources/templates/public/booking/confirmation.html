@@ -47,13 +47,18 @@
                             <p th:text="${appt.company.address}"></p>
                         </div>
                     </div>
+                    <form class="row" method="POST" th:action="@{'/booking/initBooking?appointmentCode='+${appt.getCode()}+'&confirm=true'}" th:if="${appt != null && appt.getApptStatus() == appt.getApptStatus().CONFIRM}">
+                        <div class="offset-md-5 col-12 col-md-2">
+                            <button type="submit" class="btn btn-primary w-100" th:text="#{button.init.booking}">INICIAR TURNO</button>
+                        </div>
+                    </form>
                     <form class="row" method="post" th:action="@{'/payment/payBooking?apptId='+${appt.getId}}" th:if="${appt.getApptStatus() == appt.getApptStatus().CREATED}">
                         <div class="offset-md-5 col-12 col-md-2">
                             <button type="submit" class="btn btn-primary w-100" th:text="#{button.prepay}">PAGAR RESERVA</button>
                         </div>
                     </form>
+                    <div class="row" th:if="${appt != null && appt.getApptStatus() == appt.getApptStatus().CREATED || appt.getApptStatus() == appt.getApptStatus().CONFIRM}">
                     <hr>
-                    <div class="row">
                         <div class="offset-md-5 col-12 col-md-2">
                             <a class="btn btn-danger w-100" th:href="@{'/booking/cancel?apptId='+${appt.getId}}" th:text="#{title.cancel.book}">CANCELAR TURNO</a>
                         </div>

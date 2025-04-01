@@ -1,0 +1,27 @@
+<form class="row g-3 mt-3" th:fragment="formAddItem">
+    <h5 class="mt-3">Agregar item</h5>
+    <div class="col-3">
+        <label for="item" class="form-label">Item</label>
+        <select class="form-select" id="item" multiple>
+            <option th:each="it : ${items}"
+                    th:value="${'/items/' + it.id}"
+                    th:text="${it.name}">
+            </option>
+        </select>
+    </div>
+    <div class="col-3">
+        <label for="price" class="form-label">Valor</label>
+        <input type="text" class="form-control" id="price" readonly>
+    </div>
+    <div class="col-3">
+        <label for="quantity" class="form-label">Cantidad</label>
+        <input type="number" class="form-control" id="quantity">
+    </div>
+    <div class="col-3">
+        <label for="totalPrice" class="form-label">Precio Total</label>
+        <input type="text" class="form-control" id="totalPrice" readonly>
+    </div>
+    <div class="col-3">
+        <button type="reset" class="btn btn-secondary">Agregar</button>
+    </div>
+</form>

@@ -9,6 +9,7 @@
         <th scope="col" th:text="#{table.status}">Estado</th>
         <th scope="col"></th>
         <th scope="col"></th>
+        <th scope="col"></th>
     </tr>
     </thead>
     <tbody>
@@ -24,14 +25,19 @@
         <td th:text="${appt.professional.getFullname()}"></td>
         <td th:text="${appt.scheduledDateStart + ' - ' + appt.scheduledDateEnd}"></td>
         <td>
-            <span th:if="${appt.apptStatus == appt.apptStatus.CREATED}" class="badge bg-info text-white" th:text="${#messages.msg(appt.apptStatus.CREATED.getText())}"></span>
+            <span th:if="${appt.apptStatus == appt.apptStatus.CREATED}" class="badge bg-warning" th:text="${#messages.msg(appt.apptStatus.CREATED.getText())}"></span>
             <span th:if="${appt.apptStatus == appt.apptStatus.CANCELLED}" class="badge bg-danger text-white" th:text="${#messages.msg(appt.apptStatus.CANCELLED.getText())}"></span>
-            <span th:if="${appt.apptStatus == appt.apptStatus.COMPLETED}" class="badge bg-success text-white" th:text="${#messages.msg(appt.apptStatus.COMPLETED.getText())}"></span>
-            <span th:if="${appt.apptStatus == appt.apptStatus.CONFIRM}" class="badge bg-success text-white" th:text="${#messages.msg(appt.apptStatus.CONFIRM.getText())}"></span>
+            <span th:if="${appt.apptStatus == appt.apptStatus.COMPLETED}" class="badge bg-dark text-white" th:text="${#messages.msg(appt.apptStatus.COMPLETED.getText())}"></span>
+            <span th:if="${appt.apptStatus == appt.apptStatus.CONFIRM}" class="badge bg-success" th:text="${#messages.msg(appt.apptStatus.CONFIRM.getText())}"></span>
+            <span th:if="${appt.apptStatus == appt.apptStatus.IN_PROGRESS}" class="badge bg-primary text-white" th:text="${#messages.msg(appt.apptStatus.IN_PROGRESS.getText())}"></span>
         </td>
         <td th:text="${appt.apptStatus}"></td>
-        <td>
+        <td th:if="${appt.apptStatus == appt.apptStatus.CONFIRM || appt.apptStatus == appt.apptStatus.CREATED}">
             <th:block th:insert="~{/components/buttons/table :: buttonManagerById('title.cancel.appointment', 'btn-danger btnDelete', 'bi bi-trash', ${appt.code}, ${appt.apptStatus != appt.apptStatus.CONFIRM || appt.apptStatus != appt.apptStatus.CREATED})}"></th:block>
+        </td>
+        <td th:if="${appt.apptStatus != appt.apptStatus.CONFIRM || appt.apptStatus != appt.apptStatus.CREATED}"></td>
+        <td th:if="${appt.apptStatus == appt.apptStatus.IN_PROGRESS}">
+            <th:block th:insert="~{/components/buttons/table :: buttonManagerByUrl('title.complete.appointment', 'btn-primary btnComplete', 'bi-check', @{'/booking/completeBooking?bookingId=' + ${appt.code}}, ${appt.apptStatus != appt.apptStatus.IN_PROGRESS})}"></th:block>
         </td>
     </tr>
     </tbody>

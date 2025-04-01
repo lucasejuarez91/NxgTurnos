@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Incluir el header -->
+<th:block th:replace="~{fragments/header :: head}"></th:block>
+<body>
+<th:block th:replace="~{fragments/header :: header}"></th:block>
+<script th:src="@{/js/booking/confirmation.js}"></script>
+<div>
+  <div class="page-header" id="banner">
+    <div class="row">
+      <div class="card">
+          <div class="card-body">
+            <h4 class="card-title text-center fs-2"></h4>
+            <div class="card">
+              <h4 class="card-title text-center fs-2" th:text="#{title.booking.resume(${appt.client.firstName.toUpperCase()})}"></h4>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-12 col-md-3">
+                    <span class="card-subtitle mb-2 text-muted" th:text="#{title.service}">Servicio</span>
+                    <p th:text="${appt.service.name}"></p>
+                  </div>
+                  <div class="col-12 col-md-3">
+                    <span class="card-subtitle mb-2 text-muted" th:text="#{title.professional}">Profesional</span>
+                    <p th:text="${appt.professional.fullname}"></p>
+                  </div>
+                  <div class="col-12 col-md-3">
+                    <span class="card-subtitle mb-2 text-muted" th:text="#{title.datetime}">Horario</span>
+                    <p th:text="${appt.scheduledDateStart}"></p>
+                  </div>
+                  <div class="col-12 col-md-3">
+                    <span class="card-subtitle mb-2 text-muted" th:text="#{title.price}">Pago</span>
+                    <p th:text="${'$ ' + #numbers.formatDecimal(appt.service.price, 0, 'COMMA', 2, 'POINT')}"></p>
+                  </div>
+                  <div th:if="${!appt.payments.isEmpty()}" class="row">
+                    <h5 th:text="#{title.prepay}">Reserva</h5>
+                    <div class="col-6 col-md-3">
+                      <span class="card-subtitle mb-2 text-muted" th:text="#{title.price}">Reserva</span>
+                      <p th:text="${'$ ' + #numbers.formatDecimal(appt.payments[0].amount, 0, 'COMMA', 2, 'POINT')}"></p>
+                    </div>
+                    <div class="col-6 col-md-3">
+                      <span class="card-subtitle mb-2 text-muted" th:text="#{title.payment.method}">Reserva</span>
+                      <p th:text="${appt.payments[0].getPaymentMethodEnum}"></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <section class="section dashboard">
+            <div class="row">
+              <div class="offset-3 col-md-2">
+                <div class="card info-card revenue-card">
+                  <div class="card-body">
+                    <h5 class="card-title">Total</h5>
+                    <div class="d-flex align-items-center">
+                      <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                        <i class="bi bi-currency-dollar"></i>
+                      </div>
+                      <div class="ps-3">
+                        <h6>$3,000</h6>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="card info-card revenue-card">
+                  <div class="card-body">
+                    <h5 class="card-title">Pagado</h5>
+                    <div class="d-flex align-items-center">
+                      <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                        <i class="bi bi-currency-dollar"></i>
+                      </div>
+                      <div class="ps-3">
+                        <h6>$100</h6>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="card info-card revenue-card">
+                  <div class="card-body">
+                    <h5 class="card-title">Pendiente</h5>
+                    <div class="d-flex align-items-center">
+                      <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                        <i class="bi bi-currency-dollar"></i>
+                      </div>
+                      <div class="ps-3">
+                        <h6>$2,900</h6>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="card">
+                <div class="card-body">
+                  <th:block th:insert="~{/booking/formAddItems :: formAddItem}"></th:block>
+                  <th:block th:insert="~{/booking/tableItemsByAppt :: tblItemsByAppt}"></th:block>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

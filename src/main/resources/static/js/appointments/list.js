@@ -14,5 +14,9 @@ $(document).ready(function(){
         if(respuesta)
             await manageEntity("appointments", id, {status: false, apptStatus: '/appointmentStatus/2'})
     });
+
+    $('.btnComplete').on('click', function(){
+        window.location.href = $(this).data('url');
+    });
 });
 

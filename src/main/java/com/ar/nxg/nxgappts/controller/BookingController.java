@@ -73,6 +73,12 @@ public class BookingController extends GlobalControllerAdvice {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private PaymentRepository paymentRepository;
+
+    @Autowired
+    private ItemRepository itemRepository;
+
     @ModelAttribute("booking")
     public BookingDTO booking() {
         return new BookingDTO();
@@ -220,7 +226,7 @@ public class BookingController extends GlobalControllerAdvice {
             return "home";
         }
         model.addAttribute("appt", appt);
-        return "public/booking/initBooking";
+        return "public/booking/confirmation";
 
     }
 
@@ -230,18 +236,34 @@ public class BookingController extends GlobalControllerAdvice {
         model.addAttribute("initializated", false);
         if(appt == null || getUserIdLogged() == null){
             //model.addAttribute("initializated", false);
-            return "home";
+            return "login";
         }
         model.addAttribute("appt", appt);
         User userProfessional = userRepository.findById(getUserIdLogged().getId()).orElseThrow();
         if(userProfessional.getRoles().contains(roleRepository.findByName("APPT_INITIATOR"))
-                && appt.getApptStatus() == AppointmentStatusEnum.CREATED
+                && appt.getApptStatus() == AppointmentStatusEnum.CONFIRM
                 && Boolean.TRUE.equals(confirm)){
             appt.setApptStatus(AppointmentStatusEnum.IN_PROGRESS);
             appointmentRepository.save(appt);
             model.addAttribute("initializated", true);
         }
-        return "public/booking/initBooking";
+        return "public/booking/confirmation";
+
+    }
+
+    @GetMapping("/completeBooking")
+    public String completeBooking(@RequestParam String bookingId, Model model){
+        Appointment appt = appointmentRepository.getAppointmentByCode(bookingId);
+        model.addAttribute("initializated", false);
+        if(appt == null || getUserIdLogged() == null){
+            //model.addAttribute("initializated", false);
+            return "appointments/list";
+        }
+        Payment payment = paymentRepository.findByAppointment(appt);
+        model.addAttribute("appt", appt);
+        model.addAttribute("payment", payment);
+        model.addAttribute("items", itemRepository.findByCompany(appt.getCompany()));
+        return "/booking/completeBooking";
 
     }
 

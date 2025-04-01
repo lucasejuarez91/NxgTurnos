@@ -28,6 +28,8 @@ public class Appointment extends BaseEntity {
     @JoinColumn(name = "professional_id")
     private Professional professional;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private AppointmentStatusEnum apptStatus;
 
     private LocalDateTime scheduledDateStart; // Fecha y hora de la cita

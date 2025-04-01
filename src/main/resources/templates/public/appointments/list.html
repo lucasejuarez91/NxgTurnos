@@ -40,10 +40,11 @@
                             <td th:text="${appt.scheduledDateStart + ' - ' + appt.scheduledDateEnd}"></td>
                             <td th:text="${appt.apptStatus}"></td>
                             <td>
-                                <span th:if="${appt.apptStatus == appt.apptStatus.CREATED}" class="badge bg-info text-white" th:text="${#messages.msg(appt.apptStatus.CREATED.getText())}"></span>
+                                <span th:if="${appt.apptStatus == appt.apptStatus.CREATED}" class="badge bg-warning" th:text="${#messages.msg(appt.apptStatus.CREATED.getText())}"></span>
                                 <span th:if="${appt.apptStatus == appt.apptStatus.CANCELLED}" class="badge bg-danger text-white" th:text="${#messages.msg(appt.apptStatus.CANCELLED.getText())}"></span>
-                                <span th:if="${appt.apptStatus == appt.apptStatus.COMPLETED}" class="badge bg-success text-white" th:text="${#messages.msg(appt.apptStatus.COMPLETED.getText())}"></span>
-                                <span th:if="${appt.apptStatus == appt.apptStatus.CONFIRM}" class="badge bg-success text-white" th:text="${#messages.msg(appt.apptStatus.CONFIRM.getText())}"></span>
+                                <span th:if="${appt.apptStatus == appt.apptStatus.COMPLETED}" class="badge bg-dark text-white" th:text="${#messages.msg(appt.apptStatus.COMPLETED.getText())}"></span>
+                                <span th:if="${appt.apptStatus == appt.apptStatus.CONFIRM}" class="badge bg-success" th:text="${#messages.msg(appt.apptStatus.CONFIRM.getText())}"></span>
+                                <span th:if="${appt.apptStatus == appt.apptStatus.IN_PROGRESS}" class="badge bg-primary text-white" th:text="${#messages.msg(appt.apptStatus.IN_PROGRESS.getText())}"></span>
                             </td>
                             <td>
                                 <th:block th:if="${appt.apptStatus.CONFIRM}" th:insert="~{/components/buttons/table :: buttonManagerByUrl('title.qr', 'btn-primary btnQR', 'bi-qr-code', './qr/' + ${appt.code}, ${!available})}"></th:block>
@@ -52,7 +53,7 @@
                                 <th:block th:if="${available}" th:insert="~{/components/buttons/table :: buttonManagerByUrl('title.reschedule', 'btn-warning btnReSchedule', 'bi-calendar-date', '/appointments/edit/' + ${appt.code}, ${!available})}"></th:block>
                             </td>
                             <td>
-                                <th:block th:if="${available}" th:insert="~{/components/buttons/table :: buttonManagerByUrl('title.view', 'btn-primary btnView', 'bi-eye', '/booking/confirmation?bookingId=' + ${appt.code}, ${!available})}"></th:block>
+                                <th:block th:if="${available}" th:insert="~{/components/buttons/table :: buttonManagerByUrl('title.view', 'btn-primary btnView', 'bi-eye', @{'/booking/confirmation?bookingId=' + ${appt.code}}, ${!available})}"></th:block>
                             </td>
                             <td>
                                 <th:block th:if="${available}" th:insert="~{/components/buttons/table :: buttonManagerById('title.cancel.appointment', 'btn-danger btnDelete', 'bi bi-trash', ${appt.id}, ${!available})}"></th:block>

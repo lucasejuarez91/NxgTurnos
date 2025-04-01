@@ -1,3 +1,8 @@
+$(document).ready(function(){
+   initDataTable('tblItems');
+   $('#item').select2({theme: 'bootstrap-5'})
+});
+
 function createGoogleCalendarEvent(button) {
     // Obtener los datos almacenados en los atributos data-* del botón
     const startDate = button.getAttribute('data-startdate');

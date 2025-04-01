@@ -1,5 +1,6 @@
 package com.ar.nxg.nxgappts.repositories;
 
+import com.ar.nxg.nxgappts.domain.Appointment;
 import com.ar.nxg.nxgappts.domain.Company;
 import com.ar.nxg.nxgappts.domain.Payment;
 import com.ar.nxg.nxgappts.domain.Service;
@@ -12,5 +13,7 @@ import java.util.List;
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     Payment findByPaymentCode(String externalReference);
+
+    Payment findByAppointment(Appointment appt);
 }
 
