@@ -57,6 +57,7 @@
                                     </div>
 
                                     <form class="row g-3 needs-validation" th:action="@{/login}" method="post" th:fragment="loginForm" id="loginForm">
+                                        <input type="hidden" name="redirectTo" id="redirectTo" value="">
                                         <div id="loginError" class="alert alert-danger fade show text-center p-2 mb-0 mt-3" th:if="${param.error}">
                                             <label class="message" style="font-size: 15px" th:text="${#messages.msg('login.failed')}"></label>
                                         </div>

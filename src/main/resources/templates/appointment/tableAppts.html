@@ -1,0 +1,68 @@
+<table class="display table-stripped" style="width:100%" id="tblAppts" th:fragment="tblAppts">
+    <thead>
+    <tr>
+        <!--   1     -->
+        <th scope="col">#</th>
+        <!--   2     -->
+        <th scope="col" th:text="#{table.client}">Cliente</th>
+        <!--   3     -->
+        <th th:text="#{table.service}">Servicio</th>
+        <!--   4     -->
+        <th th:text="#{table.professional}">Profesional</th>
+        <!--   5     -->
+        <th scope="col" th:text="#{table.datetime}">Fecha/Hora</th>
+        <!--   6     -->
+        <th scope="col" th:text="#{table.status}">Estado</th>
+        <!--   7     -->
+        <th scope="col"></th>
+        <!--   8     -->
+        <th scope="col"></th>
+        <!--   9     -->
+        <th scope="col"></th>
+        <!--   10     -->
+        <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="appt : ${appointments}" th:class="${!appt.status ? 'text-muted' : ''}">
+        <!--        -->
+        <!--    1   -->
+        <td th:if="${appt.apptStatus == appt.apptStatus.CREATED}">
+            <a class="btn btn-dark btn-xs w-100" th:href="'./edit/' + ${appt.code}" th:text="${'#'+appt.code}"></a>
+        </td>
+        <td th:if="${appt.apptStatus != appt.apptStatus.CREATED}">
+            <label class="btn btn-dark btn-xs w-100" th:text="${'#'+appt.code}"></label>
+        </td>
+        <!--     2   -->
+        <td th:text="${appt.client.getFullname()}"></td>
+        <!--     3   -->
+        <td th:text="${appt.service.item.name}"></td>
+        <!--     4   -->
+        <td th:text="${appt.professional.getFullname()}"></td>
+        <!--     5   -->
+        <td th:text="${appt.scheduledDateStart + ' - ' + appt.scheduledDateEnd}"></td>
+        <!--     6   -->
+        <td>
+            <span th:if="${appt.apptStatus == appt.apptStatus.CREATED}" class="badge bg-info w-100" th:text="${#messages.msg(appt.apptStatus.CREATED.getText())}"></span>
+            <span th:if="${appt.apptStatus == appt.apptStatus.CANCELLED}" class="badge bg-danger text-white w-100" th:text="${#messages.msg(appt.apptStatus.CANCELLED.getText())}"></span>
+            <span th:if="${appt.apptStatus == appt.apptStatus.COMPLETED}" class="badge bg-dark text-white w-100" th:text="${#messages.msg(appt.apptStatus.COMPLETED.getText())}"></span>
+            <span th:if="${appt.apptStatus == appt.apptStatus.CONFIRM}" class="badge bg-success w-100" th:text="${#messages.msg(appt.apptStatus.CONFIRM.getText())}"></span>
+            <span th:if="${appt.apptStatus == appt.apptStatus.IN_PROGRESS}" class="badge bg-primary text-white w-100" th:text="${#messages.msg(appt.apptStatus.IN_PROGRESS.getText())}"></span>
+        </td>
+        <!--     7   -->
+        <td th:text="${appt.apptStatus}"></td>
+        <!--     8   -->
+        <td>
+            <th:block th:if="${appt.apptStatus == appt.apptStatus.CONFIRM || appt.apptStatus == appt.apptStatus.CREATED}" th:insert="~{/components/buttons/table :: buttonManagerById('title.cancel.appointment', 'btn-danger btnDelete', 'bi bi-trash', ${appt.code}, ${appt.apptStatus != appt.apptStatus.CONFIRM || appt.apptStatus != appt.apptStatus.CREATED})}"></th:block>
+        </td>
+        <!--     9   -->
+        <td>
+            <th:block th:if="${appt.apptStatus == appt.apptStatus.CONFIRM}" th:insert="~{/components/buttons/table :: buttonManagerByUrl('title.view', 'btn-primary btnView', 'bi-eye', @{'/appointments/confirmation?bookingId=' + ${appt.code}}, ${!(appt.apptStatus == appt.apptStatus.CONFIRM)})}"></th:block>
+        </td>
+        <!--     10   -->
+        <td>
+            <th:block th:if="${appt.apptStatus == appt.apptStatus.IN_PROGRESS}" th:insert="~{/components/buttons/table :: buttonManagerByUrl('title.complete.appointment', 'btn-primary btnComplete', 'bi-check', @{'/appointments/completeBooking?bookingId=' + ${appt.code}}, ${appt.apptStatus != appt.apptStatus.IN_PROGRESS})}"></th:block>
+        </td>
+    </tr>
+    </tbody>
+</table>

@@ -20,7 +20,7 @@ public class Payment extends BaseEntity {
     @Column(name = "payment_code", nullable = false, unique = true)
     private String paymentCode = generateRandomCode();
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "appointment", nullable = false, unique = true)
     private Appointment appointment;
 

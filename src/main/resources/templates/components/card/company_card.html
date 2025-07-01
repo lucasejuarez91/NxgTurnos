@@ -4,7 +4,7 @@
     </div>
     <div class="col-md-9">
         <div class="card-body mt-1 p-1" >
-            <a class="card-title" th:text="${comp.name}" th:href="@{'/booking/request/select-salon/' + ${comp.id} }"></a>
+            <a class="card-title" th:text="${comp.name}" th:href="@{'/appointments/request/select-salon/' + ${comp.id} }"></a>
             <br>
             <div class="rating text-muted">
                 <span class="score" th:text="${calificacion}">4.6</span>

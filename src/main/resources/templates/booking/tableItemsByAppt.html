@@ -3,20 +3,20 @@
     <tr>
         <th scope="col">#</th>
         <th th:text="#{table.Item}">Item</th>
-        <th th:text="#{table.quantity}">Cantidad</th>
         <th scope="col" th:text="#{table.price}">Valor</th>
+        <th th:text="#{table.quantity}">Cantidad</th>
         <th scope="col" th:text="#{table.total_price}">Valor Total</th>
         <th scope="col" th:text="#{table.status}">Estado</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="item, iter : ${payment.paymentItems}">
+    <tr th:each="item, iter : ${paymentItems}">
         <td th:text="${iter.index + 1}"></td>
         <td th:text="${item.item.name}"></td>
+        <td th:text="${item.price}"></td>
         <td th:text="${item.quantity}"></td>
         <td th:text="${item.totalPrice}"></td>
-        <td th:text="${item.totalPrice}"></td>
-        <td th:text="#{item.itemStatusEnum}"></td>
+        <td th:text="${item.itemStatusEnum}"></td>
     </tr>
     </tbody>
 </table>

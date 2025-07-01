@@ -34,10 +34,8 @@ public class Company extends BaseEntity {
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Rating> ratings = new ArrayList<>();
 
-    private LocalTime minStartTime;
-    private LocalTime maxEndtime;
-    private DayOfWeek minDay;
-    private DayOfWeek maxDay;
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OpeningHour> openingHours;
     @Column(nullable = true)
     private Double prepaymentPercentage;
     @Column(nullable = true)

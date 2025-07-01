@@ -7,7 +7,7 @@
 <script th:src="@{/js/booking/confirmation.js}"></script>
 <div>
     <div class="page-header" id="banner">
-        <div class="row">
+        <div class="">
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title text-center fs-1" th:text="#{title.thanks.for.book.with.us(${appt.client.firstName.toUpperCase()})}"></h4>
@@ -15,7 +15,7 @@
                     <div class="row">
                         <div class="col-12 col-md-3">
                             <span class="card-subtitle mb-2 text-muted" th:text="#{title.service}">Servicio</span>
-                            <p th:text="${appt.service.name}"></p>
+                            <p th:text="${appt.service.item.name}"></p>
                         </div>
                         <div class="col-12 col-md-3">
                             <span class="card-subtitle mb-2 text-muted" th:text="#{title.professional}">Profesional</span>
@@ -23,11 +23,12 @@
                         </div>
                         <div class="col-12 col-md-3">
                             <span class="card-subtitle mb-2 text-muted" th:text="#{title.datetime}">Horario</span>
-                            <p th:text="${#dates.format(scheduledDateStart, 'dd MMMM yyyy HH:mm')}"></p>
+                            <p th:text="${#dates.format(scheduledDateStart, 'dd MMMM yyyy') +
+                            ' (' + #dates.format(scheduledDateStart, 'HH:mm') + ' - ' + #dates.format(scheduledDateEnd, 'HH:mm') + ')'}"></p>
                         </div>
                         <div class="col-12 col-md-3">
                             <span class="card-subtitle mb-2 text-muted" th:text="#{title.price}">Pago</span>
-                            <p th:text="${'$ ' + #numbers.formatDecimal(appt.service.price, 0, 'COMMA', 2, 'POINT')}"></p>
+                            <p th:text="${'$ ' + #numbers.formatDecimal(appt.service.item.price, 0, 'COMMA', 2, 'POINT')}"></p>
                         </div>
                         <div th:if="${!appt.payments.isEmpty()}" class="row">
                             <h5 th:text="#{title.prepay}">Reserva</h5>
@@ -47,12 +48,12 @@
                             <p th:text="${appt.company.address}"></p>
                         </div>
                     </div>
-                    <form class="row" method="POST" th:action="@{'/booking/initBooking?appointmentCode='+${appt.getCode()}+'&confirm=true'}" th:if="${appt != null && appt.getApptStatus() == appt.getApptStatus().CONFIRM}">
+                    <form class="row mb-3" method="POST" th:action="@{'/appointments/initBooking?appointmentCode='+${appt.getCode()}+'&confirm=true'}" th:if="${appt != null && appt.getApptStatus() == appt.getApptStatus().CONFIRM}">
                         <div class="offset-md-5 col-12 col-md-2">
                             <button type="submit" class="btn btn-primary w-100" th:text="#{button.init.booking}">INICIAR TURNO</button>
                         </div>
                     </form>
-                    <form class="row" method="post" th:action="@{'/payment/payBooking?apptId='+${appt.getId}}" th:if="${appt.getApptStatus() == appt.getApptStatus().CREATED}">
+                    <form class="row mb-3" method="post" th:action="@{'/payment/payBooking?bookingCode='+${appt.getCode}}" th:if="${appt.getApptStatus() == appt.getApptStatus().CREATED}">
                         <div class="offset-md-5 col-12 col-md-2">
                             <button type="submit" class="btn btn-primary w-100" th:text="#{button.prepay}">PAGAR RESERVA</button>
                         </div>
@@ -60,17 +61,17 @@
                     <div class="row" th:if="${appt != null && appt.getApptStatus() == appt.getApptStatus().CREATED || appt.getApptStatus() == appt.getApptStatus().CONFIRM}">
                     <hr>
                         <div class="offset-md-5 col-12 col-md-2">
-                            <a class="btn btn-danger w-100" th:href="@{'/booking/cancel?apptId='+${appt.getId}}" th:text="#{title.cancel.book}">CANCELAR TURNO</a>
+                            <a class="btn btn-danger w-100" th:href="@{'/appointments/cancel?bookingCode='+${appt.getCode}}" th:text="#{title.cancel.book}">CANCELAR TURNO</a>
                         </div>
                     </div>
                     <hr>
-                    <div class="row" th:if="${appt.getApptStatus().CONFIRM}">
+                    <div class="row" th:if="${appt.getApptStatus() == appt.getApptStatus().CONFIRM}">
                         <div class="col-12 col-md-2 mb-2 offset-md-4">
                             <button class="btn btn-light w-100"
                                     th:data-startdate="${appt.scheduledDateStart}"
                                     th:data-enddate="${appt.scheduledDateEnd}"
                                     th:data-title="${appt.company.name}"
-                                    th:data-description="${appt.service.name}"
+                                    th:data-description="${appt.service.item.name}"
                                     th:data-professional="${appt.professional.fullname}"
                                     th:data-location="${appt.company.address}"
                                     onclick="createGoogleCalendarEvent(this)">
@@ -82,7 +83,7 @@
                                     th:data-startdate="${appt.scheduledDateStart}"
                                     th:data-enddate="${appt.scheduledDateEnd}"
                                     th:data-title="${appt.company.name}"
-                                    th:data-description="${appt.service.name}"
+                                    th:data-description="${appt.service.item.name}"
                                     th:data-professional="${appt.professional.fullname}"
                                     th:data-location="${appt.company.address}"
                                     onclick="createAppleCalendarEvent(this)">

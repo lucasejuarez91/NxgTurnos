@@ -22,6 +22,10 @@ public class Professional extends BaseEntity {
     @ManyToOne
     private Company company;
 
+    @OneToOne
+    @JoinColumn(name = "image_professional_file_id", referencedColumnName = "id", nullable = true)
+    private Files image;
+
     public String getFullname(){
         return String.format("%s %s", this.firstname, this.lastname);
     }

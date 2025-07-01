@@ -1,7 +1,35 @@
 $(document).ready(function(){
    initDataTable('tblItems');
-   $('#item').select2({theme: 'bootstrap-5'})
+   $('#item').select2({theme: 'bootstrap-5'});
+
+   $('#formAddItems').on('submit', async function(e){
+       e.preventDefault();
+       // Crear un objeto FormData a partir del formulario
+       let formData = new FormData(this);
+
+       // Usar Fetch para enviar el formulario al backend
+       fetch(getContextPath() + '/appointments/addItemsToBooking', {
+           method: 'POST',
+           body: formData,
+       })
+           .then(response => response.text()) // Asumiendo que el backend responde con JSON
+           .then(async data => {
+               //console.log('Respuesta del backend:', data);
+               // Aquí puedes hacer algo con la respuesta, como mostrar un mensaje de éxito
+               await mixinAlert('success', 'Item agregado', () => {
+                   window.location.reload();
+               });
+               //$('#tblItems').html(data);
+               //initDataTable('tblItems');
+               //refreshFragment(getContextPath() + '/booking/refreshTotalizers', '#totalizers')
+           })
+           .catch(error => {
+               console.error('Error al enviar los datos:', error);
+           });
+   })
+
 });
+
 
 function createGoogleCalendarEvent(button) {
     // Obtener los datos almacenados en los atributos data-* del botón
@@ -74,4 +102,22 @@ function formatDateForICalendar(date) {
 
     return `${year}${month}${day}T${hours}${minutes}${seconds}Z`;
 }
+
+/*Items*/
+function autocompleteItem(element) {
+    // Obtener la opción seleccionada
+    let selectedOption = element.selectedOptions[0];
+
+    // Obtener el valor del atributo 'data-price'
+    let itemPrice = selectedOption ? selectedOption.dataset.price : null;
+
+    // Obtener el input donde se mostrará el precio
+    let priceInputElement = document.getElementById('price');
+
+    // Asignar el valor al input
+    if (priceInputElement && itemPrice) {
+        priceInputElement.value = itemPrice;
+    }
+}
+
 

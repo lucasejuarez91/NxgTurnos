@@ -15,10 +15,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class MenuService {
+public class MenuService extends BaseService<Menu> {
 
-    @Autowired
-    private MenuRepository menuRepository;
+    private final MenuRepository menuRepository;
+
+    public MenuService(MenuRepository menuRepository) {
+        this.menuRepository = menuRepository;
+    }
 
     public List<MenuDTO> getMenuForUser(List<Role> roles) {
         // Obtener todas las categorías de menú

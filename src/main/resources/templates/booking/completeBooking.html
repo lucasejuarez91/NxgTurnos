@@ -45,63 +45,27 @@
                 </div>
               </div>
             </div>
-          <section class="section dashboard">
-            <div class="row">
-              <div class="offset-3 col-md-2">
-                <div class="card info-card revenue-card">
-                  <div class="card-body">
-                    <h5 class="card-title">Total</h5>
-                    <div class="d-flex align-items-center">
-                      <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                        <i class="bi bi-currency-dollar"></i>
+            <section class="section dashboard">
+              <th:block th:insert="~{/booking/bookingDashboard :: totalizers}"></th:block>
+              <div class="row">
+                <div class="">
+                  <div class="">
+                    <div class="card" th:if="${appt.apptStatus == appt.apptStatus.IN_PROGRESS}">
+                      <div class="card-body">
+                        <h5 class="card-title">Agregar Item</h5>
+                        <th:block th:insert="~{/booking/formAddItems :: formAddItem}"></th:block>
                       </div>
-                      <div class="ps-3">
-                        <h6>$3,000</h6>
+                    </div>
+                    <div class="card">
+                      <div class="card-body">
+                        <h5 class="card-title">Listado de Items</h5>
+                        <th:block th:insert="~{/booking/tableItemsByAppt :: tblItemsByAppt}"></th:block>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="col-md-2">
-                <div class="card info-card revenue-card">
-                  <div class="card-body">
-                    <h5 class="card-title">Pagado</h5>
-                    <div class="d-flex align-items-center">
-                      <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                        <i class="bi bi-currency-dollar"></i>
-                      </div>
-                      <div class="ps-3">
-                        <h6>$100</h6>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-2">
-                <div class="card info-card revenue-card">
-                  <div class="card-body">
-                    <h5 class="card-title">Pendiente</h5>
-                    <div class="d-flex align-items-center">
-                      <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                        <i class="bi bi-currency-dollar"></i>
-                      </div>
-                      <div class="ps-3">
-                        <h6>$2,900</h6>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="card">
-                <div class="card-body">
-                  <th:block th:insert="~{/booking/formAddItems :: formAddItem}"></th:block>
-                  <th:block th:insert="~{/booking/tableItemsByAppt :: tblItemsByAppt}"></th:block>
-                </div>
-              </div>
-            </div>
-          </section>
+            </section>
         </div>
       </div>
     </div>

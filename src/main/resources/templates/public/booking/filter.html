@@ -1,0 +1,30 @@
+<section id="client-empresas" class="section" aria-label="Listado y búsqueda de empresas para cliente" th:fragment="filterDiv">
+    <h2 th:text="#{filters}"></h2>
+    <div id="client-empresas-content">
+        <aside id="client-company-filters" aria-label="Filtros de empresas para cliente">
+            <div class="company-filters-group">
+                <label for="client-filter-location" th:text="#{filter.location}">Ubicación</label>
+                <select id="client-filter-location" class="form-select" aria-label="Filtro por ubicación cliente">
+                    <option value="" th:text="#{option.all.f}">Todas</option>
+                </select>
+            </div>
+            <div class="company-filters-group">
+                <label for="client-filter-type">Tipo</label>
+                <select id="client-filter-type" class="form-select" aria-label="Filtro por tipo cliente">
+                    <option value="" th:text="#{option.all.m}">Todos</option>
+                    <option value="Gimnasio">Gimnasio</option>
+                    <option value="Clinica">Clínica</option>
+                    <option value="Estética">Estética</option>
+                    <option value="Consultorio">Consultorio</option>
+                </select>
+            </div>
+            <div class="company-filters-group">
+                <label>
+                    <input type="checkbox" id="client-filter-active" checked th:text="#{only.active}" />
+                </label>
+            </div>
+            <input type="search" id="client-company-search" class="form-control" th:placeholder="#{home.box.find.placeholder}" />
+            <button id="client-btnClearFilters" class="btn btn-sm btn-outline-secondary w-100 mt-2" th:text="#{button.clear}">Limpiar filtros</button>
+        </aside>
+    </div>
+</section>

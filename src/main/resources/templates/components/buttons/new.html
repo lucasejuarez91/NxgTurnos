@@ -1,11 +1,11 @@
-<button type="button" class="btn btn-primary btn-sm"
+<button type="button" class="nav-link nav-profile d-flex align-items-center pe-0"
         data-toggle="modal" th:data-url="@{${dataUrl}}" th:data-target="${isHeaderButton ? '#headerModalCreate' : '#modalCreate'}"
         th:id="${isHeaderButton ? 'headerButton' : 'createBtn'}" th:fragment="buttonNew(dataUrl, labelKey, isHeaderButton)">
-    <span th:text="${labelKey != null ? #messages.msg(labelKey) : #messages.msg('button.new')}">NUEVO</span>
+    <span class="d-md-block ps-2 badge bg-success" th:text="${labelKey != null ? #messages.msg(labelKey) : #messages.msg('button.new')}">NUEVO</span>
 </button>
-<a th:class="${'btn btn-secondary btn-sm me-3'}" th:href="@{${dataUrl}}"
+<a th:class="${'nav-link nav-profile d-flex align-items-center pe-0'}" th:href="@{${dataUrl}}"
    th:fragment="buttonNewLink(dataUrl, labelKey, type)">
-    <span th:text="${labelKey != null ? #messages.msg(labelKey) : #messages.msg('button.new')}">NUEVO</span>
+    <span class="d-md-block ps-2 badge bg-primary" th:text="${labelKey != null ? #messages.msg(labelKey) : #messages.msg('button.new')}">NUEVO</span>
 </a>
 
 

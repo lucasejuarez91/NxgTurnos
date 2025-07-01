@@ -4,6 +4,7 @@ import com.ar.nxg.nxgappts.domain.BaseEntity;
 import com.ar.nxg.nxgappts.domain.User;
 import com.ar.nxg.nxgappts.repositories.RepositoryLocator;
 import com.ar.nxg.nxgappts.repositories.UserRepository;
+import jakarta.persistence.MappedSuperclass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.Authentication;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 @Service
+@MappedSuperclass
 public class BaseService<T> {
 
     @Autowired

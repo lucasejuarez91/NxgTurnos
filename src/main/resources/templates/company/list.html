@@ -8,25 +8,22 @@
 <div>
     <th:block th:replace="~{fragments/breadcrumbs :: listbreacrumbs}"></th:block>
     <div class="page-header" id="banner">
-        <div class="row">
+        <div class="">
             <div class="card">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-6 mt-3">
-                            <button type="button" class="btn btn-primary btn-sm"
-                                    data-toggle="modal" data-url="/company/create" data-target="#modalCreate" id="createCompanyBtn">
-                                NUEVO <i class="bi bi-plus"></i>
-                            </button>
+                            <th:block th:insert="~{/components/buttons/new :: buttonNew('/company/create', null, false)}"></th:block>
                         </div>
                     </div>
                     <table class="display table-stripped" style="width:100%" id="tblCompany">
                         <thead>
                         <tr>
-                            <th scope="col">Razon Social</th>
-                            <th>Dirección</th>
-                            <th>Teléfono</th>
-                            <th>Contacto</th>
-                            <th>Estado</th>
+                            <th scope="col" th:text="${#messages.msg('table.company.name')}">Razon Social</th>
+                            <th th:text="${#messages.msg('table.address')}">Dirección</th>
+                            <th th:text="${#messages.msg('table.telephone')}">Teléfono</th>
+                            <th th:text="${#messages.msg('table.contact')}">Contacto</th>
+                            <th th:text="${#messages.msg('table.status')}">Estado</th>
                             <th></th>
                             <th></th>
                             <th></th>
@@ -38,21 +35,15 @@
                             <td th:text="${comp.address}"></td>
                             <td th:text="${comp.telephone}"></td>
                             <td th:text="${comp.contact}"></td>
-                            <td th:text="${comp.status ? 'ACTIVO' : 'INACTIVO'}"></td>
+                            <td th:text="${comp.status ? #messages.msg('entity.status.active') : #messages.msg('entity.status.inactive')}"></td>
                             <td>
-                                <button class="btn btn-sm btn-primary btnEdit" th:data-url="'./edit/' + ${comp.id}" th:disabled="${!comp.status}" data-toggle="tooltip" data-placement="top" title="Editar">
-                                    <i class="bi bi-pencil-square"></i>
-                                </button>
+                                <th:block th:insert="~{/components/buttons/table :: buttonManagerByUrl('title.edit', 'btn-primary btnEdit', 'bi-pencil-square', './edit/' + ${comp.id}, ${!comp.status})}"></th:block>
                             </td>
                             <td>
-                                <button class="btn btn-sm btn-warning btnChangeStatus" th:data-id="${comp.id}" th:disabled="${comp.status}" data-toggle="tooltip" data-placement="top" title="Recuperar">
-                                    <i class="bi bi-arrow-counterclockwise"></i>
-                                </button>
+                                <th:block th:insert="~{/components/buttons/table :: buttonManagerById('title.recover', 'btn-warning btnChangeStatus', 'bi bi-arrow-counterclockwise', ${comp.id}, ${comp.status})}"></th:block>
                             </td>
                             <td>
-                                <button class="btn btn-sm btn-danger btnDelete" th:data-id="${comp.id}" th:disabled="${!comp.status}" data-toggle="tooltip" data-placement="top" title="Eliminar">
-                                    <i class="bi bi-trash"></i>
-                                </button>
+                                <th:block th:insert="~{/components/buttons/table :: buttonManagerById('title.delete', 'btn-danger btnDelete', 'bi bi-trash', ${comp.id}, ${!comp.status})}"></th:block>
                             </td>
                         </tr>
                         </tbody>

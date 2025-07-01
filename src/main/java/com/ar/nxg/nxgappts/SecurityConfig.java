@@ -17,8 +17,13 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private CustomUserDetailsService userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
+    private final CustomAuthenticationSuccessHandler successHandler;
+
+    public SecurityConfig(CustomUserDetailsService userDetailsService, CustomAuthenticationSuccessHandler successHandler) {
+        this.userDetailsService = userDetailsService;
+        this.successHandler = successHandler;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -32,11 +37,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) -> authorize
                                 .requestMatchers("/login/**", "/register/**", "/registerUser/**", "/confirm", "/confirmation",
                                         "/assets/**",  "/css/**", "/js/**", "/images/**", "/image/**", "/vendor/**", "/reset-password-request",
-                                        "/reset-password","/booking/request/**").permitAll()
+                                        "/reset-password","/appointments/request/**").permitAll()
                                 //.requestMatchers( "/confirm","/confirmation").authenticated()
                         .anyRequest().permitAll()
                 )
-                .formLogin(t -> t.loginPage("/login").permitAll().defaultSuccessUrl("/", false))
+                .formLogin(t -> t.loginPage("/login").successHandler(successHandler).permitAll())
                         //.failureUrl("/login?error"))
                         //.failureHandler(customAuthenticationFailureHandler())) // Configurar el handler de fallos
                 //.addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)  // Añadir el filtro de autenticación JWT

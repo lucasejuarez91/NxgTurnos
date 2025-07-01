@@ -5,7 +5,9 @@ import com.ar.nxg.nxgappts.domain.User;
 import com.ar.nxg.nxgappts.dto.ResponseMessage;
 import com.ar.nxg.nxgappts.repositories.FilesRepository;
 import com.ar.nxg.nxgappts.repositories.UserRepository;
+import com.ar.nxg.nxgappts.service.FilesService;
 import com.ar.nxg.nxgappts.service.MenuService;
+import com.ar.nxg.nxgappts.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,16 +19,19 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/user")
 public class UserController extends GlobalControllerAdvice {
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserService userService;
 
-    @Autowired
-    private FilesRepository filesRepository;
+    private final FilesService filesService;
+
+    public UserController(UserService userService, FilesService filesService) {
+        this.userService = userService;
+        this.filesService = filesService;
+    }
 
     @GetMapping("/my-profile")
     public ModelAndView showHome() {
         ModelAndView m = new ModelAndView("user/profile");
-        m.addObject("user", userRepository.findById(getUserIdLogged().getId()).orElseThrow());
+        m.addObject("user", userService.findById(getUserIdLogged().getId()));
         return m;
     }
 
@@ -35,10 +40,9 @@ public class UserController extends GlobalControllerAdvice {
         ResponseMessage resp = new ResponseMessage();
 
         try {
-            User user = userRepository.findById(getUserIdLogged().getId())
-                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + getUserIdLogged().getId()));
-            user.setAvatar(filesRepository.findById(fileId).orElseThrow());
-            userRepository.save(user);
+            User user = userService.findById(getUserIdLogged().getId());
+            user.setAvatar(filesService.findById(fileId));
+            userService.saveOrUpdate(user);
             // Configurar la respuesta de éxito
             resp.setError(false);
             resp.setMessage("Actualizado correctamente");

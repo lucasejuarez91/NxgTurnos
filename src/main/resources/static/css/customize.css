@@ -1,0 +1,49 @@
+/* Ajustar botones y texto */
+.fc-toolbar-title {
+    font-size: 1.2rem !important; /* Tamaño de título */
+}
+.fc-button {
+    font-size: 0.9rem !important; /* Tamaño de botones */
+    padding: 6px 10px !important; /* Espaciado en botones */
+}
+
+/* En pantallas pequeñas */
+@media (max-width: 600px) {
+    .fc-toolbar-title {
+        font-size: 1rem !important; /* Reducir título */
+    }
+    .fc-button {
+        font-size: 0.8rem !important;
+        padding: 4px 8px !important;
+    }
+}
+.rating {
+    display: inline-flex;
+    align-items: center;
+    font-size: 13px;
+}
+.stars {
+    display: flex;
+    margin: 0 5px;
+}
+.star {
+    color: #ccc;
+    font-size: 13px;
+}
+.filled {
+    color: gold;
+}
+.half-filled {
+    position: relative;
+}
+.half-filled::before {
+    content: "★";
+    color: gold;
+    position: absolute;
+    width: 25%;
+    overflow: hidden;
+}
+.btn-xs {
+    font-size: 0.600rem;
+    border-radius: var(--bs-border-radius-sm);
+}

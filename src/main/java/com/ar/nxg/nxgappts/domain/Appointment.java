@@ -42,6 +42,9 @@ public class Appointment extends BaseEntity {
     @OneToMany(mappedBy = "appointment")
     private List<Payment> payments;
 
+    private LocalDateTime startedAt;
+    private Long startedByUserId;
+
     public String getPaymentTitle(boolean prePayment){
         return String.format("%s - %s [%s]", prePayment ? "Reserva" : "", this.company.getName(), this.scheduledDateStart);
     }

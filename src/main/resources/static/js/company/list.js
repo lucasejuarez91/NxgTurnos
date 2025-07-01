@@ -9,7 +9,7 @@ $(document).ready(function(){
 
     $('.btnChangeStatus').on('click', async function(){
         let id = $(this).data('id');
-        const respuesta = await modalConfirmation(`¿Está seguro de recuperar este salón eliminado?`);
+        const respuesta = await modalConfirmation(i18next.t("title.modal.confirm.recover", {'entity': i18next.t("entity.lounge")}));
         if (respuesta) {
             await manageEntity("companies", id, {status: true})
         }
@@ -17,7 +17,7 @@ $(document).ready(function(){
 
     $('.btnDelete').on('click', async function(){
         let id = $(this).data('id');
-        const respuesta = await modalConfirmation(`¿Está seguro de cancelar de dar de baja este salón?`);
+        const respuesta = await modalConfirmation(i18next.t("title.modal.confirm.delete", {'entity': i18next.t("entity.lounge")}));
         if(respuesta)
             await manageEntity("companies", id, {status: false})
     });

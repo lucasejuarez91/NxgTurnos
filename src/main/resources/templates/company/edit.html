@@ -8,44 +8,40 @@
 <div>
     <th:block th:replace="~{fragments/breadcrumbs :: listbreacrumbs}"></th:block>
     <div class="page-header" id="banner">
-        <div class="row">
+        <div class="">
             <div class="card">
                 <div class="card-body">
                     <th:block th:replace="~{components/buttons/others :: buttonBack}"></th:block>
                     <div class="col-12 mt-3">
-                        <div class="row">
-                            <div class="offset-3 col-5">
-                                <div class="card mb-3">
+                        <div class="">
+                            <div class="col-5">
+                                <div class="mb-3">
                                     <div class="row g-0">
-                                        <div class="col-md-4">
-                                            <img th:src="@{/images/{filename}(filename=${company.logo != null ? company.logo.getName() : ''})}" class="img-fluid rounded-start" alt="...">
-                                        </div>
-                                        <div class="col-md-8">
-                                            <div class="card-body mt-4">
-                                                <div class="d-flex justify-content-center align-items-center">
-                                                    <input type="file" id="fileInput" accept="image/*" required hidden th:data-url="@{'/company/updateAvatar/' + ${company.id}}">
-                                                    <th:block th:insert="~{/components/buttons/others :: updateAvatar}"></th:block>
-                                                </div>
-                                            </div>
+                                        <div class="col-md-4 position-relative image-container">
+                                            <img th:src="@{/images/{filename}(filename=${company.logo != null ? company.logo.getName() : ''})}" class="img-fluid rounded-start" alt="Logo">
+                                            <!-- Ícono del lápiz + input de archivo oculto -->
+                                            <label class="edit-icon">
+                                                <input type="file" id="fileInput" accept="image/*" required hidden th:data-url="@{'/company/updateAvatar/' + ${company.id}}">
+                                                <button class="badge bg-dark" type="button" id="btnUploadAvatar"><i class="bi bi-pencil"></i></button>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <hr width="50%" class="offset-3 text-center">
                     <div class="row">
                         <div class="col-12 col-lg-6">
-                            <label for="name" class="form-label mt-4">Nombre</label>
+                            <label for="name" class="form-label mt-4" th:text="${#messages.msg('company.name')}">Nombre</label>
                             <input type="text" class="form-control" id="name" th:value="${company.name}">
                         </div>
                         <div class="col-12 col-lg-6">
-                            <label for="description" class="form-label mt-4">Descripción</label>
+                            <label for="description" class="form-label mt-4" th:text="${#messages.msg('company.description')}">Descripción</label>
                             <textarea type="text" class="form-control" id="description" th:text="${company.description}"></textarea>
                         </div>
                         <div class="col-12 col-lg-12">
-                            <label for="address" class="form-label mt-4">Dirección</label>
-                            <input type="text" class="form-control" id="address" th:value="${company.address}"></input>
+                            <label for="address" class="form-label mt-4" th:text="${#messages.msg('company.address')}">Dirección</label>
+                            <input type="text" class="form-control" id="address" th:value="${company.address}" th:onchange="|reloadAddressFrame()|">
                             <div>
                                 <div class="mapouter mt-3">
                                     <div class="gmap_canvas">
@@ -55,7 +51,7 @@
                             </div>
                         </div>
                         <div class="col-12 col-lg-3">
-                            <label for="minDay" class="form-label mt-4">Día Apertura</label>
+                            <label for="minDay" class="form-label mt-4" th:text="${#messages.msg('company.open.day')}">Día Apertura</label>
                             <select id="minDay" name="minDay" class="form-select" required >
                                 <option th:each="d : ${days}" th:value="${d.toUpperCase()}"
                                         th:text="${d.toUpperCase()}"
@@ -64,8 +60,7 @@
                             </select>
                         </div>
                         <div class="col-12 col-lg-3">
-                            <label for="maxDay" class="form-label mt-4">Día Cierre</label>
-                            [[${company.maxDay}]]
+                            <label for="maxDay" class="form-label mt-4" th:text="${#messages.msg('company.close.day')}">Día Cierre</label>
                             <select id="maxDay" name="maxDay" class="form-select" required >
                                 <option th:each="d : ${days}" th:value="${d.toUpperCase()}"
                                         th:text="${d.toUpperCase()}"
@@ -74,19 +69,19 @@
                             </select>
                         </div>
                         <div class="col-12 col-lg-3">
-                            <label for="minStartTime" class="form-label mt-4">Hora Apertura</label>
+                            <label for="minStartTime" class="form-label mt-4" th:text="${#messages.msg('company.open.hour')}">Hora Apertura</label>
                             <input type="time" class="form-control" id="minStartTime" th:value="${company.minStartTime}"></input>
                         </div>
                         <div class="col-12 col-lg-3">
-                            <label for="maxEndtime" class="form-label mt-4">Hora Cierre</label>
+                            <label for="maxEndtime" class="form-label mt-4" th:text="${#messages.msg('company.close.hour')}">Hora Cierre</label>
                             <input type="time" class="form-control" id="maxEndtime" th:value="${company.maxEndtime}"></input>
                         </div>
                         <div class="col-12 col-lg-6">
-                            <label for="telephone" class="form-label mt-4">Teléfono</label>
+                            <label for="telephone" class="form-label mt-4" th:text="${#messages.msg('table.telephone')}">Teléfono</label>
                             <input type="text" class="form-control" id="telephone" th:value="${company.telephone}"></input>
                         </div>
                         <div class="col-12 col-lg-6">
-                            <label for="contact" class="form-label mt-4">Contacto</label>
+                            <label for="contact" class="form-label mt-4" th:text="${#messages.msg('table.contact')}">Contacto</label>
                             <input type="text" class="form-control" id="contact" th:value="${company.contact}"></input>
                         </div>
                     </div>
@@ -99,57 +94,13 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="">
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <h5 class="card-title">Profesionales asociados</h5>
-                        <table class="display table-stripped" style="width:100%" id="tblProfessionals">
-                            <thead>
-                            <tr>
-                                <th scope="col">Nombre</th>
-                                <th>Especialidad</th>
-                                <th>Teléfono</th>
-                                <th scope="col">Estado</th>
-                                <th scope="col"></th>
-                                <th scope="col"></th>
-                                <th scope="col"></th>
-                                <th scope="col"></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="professional, iter : ${professionals}" th:class="${!professional.status ? 'text-muted' : ''}">
-                                <td th:text="${professional.firstname + ' ' + professional.lastname}"></td>
-                                <td>
-                                    <span th:each="p: ${professional.services}">
-                                        <a class="badge rounded-pill text-bg-secondary" th:text="${p.name}">
-                                    </a>
-                                </td>
-                                <td th:text="${professional.telephone}"></td>
-                                <td th:text="${professional.status ? 'ACTIVO' : 'INACTIVO'}"></td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary btnEdit" th:data-url="'./edit/' + ${professional.id}" th:disabled="${!professional.status}" data-toggle="tooltip" data-placement="top" title="Editar">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </button>
-                                </td>
-                                <td>
-                                    <button class="btn btn-sm btn-info btnAvailability" th:data-url="'./availability/' + ${professional.id}" th:disabled="${!professional.status}" data-toggle="tooltip" data-placement="top" title="Disponibilidad">
-                                        <i class="bi bi-calendar"></i>
-                                    </button>
-                                </td>
-                                <td>
-                                    <button class="btn btn-sm btn-warning btnChangeStatus" th:data-id="${professional.id}" th:disabled="${professional.status}" data-toggle="tooltip" data-placement="top" title="Recuperar">
-                                        <i class="bi bi-arrow-counterclockwise"></i>
-                                    </button>
-                                </td>
-                                <td>
-                                    <button class="btn btn-sm btn-danger btnDelete" th:data-id="${professional.id}" th:disabled="${!professional.status}" data-toggle="tooltip" data-placement="top" title="Eliminar">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </td>
-                                </span>
-                            </tbody>
-                        </table>
+                        <h5 class="card-title" th:text="${#messages.msg('title.professionals')}">Profesionales asociados</h5>
+                        <script th:src="@{/js/professionals/list.js}"></script>
+                        <th:block th:insert="~{/professionals/tblProfessionals :: #tblProfessionals}"></th:block>
                     </div>
                 </div>
             </div>

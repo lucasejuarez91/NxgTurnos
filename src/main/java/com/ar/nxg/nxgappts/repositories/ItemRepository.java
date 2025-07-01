@@ -14,5 +14,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     Item findByName(String reservation);
 
     List<Item> findByCompany(Company company);
+
+    Item findByNameAndCompany(String reservation, Company company);
 }
 

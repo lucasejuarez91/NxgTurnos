@@ -25,9 +25,9 @@ public class Availability extends BaseEntity {
     private Professional professional;
 
     private DayOfWeek dayOfWeek; // Enum de lunes a domingo
-    @JsonFormat(pattern="yyyy-MM-ddTHH:mm:ss.zzzz")
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime startTime;
-    @JsonFormat(pattern="yyyy-MM-ddTHH:mm:ss.zzzz")
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime endTime;
 
     private static final Map<DayOfWeek, String> dayTranslations = new HashMap<>();

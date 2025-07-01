@@ -3,14 +3,18 @@ package com.ar.nxg.nxgappts.service;
 import com.ar.nxg.nxgappts.domain.Appointment;
 import com.ar.nxg.nxgappts.domain.Company;
 import com.ar.nxg.nxgappts.domain.Professional;
+import com.ar.nxg.nxgappts.domain.User;
 import com.ar.nxg.nxgappts.dto.AppointmentDTO;
 import com.ar.nxg.nxgappts.enums.AppointmentStatusEnum;
 import com.ar.nxg.nxgappts.repositories.AppointmentRepository;
 import com.ar.nxg.nxgappts.repositories.ClientRepository;
 import com.ar.nxg.nxgappts.repositories.ProfessionalRepository;
+import com.ar.nxg.nxgappts.repositories.RoleRepository;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -22,7 +26,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-public class AppointmentService {
+public class AppointmentService extends BaseService<Appointment> {
 
     @Autowired
     private AppointmentRepository appointmentRepository;
@@ -33,11 +37,14 @@ public class AppointmentService {
     @Autowired
     private EmailQueueService emailQueueService;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     // Método para cambiar el estado de la cita
     public void updateAppointmentStatus(String code, String status) {
         Appointment appointment = appointmentRepository.getAppointmentByCode(code);
         appointment.setApptStatus(AppointmentStatusEnum.valueOf(status));
-        appointmentRepository.save(appointment);
+        saveOrUpdate(appointment);
     }
 
     // Método para asignar un profesional a la cita
@@ -48,14 +55,15 @@ public class AppointmentService {
                 .orElseThrow(() -> new RuntimeException("Profesional no encontrado"));
 
         appointment.setProfessional(professional);
-        appointmentRepository.save(appointment);
+        saveOrUpdate(appointment);
     }
 
     public Appointment getAppointmentById(Long id) {
         return appointmentRepository.findById(id).orElseThrow();
     }
 
-    public List<Appointment> getAllAppointments(Company company) {
+    public List<Appointment> getAllAppointments(HttpSession httpSession) {
+        Company company = (Company) httpSession.getAttribute("actualCompany");
         return appointmentRepository.findByCompanyOrderByApptStatusDesc(company);
     }
 
@@ -72,11 +80,10 @@ public class AppointmentService {
         params.put("company_name", appt.getCompany().getName());
         params.put("appt", new AppointmentDTO(appt));
         params.put("logo", appt.getCompany().getLogo().getPath());
-        params.put("urlApple", generateAppleCalendarLink(appt.getCompany().getName(),appt.getService().getName(), appt.getCompany().getAddress(),
+        params.put("urlApple", generateAppleCalendarLink(appt.getCompany().getName(),appt.getService().getItem().getName(), appt.getCompany().getAddress(),
                 appt.getScheduledDateStart(), appt.getScheduledDateEnd()));
-        params.put("urlGoogle", generateGoogleCalendarLink(appt.getCompany().getName(),appt.getService().getName(), appt.getCompany().getAddress(),
+        params.put("urlGoogle", generateGoogleCalendarLink(appt.getCompany().getName(),appt.getService().getItem().getName(), appt.getCompany().getAddress(),
                 appt.getScheduledDateStart(), appt.getScheduledDateEnd()));
-        //emailService.sendHtmlEmail(appt.getClient().getEmail(), "Turno Confirmado", params, "emails/booking_confirmation", appt.getCompany().getLogo().getPath());
         emailQueueService.queueEmail(appt.getClient().getEmail(), "Confirmación de Turno", "emails/booking_confirmation", params);
     }
 
@@ -105,5 +112,58 @@ public class AppointmentService {
     }
 
     // Otros métodos como cancelar cita, filtrar citas, etc.
+    public void confirmAppointment(Appointment appt) {
+        appt.setApptStatus(AppointmentStatusEnum.CONFIRM);
+        saveOrUpdate(appt);
+    }
+
+    public void closeAppointment(Appointment appt) throws MessagingException {
+        appt.setApptStatus(AppointmentStatusEnum.COMPLETED);
+        saveOrUpdate(appt);
+        emailQueueService.sendCompletedBookingMail(appt);
+    }
+
+    public Appointment getAppointmentByCode(String code) {
+        return appointmentRepository.getAppointmentByCode(code);
+    }
+
+    public List<Appointment> findByCompanyOrderByApptStatusDesc(Company company) {
+        return appointmentRepository.findByCompanyOrderByApptStatusDesc(company);
+    }
+
+    public List<Appointment> findByClient(User userIdLogged) {
+        return appointmentRepository.findByClient(userIdLogged);
+    }
+
+    public void initAppointment(Appointment appt, User userProfessional, Model model, Boolean confirm) {
+        if (appt.getApptStatus() != AppointmentStatusEnum.CONFIRM) {
+            model.addAttribute("error", "El turno ya fue iniciado o está en estado inválido.");
+            return;
+        }
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime start = appt.getScheduledDateStart();
+        if (now.isBefore(start.minusMinutes(15)) || now.isAfter(start.plusMinutes(30))) {
+            model.addAttribute("error", "Solo se puede iniciar el turno dentro del rango permitido.");
+            return;
+        }
+
+        if(userProfessional.getRoles().contains(roleRepository.findByName("APPT_INITIATOR"))
+                && appt.getApptStatus() == AppointmentStatusEnum.CONFIRM
+                && Boolean.TRUE.equals(confirm)){
+            appt.setApptStatus(AppointmentStatusEnum.IN_PROGRESS);
+            appt.setStartedAt(LocalDateTime.now());
+            appt.setStartedByUserId(userProfessional.getId());
+            appointmentRepository.save(appt);
+            model.addAttribute("initializated", true);
+            model.addAttribute("statusMessage", "El turno fue iniciado correctamente");
+            model.addAttribute("statusType", "success"); // o "error"
+        }
+    }
+
+    public void cancelAppointment(Appointment appt) {
+        appt.setApptStatus(AppointmentStatusEnum.CANCELLED);
+        saveOrUpdate(appt);
+        emailQueueService.sendCancelledBookingMail(appt);
+    }
 }
 

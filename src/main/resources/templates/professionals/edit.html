@@ -12,6 +12,24 @@
             <div class="card">
                 <div class="card-body">
                     <th:block th:replace="~{components/buttons/others :: buttonBack}"></th:block>
+                    <div class="col-12 mt-3">
+                        <div class="">
+                            <div class="col-5">
+                                <div class="mb-3">
+                                    <div class="row g-0">
+                                        <div class="col-md-4 position-relative image-container">
+                                            <img th:src="@{/images/{filename}(filename=${professional.image != null ? professional.image.name : ''})}" class="img-fluid rounded-start" alt="Logo">
+                                            <!-- Ícono del lápiz + input de archivo oculto -->
+                                            <label class="edit-icon">
+                                                <input type="file" id="fileInput" accept="image/*" required hidden th:data-url="@{'/professionals/updateAvatar/' + ${professional.id}}">
+                                                <button class="badge bg-dark" type="button" id="btnUploadAvatar"><i class="bi bi-pencil"></i></button>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-12 col-lg-6">
                             <label for="firstname" class="form-label mt-4" th:text="${#messages.msg('title.firstname')}">Nombre</label>
@@ -28,7 +46,7 @@
                             <select class="form-select" id="specialities" multiple>
                                 <option th:each="speciality : ${specialities}"
                                         th:value="${'/specialityService/' + speciality.id}"
-                                        th:text="${speciality.name}"
+                                        th:text="${speciality.item.name}"
                                         th:selected="${#arrays.contains(professional.services, speciality)}">
                                 </option>
                             </select>

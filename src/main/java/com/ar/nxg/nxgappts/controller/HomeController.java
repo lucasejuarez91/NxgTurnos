@@ -22,15 +22,9 @@ import java.util.List;
 @RequestMapping("/")
 public class HomeController extends GlobalControllerAdvice {
 
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    MenuService menuService;
-
     @GetMapping("/")
-    public ModelAndView showHome() {
-        return new ModelAndView("home");
+    public String showHome() {
+        return "redirect:appointments/request/list-company";
     }
     @GetMapping("/register")
     public ModelAndView showRegister() {

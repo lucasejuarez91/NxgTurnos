@@ -23,6 +23,8 @@ public class MailConfig {
         Map<String, String> params = parametersRepository.findByReference("MAIL").stream()
                 .collect(Collectors.toMap(Parameters::getName, Parameters::getValue));
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        System.out.println("SMTP Server: " + params.get("SMTP.SERVER"));
+        System.out.println("SMTP Port: " + params.get("SMTP.PORT"));
         if (!params.isEmpty()) {
             mailSender.setHost(params.get("SMTP.SERVER"));
             mailSender.setPort(Integer.parseInt(params.get("SMTP.PORT")));

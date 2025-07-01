@@ -27,6 +27,6 @@ public class MenuItem extends BaseEntity {
     private Set<Role> roles;
 
     public List<String> getBreadcrumbList() {
-        return List.of(this.breadcrumb.split(";"));
+        return this.breadcrumb.isEmpty() ? List.of() : List.of(this.breadcrumb.split(";"));
     }
 }

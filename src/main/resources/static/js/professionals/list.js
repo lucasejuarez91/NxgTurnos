@@ -13,7 +13,7 @@ $(document).ready(function(){
 
     $('.btnChangeStatus').on('click', async function(){
         let id = $(this).data('id');
-        const respuesta = await modalConfirmation(`¿Está seguro de recuperar este Profesional eliminado?`);
+        const respuesta = await modalConfirmation(i18next.t("title.modal.confirm.recover", {'entity': i18next.t("entity.professional")}));
         if (respuesta) {
             await manageEntity("professionals", id, {status: true})
         }
@@ -21,7 +21,7 @@ $(document).ready(function(){
 
     $('.btnDelete').on('click', async function(){
         let id = $(this).data('id');
-        const respuesta = await modalConfirmation(`¿Está seguro de eliminar este Profesional?`);
+        const respuesta = await modalConfirmation(i18next.t("title.modal.confirm.delete", {'entity': i18next.t("entity.professional")}));
         if(respuesta)
             await manageEntity("professionals", id, {status: false})
     });

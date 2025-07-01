@@ -12,14 +12,32 @@
             <div class="card">
                 <div class="card-body">
                     <th:block th:insert="~{/components/buttons/others :: buttonBack}"></th:block>
+                    <div class="col-12 mt-3">
+                        <div class="">
+                            <div class="col-5">
+                                <div class="mb-3">
+                                    <div class="row g-0">
+                                        <div class="col-md-4 position-relative image-container">
+                                            <img th:src="@{/images/{filename}(filename=${service.item != null && service.item.image != null ? service.item.image.name : ''})}" class="img-fluid rounded-start" alt="Logo">
+                                            <!-- Ícono del lápiz + input de archivo oculto -->
+                                            <label class="edit-icon">
+                                                <input type="file" id="fileInput" accept="image/*" required hidden th:data-url="@{'/services/updateAvatar/' + ${service.item.id}}">
+                                                <button class="badge bg-dark" type="button" id="btnUploadAvatar"><i class="bi bi-pencil"></i></button>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-12 col-lg-6">
-                            <label for="name" class="form-label mt-4">Nombre</label>
-                            <input type="text" class="form-control" id="name" th:value="${service.name}">
+                            <label for="name" class="form-label mt-4" th:text="${#messages.msg('table.name')}">Nombre</label>
+                            <input type="text" class="form-control" id="name" th:value="${service.item.name}">
                         </div>
                         <div class="col-12 col-lg-6">
-                            <label for="description" class="form-label mt-4">Descripción</label>
-                            <input type="text" class="form-control" id="description" th:value="${service.description}">
+                            <label for="description" class="form-label mt-4" th:text="${#messages.msg('table.description')}">Descripción</label>
+                            <textarea type="text" class="form-control" id="description" th:text="${service.item.description}"></textarea>
                         </div>
                         <div class="col-12 col-lg-6">
                             <label for="categoryService" class="form-label mt-4" th:text="${#messages.msg('title.specialities')}">Especialidades</label>
@@ -34,16 +52,12 @@
                     </div>
                     <div class="row">
                         <div class="col-12 col-lg-6">
-                            <label for="price" class="form-label mt-4">Valor</label>
-                            <input type="number" class="form-control" id="price" th:value="${service.price}">
-                        </div>
-                        <div class="col-12 col-lg-6">
-                            <label for="duration" class="form-label mt-4">Duración <small class="text-muted">(en minutos)</small> </label>
-                            <input type="text" class="form-control" id="duration" th:value="${service.duration}">
+                            <label for="price" class="form-label mt-4" th:text="${#messages.msg('table.price')}">Valor</label>
+                            <input type="number" class="form-control" id="price" th:value="${service.item.price}">
                         </div>
                     </div>
                     <br>
-                    <th:block th:insert="~{/components/buttons/update :: buttonUpdate('button.update',${service.id})}"></th:block>
+                    <th:block th:insert="~{/components/buttons/update :: buttonUpdate('button.update',${service.item.id})}"></th:block>
                 </div>
             </div>
         </div>

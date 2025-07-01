@@ -5,7 +5,7 @@ $(document).ready(function(){
 
 document.addEventListener("DOMContentLoaded", function() {
 
-    fetch(`/turnos/professionals/configCalendar`)
+    fetch(getContextPath() + `/professionals/configCalendar`)
         .then(response => response.json())
         .then(config => {
             var calendarEl = document.getElementById('calendar');
@@ -13,8 +13,8 @@ document.addEventListener("DOMContentLoaded", function() {
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'timeGridWeek',
                 locale: 'es',
-                slotMinTime: config.startTime, // Configurable desde backend
-                slotMaxTime: config.endTime,   // Configurable desde backend
+                //slotMinTime: config.startTime, // Configurable desde backend
+                //slotMaxTime: config.endTime,   // Configurable desde backend
                 height: 600, // Ajusta la altura a 600px
                 allDaySlot: false,
                 headerToolbar: {
@@ -22,12 +22,13 @@ document.addEventListener("DOMContentLoaded", function() {
                     center: "title",
                     right: "timeGridWeek"
                 },
+                //eventDisplay: 'background',
                 events: function(fetchInfo, successCallback, failureCallback) {
                     // Convertir a formato YYYY-MM-DD sin zona horaria
                     let start = fetchInfo.start.toISOString().split("T")[0];
                     let end = fetchInfo.end.toISOString().split("T")[0];
 
-                    let url = `/turnos/professionals/availability/appts?professionalId=${profesionalId.value}&start=${start}&end=${end}`;
+                    let url = getContextPath() + `/professionals/availability/appts?professionalId=${profesionalId.value}&start=${start}&end=${end}&includeUnavailable=true`;
 
                     console.log("Llamando a la API:", url);
 

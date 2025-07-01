@@ -1,27 +1,28 @@
-<form class="row g-3 mt-3" th:fragment="formAddItem">
-    <h5 class="mt-3">Agregar item</h5>
+<form class="row g-3" th:fragment="formAddItem" id="formAddItems" th:if="${appt.apptStatus == appt.apptStatus.IN_PROGRESS}">
     <div class="col-3">
         <label for="item" class="form-label">Item</label>
-        <select class="form-select" id="item" multiple>
+        <select class="form-select" id="item" name="item" th:onchange="autocompleteItem(this)">
+            <option value="" th:text="#{title.select.option}"></option>
             <option th:each="it : ${items}"
-                    th:value="${'/items/' + it.id}"
-                    th:text="${it.name}">
+                    th:value="${it.id}"
+                    th:text="${it.name}" th:data-price="${it.price}">
             </option>
         </select>
     </div>
-    <div class="col-3">
+    <div class="col-2">
         <label for="price" class="form-label">Valor</label>
-        <input type="text" class="form-control" id="price" readonly>
+        <input type="text" class="form-control" id="price" name="price" readonly>
+        <input type="hidden" class="form-control" id="bookingId" name="bookingId" readonly th:value="${appt.code}">
     </div>
-    <div class="col-3">
+    <div class="col-2">
         <label for="quantity" class="form-label">Cantidad</label>
-        <input type="number" class="form-control" id="quantity">
+        <input type="number" class="form-control" id="quantity" name="quantity" th:onchange="|totalPrice.value = (this.value * price.value).toFixed(2)|">
     </div>
-    <div class="col-3">
+    <div class="col-2">
         <label for="totalPrice" class="form-label">Precio Total</label>
-        <input type="text" class="form-control" id="totalPrice" readonly>
+        <input type="text" class="form-control" id="totalPrice" name="totalPrice" readonly>
     </div>
-    <div class="col-3">
-        <button type="reset" class="btn btn-secondary">Agregar</button>
+    <div class="col-3 align-content-end">
+        <button type="submit" class="btn btn-secondary" th:text="#{title.add}">Agregar</button>
     </div>
 </form>

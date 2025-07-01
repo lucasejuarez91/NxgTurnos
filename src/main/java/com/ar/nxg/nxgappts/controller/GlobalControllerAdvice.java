@@ -22,6 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import java.rmi.AccessException;
 import java.util.*;
@@ -84,8 +85,9 @@ public class GlobalControllerAdvice {
 	}
 
     @ModelAttribute("isAdmin")
-    public void toggledSidebar(Model model) { // Reemplaza User con tu clase
+    public void toggledSidebar(Model model, HttpSession httpSession) { // Reemplaza User con tu clase
         model.addAttribute("isAdmin", true);
+        httpSession.setAttribute("isAdmin", true);
     }
 
     @ModelAttribute("actualLocale")
@@ -97,7 +99,9 @@ public class GlobalControllerAdvice {
     @ModelAttribute("actualCompany")
     public Company actualCompany(HttpSession session) {
         Company company = (Company) session.getAttribute("actualCompany");
-        return company != null ? company : (getUserIdLogged() != null ? !getUserIdLogged().getCompanies().isEmpty() ? getUserIdLogged().getCompanies().get(0) : null : null);
+        session.setAttribute("actualCompany", company != null ? company : (getUserIdLogged() != null ?
+                !getUserIdLogged().getCompanies().isEmpty() ? getUserIdLogged().getCompanies().get(0) : null : null));
+        return company;
     }
 
     @ModelAttribute("myCompanies")
@@ -107,17 +111,21 @@ public class GlobalControllerAdvice {
 
     public void attributesByMenu(Model model, String viewName, String concatenated){
         MenuItem menuItemEntity = menuItemRepository.findByUrl(viewName.replace("./",""));
-        menuItemEntity.setBreadcrumb(menuItemEntity.getBreadcrumb() + concatenated);
-        List<String> breds = menuItemEntity.getBreadcrumbList();
-        model.addAttribute("actualBreadcrumb", breds);
-        model.addAttribute("actualView", breds.get(breds.size() - 2));
+        if(menuItemEntity != null){
+            menuItemEntity.setBreadcrumb(menuItemEntity.getBreadcrumb() + concatenated);
+            List<String> breds = menuItemEntity.getBreadcrumbList();
+            model.addAttribute("actualBreadcrumb", breds);
+            model.addAttribute("actualView", breds.isEmpty() ? "" : breds.get(breds.size() - 2));
+        }
     }
 
     public void attributesByMenu(Model model, String viewName){
         MenuItem menuItemEntity = menuItemRepository.findByUrl(viewName.replace("./",""));
-        List<String> breds = menuItemEntity.getBreadcrumbList();
-        model.addAttribute("actualBreadcrumb", breds);
-        model.addAttribute("actualView", breds.get(breds.size() - 2));
+        if(menuItemEntity != null){
+            List<String> breds = menuItemEntity.getBreadcrumbList();
+            model.addAttribute("actualBreadcrumb", breds);
+            model.addAttribute("actualView", breds.isEmpty() ? "" : breds.get(breds.size() - 2));
+        }
     }
 
     public String joinManualBreadCrumbs(String[] concatenated){

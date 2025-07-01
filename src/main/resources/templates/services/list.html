@@ -11,7 +11,7 @@
         <div class="row">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Listado de Servicios</h5>
+                    <h5 class="card-title" th:text="${#messages.msg('title.services')}">Listado de Servicios</h5>
                     <div class="row">
                         <div class="col-6 mt-3">
                             <th:block th:insert="~{/components/buttons/new :: buttonNew('/services/create', null, false)}"></th:block>

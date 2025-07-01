@@ -4,5 +4,20 @@
   "modal.confirmation.yes": "Yes, I'm sure",
   "modal.confirmation.cancel": "Cancel",
   "title.modal.request.book": "Are you sure you want to book an appointment for <strong>{{fechaInicioLbl}}</strong> at <strong>{{loungeName}}</strong> with <strong>{{professionalName}}</strong>?",
-  "nothing.to.do": "Nothing to update"
+  "nothing.to.do": "Nothing to update",
+  "title.modal.confirm.recover": "¿Are you sure you want recover this {{entity}} deleted?",
+  "title.modal.confirm.delete": "¿Are you sure you want delete this {{entity}}?",
+  "entity.lounge": "lounge",
+  "entity.updated": "The entity was update",
+  "label.appt.created.successfully.with.remember": "label.appt.created.successfully.with.remember",
+  "error.on.create.appt": "error.on.create.appt",
+  "label.selected.appt": "label.selected.appt",
+  "label.of.the.day": "label.of.the.day",
+  "label.available.hours.appears.here": "label.available.hours.appears.here",
+  "label.select.a.day": "label.select.a.day",
+  "label.not.available.appts": "label.not.available.appts",
+  "label.hours.available.by": "label.hours.available.by",
+  "label.available.appts": "label.available.appts",
+  "prefix.of": "",
+  "prefix.to.hour": "at"
 }

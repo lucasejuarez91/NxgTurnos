@@ -17,7 +17,7 @@
                     <div class="row">
                         <span th:if="${appt != null && initializated == true}">Turno iniciado</span>
                     </div>
-                    <form class="row" method="POST" th:action="@{'/booking/initBooking?appointmentCode='+${appt.getCode()}+'&confirm=true'}" th:if="${appt != null}">
+                    <form class="row" method="POST" th:action="@{'/appointments/initBooking?appointmentCode='+${appt.getCode()}+'&confirm=true'}" th:if="${appt != null}">
                         <div class="offset-md-5 col-12 col-md-2">
                             <button type="submit" class="btn btn-primary w-100" th:text="#{button.init.booking}">INICIAR TURNO</button>
                         </div>

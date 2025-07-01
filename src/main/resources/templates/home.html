@@ -4,30 +4,51 @@
 <th:block th:replace="~{fragments/header :: head}"></th:block>
 <body>
 <th:block th:replace="~{fragments/header :: header}"></th:block>
-<style>
-    #main {
-        padding: 0px !important;
-    }
-</style>
-<div>
-    <div class="page-header" id="banner">
-        <div>
-            <div class="d-flex justify-content-center align-items-center"
-                 style="background-image: url('https://thebarberylurgan.com/wp-content/uploads/2020/09/barber-background.jpg'); background-size: cover; height: 800px;">
-                <div class="card mb-5"> <!-- Se le da un ancho de 50% a la tarjeta interna -->
-                    <div class="card-body">
-                        <h2 class="card-title text-center fs-2" th:text="#{home.box.title}"></h2>
-                        <form th:action="@{/booking/request/list-company}">
-                            <div class="mb-3">
-                                <input type="text" class="form-control" id="searchInput" name="name" th:placeholder="#{home.box.find.placeholder}" autocomplete="off">
-                            </div>
-                            <div class="mb-3">
-                                <button type="submit" class="btn btn-primary w-100" th:text="#{button.search}"></button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+<script async th:src="@{/js/home.js}"></script>
+<section id="client-empresas" class="section" aria-label="Listado y búsqueda de empresas para cliente">
+    <h2>Empresas disponibles</h2>
+    <div id="client-empresas-content">
+        <aside id="client-company-filters" aria-label="Filtros de empresas para cliente">
+            <div class="company-filters-group">
+                <label for="client-filter-location">Nombre</label>
+                <input type="search" id="client-company-search" class="form-control" placeholder="Buscar por nombre..." aria-label="Buscar empresas para cliente" />
             </div>
-        </div>
+            <div class="company-filters-group">
+                <label for="client-filter-location">Ubicación</label>
+                <select id="client-filter-location" class="form-select" aria-label="Filtro por ubicación cliente">
+                    <option value="">Todas</option>
+                </select>
+            </div>
+            <div class="company-filters-group">
+                <label for="client-filter-type">Tipo</label>
+                <select id="client-filter-type" class="form-select" aria-label="Filtro por tipo cliente">
+                    <option value="">Todos</option>
+                    <option value="Gimnasio">Gimnasio</option>
+                    <option value="Clinica">Clínica</option>
+                    <option value="Estética">Estética</option>
+                    <option value="Consultorio">Consultorio</option>
+                </select>
+            </div>
+            <div class="company-filters-group">
+                <label for="client-filter-cities">Ciudad</label>
+                <select id="client-filter-cities" class="form-select" aria-label="Filtro por ciudad">
+                    <option value="">Todas</option>
+                </select>
+            </div>
+            <div class="company-filters-group">
+                <label>
+                    <input type="checkbox" id="client-filter-active" checked />
+                    Solo empresas activas
+                </label>
+            </div>
+
+            <button id="client-btnClearFilters" class="btn btn-sm btn-outline-secondary w-100 mt-2">Limpiar filtros</button>
+        </aside>
+        <section id="client-company-list" aria-label="Lista de empresas para cliente">
+            <h3>Resultados</h3>
+            <div id="client-companies-container" role="list" tabindex="0">
+                <!-- Client companies dynamically -->
+            </div>
+        </section>
     </div>
-</div>
+</section>

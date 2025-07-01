@@ -1,12 +1,11 @@
 <table class="display table-stripped" style="width:100%" id="tblServices" th:fragment="tblServices">
     <thead>
     <tr>
-        <th scope="col">Nombre</th>
-        <th>Descripción</th>
-        <th>Precio</th>
-        <th scope="col">Duración(min)</th>
-        <th scope="col">Categoría</th>
-        <th scope="col">Estado</th>
+        <th width="100px" scope="col" th:text="${#messages.msg('table.name')}">Nombre</th>
+        <th width="550px" th:text="${#messages.msg('table.description')}">Descripción</th>
+        <th th:text="${#messages.msg('table.price')}">Precio</th>
+        <th scope="col" th:text="${#messages.msg('table.category')}">Categoría</th>
+        <th scope="col" th:text="${#messages.msg('table.status')}">Estado</th>
         <th scope="col"></th>
         <th scope="col"></th>
         <th scope="col"></th>
@@ -16,25 +15,19 @@
     <tr th:each="service : ${services}" th:class="${!service.status ? 'text-muted' : ''}">
         <td>
             <span class="badge bg-secondary">
-                <a th:href="@{ ${service.status} ? '/services/edit/'+ ${service.id} : '#'}" th:text="${service.name}" class="text-white"></a>
+                <a th:href="@{ ${service.status} ? '/services/edit/'+ ${service.id} : '#'}" th:text="${service.item.name}" class="text-white"></a>
             </span>
         </td>
-        <td th:text="${service.description}"></td>
-        <td th:text="${'$ ' + service.price}"></td>
-        <td th:text="${service.duration}"></td>
+        <td th:text="${service.item.description}"></td>
+        <td th:text="${'$ ' + service.item.price}"></td>
         <td>
             <span class="badge bg-secondary">
                 <a th:href="@{ ${service.categoryService.status && service.status} ? '/categoryService/edit/'+ ${service.categoryService.id} : '#'}" th:text="${service.categoryService.name}" class="text-white"></a>
             </span>
         </td>
-        <td th:if="${!service.status}">
-            <span class="badge bg-danger" th:text="${'INACTIVO'}"></span>
-        </td>
-        <td th:if="${service.status}">
-            <span class="badge bg-success" th:text="${'ACTIVO'}"></span>
-        </td>
+        <td th:text="${service.status ? #messages.msg('entity.status.active') : #messages.msg('entity.status.inactive')}"></td>
         <td>
-            <th:block th:insert="~{/components/buttons/table :: buttonManagerByUrl('title.edit', 'btn-primary btnEdit', 'bi-pencil-square', './edit/' + ${service.id}, ${!service.status})}"></th:block>
+            <th:block th:insert="~{/components/buttons/table :: buttonManagerByUrl('title.edit', 'btn-primary btnEdit', 'bi-pencil-square', @{'/services/edit/' + ${service.id}}, ${!service.status})}"></th:block>
         </td>
         <td>
             <th:block th:insert="~{/components/buttons/table :: buttonManagerById('title.recover', 'btn-warning btnChangeStatus', 'bi bi-arrow-counterclockwise', ${service.id}, ${service.status})}"></th:block>

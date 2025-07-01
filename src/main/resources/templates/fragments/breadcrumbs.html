@@ -1,6 +1,6 @@
 <div class="pagetitle" th:fragment="listbreacrumbs">
     <nav>
-        <ol class="breadcrumb">
+        <ol class="breadcrumb" th:if="${actualBreadcrumb != null && actualBreadcrumb.size() > 0 }">
             <li th:each="crumb, stat : ${actualBreadcrumb}"
                 class="breadcrumb-item" th:classappend="${stat.last ? 'active' : ''}">
                 <a th:if="${!stat.last}" th:text="${#messages.msg(crumb)}"></a>

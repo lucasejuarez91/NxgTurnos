@@ -1,15 +1,15 @@
 var table;
 $(document).ready(function() {
-    //loader();
+    loader();
     initDataTableGroup('tblAppts', 4, true, 5);
 
     $('.btnView, .btnReSchedule').on('click', function () {
-        window.location.href = getContextPath() + $(this).data('url');
+        window.location.href = $(this).data('url');
     });
 
     $('.btnDelete').on('click', async function () {
         let id = $(this).data('id');
-        const respuesta = await modalConfirmation(`¿Está seguro de cancelar este turno?`);
+        const respuesta = await modalConfirmation(i18next.t("title.modal.confirm.delete", {'entity': i18next.t("entity.appointment")}));
         if (respuesta)
             await manageEntity("appointments", id, {status: false, apptStatus: '/appointmentStatus/2'})
     });
@@ -17,23 +17,26 @@ $(document).ready(function() {
     $('.btnQR').on('click', function () {
         document.getElementById("qrcode").innerHTML = '';
         $('#qrTurnoModal').modal('show');
-        let jsonData = {name: "Juan", age: 30, job: "Developer"};
-        let jsonString = JSON.stringify(jsonData);
-
-        new QRCode(document.getElementById("qrcode"), {
-            text: jsonString,  // Pasamos el JSON como string
-            width: 300,
-            height: 300
-        });
+        let url = $(this).data('url');
+        fetch(url)
+            .then(response => response.text())
+            .then(data => {
+                url = data;
+                new QRCode(document.getElementById("qrcode"), {
+                    text: getContextPath() + `/appointments/initAppointment?code=${url}`,
+                    width: 300,
+                    height: 300
+                });
+            });
     });
 
     $('#btnModalCalendar').on('click', function () {
-        fetch(`/professionals/configCalendar?companyId=${loggedUserCompany.dataset.value}`)
+        fetch(getContextPath() + `/professionals/configCalendar?companyId=${loggedUserCompany.dataset.value}`)
             .then(response => response.json())
             .then(config => {
-                var calendarEl = document.getElementById('calendar');
+                const calendarEl = document.getElementById('calendar');
 
-                var calendar = new FullCalendar.Calendar(calendarEl, {
+                const calendar = new FullCalendar.Calendar(calendarEl, {
                     initialView: 'timeGridWeek',
                     locale: 'es',
                     slotMinTime: config.startTime, // Configurable desde backend
@@ -50,7 +53,7 @@ $(document).ready(function() {
                         let start = fetchInfo.start.toISOString().split("T")[0];
                         let end = fetchInfo.end.toISOString().split("T")[0];
 
-                        let url = `/company/availability/slots?start=${start}&end=${end}`;
+                        let url = getContextPath() + `/company/availability/slots?start=${start}&end=${end}`;
 
                         console.log("Llamando a la API:", url);
 
@@ -65,5 +68,6 @@ $(document).ready(function() {
             });
         $('#modalCalendar').modal('show')
     });
+    loader(false);
 });
 

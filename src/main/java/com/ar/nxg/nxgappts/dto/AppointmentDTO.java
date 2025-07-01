@@ -22,11 +22,11 @@ public class AppointmentDTO {
         this.clientName = appt.getClient().getFullname();
         this.companyName = appt.getCompany().getName();
         this.companyAddress = appt.getCompany().getAddress();
-        this.service = appt.getService().getName();
+        this.service = appt.getService().getItem().getName();
         this.professional = appt.getProfessional().getFullname();
         this.start = appt.getScheduledDateStart();
         this.end = appt.getScheduledDateEnd();
-        this.price = appt.getService().getPrice();
+        this.price = appt.getService().getItem().getPrice();
         this.apptStatus = appt.getApptStatus().getText();
     }
 

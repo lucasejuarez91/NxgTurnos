@@ -6,15 +6,17 @@
 <th:block th:replace="~{fragments/header :: header}"></th:block>
 <div>
     <div class="page-header" id="banner">
-        <div class="row">
+        <div class="">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title text-center fs-1" th:text="#{lounge.list}">Listado de Salones</h5>
                     <div class="row">
-                        <th:block th:insert="~{/public/booking/filters :: filterDiv}"></th:block>
+                        <div class="col-md-3 offset-xl-2">
+                            <th:block th:insert="~{/public/booking/filter :: filterDiv}"></th:block>
+                        </div>
                         <div class="col-md-5">
-                            <div class="card mb-3" th:each="comp : ${companies}" style="border: 1px solid lightgray;">
-                                <th:block th:insert="~{/components/card/company_card :: companyCard}"></th:block>
+                            <div class="card mb-3" style="border: 1px solid lightgray;">
+                                <th:block th:insert="~{/components/card/company_list :: company_list}"></th:block>
                             </div>
                         </div>
                     </div>

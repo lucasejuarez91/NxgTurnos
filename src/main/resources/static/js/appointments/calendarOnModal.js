@@ -56,7 +56,7 @@ function drawCalendar(initialView = 'timeGridWeek'){
             let start = fetchInfo.start.toISOString().split("T")[0];
             let end = fetchInfo.end.toISOString().split("T")[0];
 
-            let url = `/turnos/booking/request/slots/allAppts`;
+            let url = getContextPath() + `/appointments/request/slots/allAppts`;
 
             console.log("Llamando a la API:", url);
 

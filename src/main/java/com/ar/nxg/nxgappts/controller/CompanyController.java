@@ -5,7 +5,7 @@ import com.ar.nxg.nxgappts.domain.Service;
 import com.ar.nxg.nxgappts.dto.BookingDTO;
 import com.ar.nxg.nxgappts.dto.ResponseMessage;
 import com.ar.nxg.nxgappts.repositories.*;
-import com.ar.nxg.nxgappts.service.AvailabilityService;
+import com.ar.nxg.nxgappts.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,25 +26,27 @@ import java.util.*;
 @RequestMapping("/company")
 public class CompanyController extends GlobalControllerAdvice {
 
-    @Autowired
-    private CompanyRepository companyRepository;
+    private final CompanyService companyService;
 
-    @Autowired
-    private CategoryServiceRepository categoryServiceRepository;
+    private final CategoryServicesService categoryServicesService;
 
-    @Autowired
-    private ServiceRepository serviceRepository;
+    private final AvailabilityService availabilityService;
 
-    @Autowired
-    private FilesRepository filesRepository;
+    private final ServicesService servicesService;
+    private final FilesService filesService;
 
-    @Autowired
-    private AvailabilityService availabilityService;
+    public CompanyController(CompanyService companyService, CategoryServicesService categoryServicesService, AvailabilityService availabilityService, ServicesService servicesService, FilesService filesService) {
+        this.companyService = companyService;
+        this.categoryServicesService = categoryServicesService;
+        this.availabilityService = availabilityService;
+        this.servicesService = servicesService;
+        this.filesService = filesService;
+    }
 
     @GetMapping(path = "/edit/{companyId}")
     @PreAuthorize("isAuthenticated()")
     public String listarClientes(Model model, @PathVariable(value = "companyId") long companyId, Locale locale) {
-        Company company = companyRepository.findById(companyId).orElseThrow();
+        Company company = companyService.findById(companyId);
         model.addAttribute("company", company);
         model.addAttribute("professionals", company.getProfessionals());
         model.addAttribute("days", getDaysList(locale));
@@ -56,11 +58,7 @@ public class CompanyController extends GlobalControllerAdvice {
     private List getDaysList(Locale locale){
         List<String> days = new ArrayList<>();
         Calendar cal = Calendar.getInstance();
-
-        // Usamos SimpleDateFormat para obtener el nombre del día
         SimpleDateFormat sdf = new SimpleDateFormat("EEEE", locale); // "EEEE" para el nombre completo del día
-
-        // Iteramos a través de los días de la semana
         for (int i = Calendar.SUNDAY; i <= Calendar.SATURDAY; i++) {
             cal.set(Calendar.DAY_OF_WEEK, i); // Establecemos el día de la semana
             days.add(sdf.format(cal.getTime())); // Obtenemos el nombre del día
@@ -80,12 +78,10 @@ public class CompanyController extends GlobalControllerAdvice {
     @PostMapping("/updateAvatar/{companyId}")
     public ResponseEntity<ResponseMessage> updateAvatar(@RequestBody Long fileId, @PathVariable(name = "companyId") Long companyId) {
         ResponseMessage resp = new ResponseMessage();
-
         try {
-            Company existingCompany = companyRepository.findById(companyId)
-                    .orElseThrow(() -> new RuntimeException("Empresa no encontrado con ID: " + companyId));
-            existingCompany.setLogo(filesRepository.findById(fileId).orElseThrow());
-            companyRepository.save(existingCompany);
+            Company existingCompany = companyService.findById(companyId);
+            existingCompany.setLogo(filesService.findById(fileId));
+            companyService.saveOrUpdate(existingCompany);
             // Configurar la respuesta de éxito
             resp.setError(false);
             resp.setMessage("Actualizado correctamente");
@@ -93,7 +89,6 @@ public class CompanyController extends GlobalControllerAdvice {
         } catch (Exception e) {
             resp.setError(true);
             resp.setMessage("No se pudo actualizar la entidad");
-            // logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resp);
         }
 
@@ -108,7 +103,6 @@ public class CompanyController extends GlobalControllerAdvice {
     @GetMapping("/changeCompany/{companyId}")
     @PreAuthorize("isAuthenticated()")
     public String setActualCompany(@PathVariable long companyId, HttpSession session, HttpServletRequest httpServletRequest) {
-        // Buscar la empresa seleccionada
         getUserIdLogged().getCompanies()
                 .stream()
                 .filter(company -> company.getId() == companyId)
@@ -132,7 +126,7 @@ public class CompanyController extends GlobalControllerAdvice {
     }
     @GetMapping(path = "/public/list")
     public String listCompanies(Model model) {
-        model.addAttribute("companies", companyRepository.findAll());
+        model.addAttribute("companies", companyService.findAll());
         return "./public/companies/list";
     }
 
@@ -144,20 +138,20 @@ public class CompanyController extends GlobalControllerAdvice {
 
     @GetMapping(path = "/public/view/{companyId}")
     public String listCompanies(Model model, @PathVariable(value = "companyId") long companyId) {
-        Company company = companyRepository.findById(companyId).orElseThrow();
+        Company company = companyService.findById(companyId);
         model.addAttribute("company", company);
-        model.addAttribute("categoryServices", categoryServiceRepository.findByCompany(company));
+        model.addAttribute("categoryServices", categoryServicesService.findByCompany(company));
         return "./public/companies/view";
     }
 
     @GetMapping(path = "/public/view/{companyId}/{serviceId}")
     public String listCompanies(Model model, @PathVariable(value = "companyId") long companyId, @PathVariable(value = "serviceId") long serviceId) {
-        Company company = companyRepository.findById(companyId).orElseThrow();
+        Company company = companyService.findById(companyId);
         model.addAttribute("company", company);
-        Service service = serviceRepository.findById(serviceId).orElseThrow();
+        Service service = servicesService.findById(serviceId);
         model.addAttribute("company", company);
         model.addAttribute("service", service);
-        model.addAttribute("categoryServices", categoryServiceRepository.findByCompany(company));
+        model.addAttribute("categoryServices", categoryServicesService.findByCompany(company));
         return "./public/companies/view/service/view";
     }
 
@@ -167,7 +161,6 @@ public class CompanyController extends GlobalControllerAdvice {
                                               @RequestParam("end") String endStr, HttpSession httpSession, Locale locale) {
         LocalDate startDate = LocalDate.parse(startStr.substring(0, 10));
         LocalDate endDate = LocalDate.parse(endStr.substring(0, 10));
-
         return availabilityService.getAllEvents(startDate, endDate, actualCompany(httpSession), locale);
     }
 }

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta th:lang="${locale}" id="metaLang">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>NXG - Appointments </title>
+  <!-- Google Fonts -->
+  <link th:href="@{https://fonts.gstatic.com}" rel="preconnect">
+  <link th:href="@{https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i}" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+  <link th:href="@{/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet">
+  <link th:href="@{/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet">
+  <link th:href="@{/vendor/quill/quill.snow.css}" rel="stylesheet">
+  <link th:href="@{/vendor/quill/quill.bubble.css}" rel="stylesheet">
+  <link th:href="@{/vendor/remixicon/remixicon.css}" rel="stylesheet">
+  <link th:href="@{/vendor/simple-datatables/style.css}" rel="stylesheet">
+  <!-- Template Main CSS File -->
+  <link th:href="@{/css/style.css}" rel="stylesheet">
+  <!-- Template Main JS File -->
+  <script th:src="@{/vendor/jquery-3.7.1.slim.min.js}"></script>
+  <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+  <script th:src="@{/vendor/tinymce/tinymce.min.js}"></script>
+  <script th:src="@{/vendor/sweetalert2@11.js}"></script>
+  <script th:src="@{/vendor/dataTables.min.js}"></script>
+  <script th:src="@{/vendor/i18next.min.js}"></script>
+  <script th:src="@{/vendor/dataTables.responsive.js}"></script>
+  <script th:src="@{/vendor/responsive.dataTables.js}"></script>
+  <link th:href="@{/css/select2.min.css}" rel="stylesheet" />
+  <script th:src="@{/vendor/select2.min.js}"></script>
+  <link rel="stylesheet" th:href="@{/css/dataTables.dataTables.css}">
+  <link rel="stylesheet" th:href="@{/css/responsive.dataTables.css}">
+  <link rel="stylesheet" th:href="@{/css/select2-bootstrap-5-theme.min.css}" />
+  <script th:src="@{/vendor/index.global.min.js}"></script>
+  <script th:src="@{/vendor/moment-with-locales.js}"></script>
+  <script th:src="@{/js/datatable-language/es-ar.js}"></script>
+  <script th:src="@{/js/datatable-language/en-GB.js}"></script>
+  <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.17/locales-all.global.min.js'></script>
+  <script th:src="@{/js/functions.js}"></script>
+  <script th:src="@{/js/calendarModalCreate.js}"></script>
+  <link th:href="@{/css/stylev2.css}" rel="stylesheet">
+</head>
+<body th:fragment="header" th:class="${toggleSidebar}">
+
+<nav id="mainNavbar" class="navbar navbar-expand-lg navbar-light sticky-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" th:href="@{/}">NXGTurnos</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent"
+            aria-controls="navContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navContent" class="collapse navbar-collapse">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0" id="navTabs" role="tablist">
+        <!--My appointments Button-->
+        <li class="nav-item dropdown" th:if="${loggedUser != null && actualCompany == null}">
+          <th:block th:insert="~{/components/buttons/new :: buttonNewLink('/appointments/my-appointments', 'button.my.appointments', true)}"></th:block>
+        </li>
+        <!--New appt Button-->
+        <li class="nav-item dropdown" th:if="${loggedUser != null && actualCompany != null}">
+            <th:block th:insert="~{/components/buttons/new :: buttonNew('/appointments/create', 'button.new.appointment', true)}"></th:block>
+        </li>
+        <!--Appt list Button-->
+        <li class="nav-item dropdown" th:if="${loggedUser != null && actualCompany != null}">
+          <th:block th:insert="~{/components/buttons/new :: buttonNewLink('/appointments/list', 'button.appointments', true)}"></th:block>
+        </li>
+
+        <!--Config change Button-->
+        <li class="nav-item dropdown" th:if="${loggedUser != null && actualCompany != null}">
+          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <span class="d-md-block dropdown-toggle ps-2"><i class="bi bi-gear"></i></span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li>
+              <a class="dropdown-item d-flex align-items-center" th:href="@{'/company/list'}">
+                <span th:text="${#messages.msg('menu.company')}"></span>
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center" th:href="@{'/professionals/list'}">
+                <span th:text="${#messages.msg('menu.professionals')}"></span>
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center" th:href="@{'/services/list'}">
+                <span th:text="${#messages.msg('menu.services')}"></span>
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center" th:href="@{'/parameters/list'}">
+                <span th:text="${#messages.msg('menu.parameters')}"></span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <!--Company change Button-->
+        <li class="nav-item dropdown" th:if="${loggedUser != null && actualCompany != null}">
+          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <span class="d-md-block dropdown-toggle ps-2 badge bg-secondary" id="loggedUserCompany"
+                  th:data-value="${loggedUser != null && actualCompany != null ? actualCompany.id  : '0'}"
+                  th:text="${loggedUser != null && actualCompany != null ? actualCompany.name  : ''}">NXG Argentina</span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li class="dropdown-header p-1">
+              <span th:text="#{header.change.company}">Cambiar compañía</span>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li th:each="company : ${loggedUser.getCompanies()}">
+              <a class="dropdown-item d-flex align-items-center" th:href="@{'/company/changeCompany/' + ${company.id}}">
+                <span th:text="${company.name}"></span> <small th:if="${!company.status}" class="badge bg-danger">([[#{title.inactive}]])</small>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <!--Register Button-->
+        <li class="nav-item dropdown">
+          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="modal" data-bs-target="#openRegisterModal" th:if="${loggedUser == null}">
+            <span class="d-md-block ps-2 badge bg-danger" th:text="#{button.register}">REGISTRARSE</span>
+          </a>
+        </li>
+        <!--Login Button-->
+        <li class="nav-item dropdown">
+          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="modal" data-bs-target="#openLoginModal" th:if="${loggedUser == null}">
+            <span class="d-md-block ps-2 badge bg-primary" th:text="#{button.log.in}">INICIAR SESIÓN</span>
+          </a>
+          <!--My account menu Button-->
+          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown" th:if="${loggedUser != null}">
+            <span class="d-md-block dropdown-toggle ps-2 badge bg-primary" th:text="${loggedUser != null ? loggedUser.fullname  : ''}">K. Anderson</span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li class="dropdown-header">
+              <h6 th:text="${loggedUser != null ? loggedUser.fullname : ''}">Kevin Anderson</h6>
+              <span th:text="${loggedUser != null ? loggedUser.email : ''}">Web Designer</span>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center" th:href="@{/user/my-profile}">
+                <i class="bi bi-person"></i>
+                <span th:text="#{title.my.profile}">My Profile</span>
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center" th:href="@{/help}">
+                <i class="bi bi-question-circle"></i>
+                <span th:text="#{title.need.help}">Need Help?</span>
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center" id="btnLogout">
+                <i class="bi bi-box-arrow-right"></i>
+                <span th:text="#{title.logout}">Salir</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <!--Language change Button-->
+        <li class="nav-item dropdown">
+          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <span class="d-md-block ps-2 badge bg-light dropdown-toggle text-black"><i class="bi bi-globe"></i></span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="#" onclick="changeLanguage('es')">
+                <span>Español</span>
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="#" onclick="changeLanguage('en')">
+                <span>English</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<th:block th:insert="~{headerModal :: simpleModal('Alta de Turno')}"></th:block>
+<th:block th:insert="~{/login/login :: loginModal}"></th:block>
+<th:block th:insert="~{/login/register :: registerModal}"></th:block>
+<script th:src="@{/js/main.js}"></script>
+<main class="flex-grow-1">

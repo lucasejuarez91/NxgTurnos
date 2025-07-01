@@ -6,32 +6,36 @@
 <th:block th:replace="~{fragments/header :: header}"></th:block>
 <div>
     <div class="page-header" id="banner">
-        <div class="row">
+        <div class="">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title text-center fs-1" th:text="#{title.services.list}">Listado de Servicios</h5>
+                    <th:block th:replace="~{components/buttons/others :: buttonBack}"></th:block>
+                    <h5 class="title text-center fs-1 m-3" th:text="#{title.services.list}">Listado de Servicios</h5>
                     <div class="row">
                         <th:block th:insert="~{/public/booking/summary :: summaryDiv}"></th:block>
-                        <div class="col-md-6">
-                            <div class="card mb-3" style="border: 1px solid lightgray; height: auto;">
+                        <div class="col-md-8">
+                            <div class="card mb-3" style="border: 0px solid lightgray; height: auto;">
                                 <div class="row g-0">
                                     <div class="col-md-12">
                                         <div class="container">
                                             <div class="row" th:each="catServ : ${categoryServices}">
-                                                <div class="col-12">
-                                                    <h5 class="card-title" th:text="${catServ.name}"></h5>
-                                                    <div class="row align-items-center mb-2 mt-2" style="justify-content: space-between; background-color: #d3d3d357;" th:each="serv : ${catServ.services}">
-                                                        <div class="col-md-3 col-lg-6 col-xs-12">
-                                                            <span class="fw-bold" th:text="${serv.name}"></span>
-                                                            <br>
-                                                            <small class="text-muted" th:text="${serv.description}"></small>
-                                                        </div>
-                                                        <div class="col-md-3 col-6 fw-bold text-primary" th:text="${'$ ' + serv.price}"></div>
-                                                        <div class="col-md-3 col-6 text-end">
-                                                            <a class="btn btn-outline-primary btn-sm" th:href="@{'/booking/request/select-professional/' + ${serv.id} }" th:text="#{title.book}">RESERVAR</a>
+                                                <div class="col-12" th:if="${!catServ.services.isEmpty()}">
+                                                    <h5 class="title m-2" th:text="${catServ.name}"></h5>
+                                                    <div class="row align-items-stretch">
+                                                        <div class="service-card col-md-4 d-flex flex-column h-100 m-1 p-2" th:each="serv : ${catServ.services}">
+                                                            <img th:src="@{/images/{filename}(filename=${serv.item.image != null ? serv.item.image.name : ''})}" alt="Consulta General" class="service-image" loading="lazy" />
+                                                            <div class="service-card-body">
+                                                                <h5 th:text="${serv.item.name}">Consulta General</h5>
+                                                                <p style="font-size: small" th:utext="${serv.item.description + '...'}">
+                                                                    Atención personalizada para tus necesidades.
+                                                                </p>
+                                                                <p class="service-price" th:text="${'$ ' + serv.item.price}">$50 / turno</p>
+                                                                <a class="btn btn-primary btn-sm btn-reservar w-auto" th:href="@{'/appointments/request/select-professional/' + ${serv.id} }" th:text="#{title.book}" type="button">Reservar</a>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <hr class="justify-content-around w-25 m-auto align-content-end mt-3">
                                             </div>
                                         </div>
                                     </div>

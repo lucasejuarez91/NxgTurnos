@@ -8,7 +8,7 @@
 <div>
     <th:block th:replace="~{fragments/breadcrumbs :: listbreacrumbs}"></th:block>
     <div class="page-header" id="banner">
-        <div class="row">
+        <div class="">
             <div class="card">
                 <div class="card-body">
                     <div class="row">
@@ -16,44 +16,7 @@
                             <th:block th:insert="~{/components/buttons/new :: buttonNew('/professionals/create', null, false)}"></th:block>
                         </div>
                     </div>
-                    <table class="display table-stripped" style="width:100%" id="tblProfessionals">
-                        <thead>
-                        <tr>
-                            <th scope="col" th:text="${#messages.msg('table.name')}"></th>
-                            <th th:text="${#messages.msg('table.speciality')}">Especialidad</th>
-                            <th th:text="${#messages.msg('table.phone')}">Teléfono</th>
-                            <th scope="col" th:text="${#messages.msg('table.status')}">Estado</th>
-                            <th scope="col"></th>
-                            <th scope="col"></th>
-                            <th scope="col"></th>
-                            <th scope="col"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="professional, iter : ${professionals}" th:class="${!professional.status ? 'text-muted' : ''}">
-                            <td th:text="${professional.firstname + ' ' + professional.lastname}"></td>
-                            <td>
-                                <span th:each="p: ${professional.services}">
-                                    <a class="badge rounded-pill text-bg-secondary" th:text="${p.name}">
-                                </a>
-                            </td>
-                            <td th:text="${professional.telephone}"></td>
-                            <td th:text="${professional.status ? #messages.msg('entity.status.active') : #messages.msg('entity.status.inactive')}"></td>
-                            <td>
-                                <th:block th:insert="~{/components/buttons/table :: buttonManagerByUrl('title.edit', 'btn-primary btnEdit', 'bi-pencil-square', './edit/' + ${professional.id}, ${!professional.status})}"></th:block>
-                            </td>
-                            <td>
-                                <th:block th:insert="~{/components/buttons/table :: buttonManagerByUrl('title.availability', 'btn-info btnAvailability', 'bi bi-calendar', './availability/' + ${professional.id}, ${!professional.status})}"></th:block>
-                            </td>
-                            <td>
-                                <th:block th:insert="~{/components/buttons/table :: buttonManagerById('title.recover', 'btn-warning btnChangeStatus', 'bi bi-arrow-counterclockwise', ${professional.id}, ${professional.status})}"></th:block>
-                            </td>
-                            <td>
-                                <th:block th:insert="~{/components/buttons/table :: buttonManagerById('title.delete', 'btn-danger btnDelete', 'bi bi-trash', ${professional.id}, ${!professional.status})}"></th:block>
-                            </td>
-                        </span>
-                        </tbody>
-                    </table>
+                    <th:block th:insert="~{/professionals/tblProfessionals :: #tblProfessionals}"></th:block>
                 </div>
             </div>
         </div>

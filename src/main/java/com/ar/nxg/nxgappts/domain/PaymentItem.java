@@ -1,5 +1,6 @@
 package com.ar.nxg.nxgappts.domain;
 
+import com.ar.nxg.nxgappts.enums.CurrencyEnum;
 import com.ar.nxg.nxgappts.enums.ItemStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,6 +25,9 @@ public class PaymentItem extends BaseEntity {
     private Item item;
 
     @Column(nullable = false)
+    private BigDecimal price; // price
+
+    @Column(nullable = false)
     private int quantity; // Cantidad del ítem en la compra
 
     @Column(nullable = false)
@@ -33,8 +37,9 @@ public class PaymentItem extends BaseEntity {
     @Column(nullable = false)
     private ItemStatusEnum itemStatusEnum; // Enum: PENDING, DELIVERED, CANCELLED
 
-    @Column(nullable = false, length = 3)
-    private String currency;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private CurrencyEnum currency;
 }
 
 

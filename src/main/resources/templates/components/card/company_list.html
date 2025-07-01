@@ -1,0 +1,48 @@
+<section id="client-company-list" aria-label="Lista de empresas para cliente" th:fragment="company_list">
+    <h3 th:text="#{result.list}"></h3>
+    <div id="client-companies-container" role="list" tabindex="0">
+        <div class="company-item" tabindex="0" role="listitem" th:each="entry : ${companiesWithSummaries}">
+            <strong><a class="card-title" th:text="${entry.company.name}" th:href="@{'/appointments/request/select-salon/' + ${entry.company.id} }"></a></strong>
+            <br>
+            <small class="rating text-muted mb-2">
+                <span class="score" th:text="${calificacion}">4.6</span>
+                <small class="stars">
+                    <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                        <small style="color: orange;" th:class="${i <= calificacionInt} ? 'star filled' : (${i == calificacionInt + 1 && calificacion % 1 >= 0.5} ? 'star half-filled' : 'star')"><i class="bi bi-star-fill"></i></small>
+                    </th:block>
+                </small>
+                <small class="total-ratings" th:text="'(' + ${totalRatings} + ')'">(6.345)</small>
+            </small>
+            <p class="m-0">
+                <i class="bi bi-pin-map"></i>
+                <a target="_blank" th:href="${'https://www.google.com/maps/place/' + #strings.listJoin(entry.company.address.split(' '), '+')}"><small th:text="${entry.company.address}"></small></a>
+            </p>
+            <!-- Usando emoji reloj simple para no complicar -->
+            <span style="cursor:pointer;" th:onclick="|toggleBlocks('openingBlocks' + ${entry.company.id})|" title="Mostrar/ocultar horarios">
+                <i class="bi bi-clock"></i> [[${#messages.msg('title.opening')}]]</span>
+
+            <ul th:id="${'openingBlocks' + entry.company.id}" style="display:none; margin-top:10px;">
+                <li th:each="summary : ${entry.summaries}">
+                    <small>
+                        <small th:if="${summary.firstDay == summary.lastDay}"
+                               th:text="${#messages.msg(summary.firstDay.name())}"></small>
+
+                        <small th:if="${summary.firstDay != summary.lastDay}">
+                            <span th:text="${#messages.msg(summary.firstDay.name())}"></span>
+                            <span> - </span>
+                            <span th:text="${#messages.msg(summary.lastDay.name())}"></span>
+                        </small>
+
+                        <span> </span>
+                        <span th:text="${#temporals.format(summary.startTime, 'HH:mm')}"></span>
+                        <span> - </span>
+                        <span th:text="${#temporals.format(summary.endTime, 'HH:mm')}"></span>
+                    </small>
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+</section>
